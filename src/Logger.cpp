@@ -41,5 +41,11 @@ namespace Pacman
         std::cerr << "[INFO]: " << message;
     }
 
+    void Logger::error(const std::string& message)
+    {
+        file_ << "[ERROR]: " <<  message;
+        std::cerr << "[ERROR]: " << message;
+    }
+
 
 }

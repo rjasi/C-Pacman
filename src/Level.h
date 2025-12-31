@@ -1,3 +1,5 @@
+#pragma once
+
 #include <vector>
 
 namespace Pacman
@@ -13,11 +15,11 @@ namespace Pacman
             static const int TILE_SIZE = 32;
 
         public:
-            bool isTile(int x, int y);
+            bool isTile(int x, int y) const;
 
             bool loadFromFile(const std::string& location);
 
-            const std::vector<std::string>& getTiles();
+            const std::vector<std::string>& getTiles() const;
 
     };
 }

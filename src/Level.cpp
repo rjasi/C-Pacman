@@ -48,7 +48,7 @@ namespace Pacman
         return true;
     }
 
-    const std::vector<std::string>&Level::getTiles()
+    const std::vector<std::string>&Level::getTiles() const
     {
         return tiles;
     }

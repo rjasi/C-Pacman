@@ -1,0 +1,53 @@
+#pragma once
+#include <SFML/Graphics.hpp>
+
+#include <vector>
+#include <string>
+
+#include "GameState.h"
+
+namespace Pacman
+{
+    enum class MenuAction 
+    {
+        None,
+        StartGame,
+        Quit
+    };
+
+    class MainMenu
+    {
+        public:
+           explicit MainMenu(const sf::Vector2u& windowSize);
+
+            // Feed SFML events here (discrete input)
+            void handleEvent(const sf::Event& event);
+
+            // Optional for animations later
+            void update(float dt) {}
+
+            // Draw the menu
+            void render(sf::RenderTarget& target) const;
+
+            // Game reads this; if Start/Quit was selected, it returns that once
+            MenuAction consumeAction();
+
+        private:
+            void rebuildText();
+            void updateHighlight();
+
+
+            sf::Font font_;
+            sf::Text title_;
+            std::vector<sf::Text> items_;
+
+            std::vector<std::string> labels_ = {"Start", "Quit"};
+            int selected_ = 0;
+
+            MenuAction pendingAction_ = MenuAction::None;
+
+            sf::Vector2u windowSize_;
+    };
+
+
+}
