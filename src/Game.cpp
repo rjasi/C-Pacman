@@ -50,8 +50,7 @@ namespace Pacman
     {
         while (const std::optional<sf::Event> event = window_.pollEvent())
         {
-
-            // Close window: exit
+            // exit
             if (event->is<sf::Event::Closed>())
             {
                 window_.close();
@@ -63,48 +62,53 @@ namespace Pacman
             } 
             else if (state_ == GameState::Playing) 
             {
-                // // gameplay input later
-                // if (auto* key = event->is<sf::Event::KeyPressed>()) 
-                // {
-                //     if (key->scancode == sf::Keyboard::Scancode::Escape) 
-                //     {
-                //         // You can decide: pause menu or go back to main menu
-                //         state_ = GameState::MainMenu;
-                //     }
-                // }
+                game_.handleEvent(*event);   
             }
         }
     }
 
    void Game::update(float dt) {
     (void)dt;
-    if (state_ == GameState::MainMenu) {
+    if (state_ == GameState::MainMenu) 
+    {
         auto action = menu_.consumeAction();
-        if (action == MenuAction::StartGame) {
+        if (action == MenuAction::StartGame) 
+        {
             Logger::instance().info("Menu: StartGame");
-            // startNewGame();
+            startNewGame();
             state_ = GameState::Playing;
-        } else if (action == MenuAction::Quit) {
+        } 
+        else if (action == MenuAction::Quit) 
+        {
             Logger::instance().info("Menu: Quit");
             window_.close();
         }
-    } else if (state_ == GameState::Playing) {
+    } 
+    else if (state_ == GameState::Playing) 
+    {
         // gameplay update later
     }
 }
 
-void Game::render() {
-    window_.clear();
+    void Game::render() 
+    {
+        window_.clear();
 
-    if (state_ == GameState::MainMenu) 
-    {
-        menu_.render(window_);
-    } else if (state_ == GameState::Playing) 
-    {
-        // draw gameplay later (level, pacman, ghosts)
+        if (state_ == GameState::MainMenu) 
+        {
+            menu_.render(window_);
+        } else if (state_ == GameState::Playing) 
+        {
+            game_.render(window_);
+            // draw gameplay later (level, pacman, ghosts)
+        }
+
+        window_.display();
     }
 
-    window_.display();
-}
+    void Game::startNewGame()
+    {
+        game_.reset();
+    }
 
 }

@@ -82,9 +82,12 @@ namespace Pacman
 
                 case sf::Keyboard::Scancode::Enter:
                 case sf::Keyboard::Scancode::NumpadEnter:
-                    if (selected_ == 0) {
+                    if (selected_ == 0) 
+                    {
                         pendingAction_ = MenuAction::StartGame;
-                    } else {
+                    } 
+                    else 
+                    {
                         pendingAction_ = MenuAction::Quit;
                     }
                     break;
@@ -101,7 +104,6 @@ namespace Pacman
 
     void MainMenu::render(sf::RenderTarget& target) const 
     {
-        // If font didn’t load, avoid drawing invalid text
         if (!font_.getInfo().family.empty()) 
         {
             target.draw(title_);

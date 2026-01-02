@@ -12,6 +12,7 @@ namespace Pacman
     {
         None,
         StartGame,
+        HighScore,
         Quit
     };
 
@@ -41,7 +42,7 @@ namespace Pacman
             sf::Text title_;
             std::vector<sf::Text> items_;
 
-            std::vector<std::string> labels_ = {"Start", "Quit"};
+            std::vector<std::string> labels_ = {"Start", "High scores", "Quit"};
             int selected_ = 0;
 
             MenuAction pendingAction_ = MenuAction::None;
