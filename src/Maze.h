@@ -4,7 +4,7 @@
 
 namespace Pacman
 {
-    class Level 
+    class Maze 
     {
         private: 
             int height;
@@ -15,7 +15,9 @@ namespace Pacman
             static const int TILE_SIZE = 32;
 
         public:
-            bool isTile(int x, int y) const;
+            static constexpr char WALL = '#';
+
+            bool isWall(int r, int c) const;
 
             bool loadFromFile(const std::string& location);
 

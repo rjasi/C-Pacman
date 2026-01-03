@@ -10,36 +10,34 @@ namespace Pacman
     : window_(sf::VideoMode({800, 600}), "Pacman"), 
     menu_(window_.getSize()) 
     {
-        lives_ = 3;
-        bool success = level_.loadFromFile("assets/level1.txt");
-        if (!success)
-        {
-            std::cerr << "ERROR LOADING";
-        }
-
         state_ = GameState::MainMenu;
         window_.setFramerateLimit(60);
-    }
-
-    void Game::printLevel() const
-    {
-        std::vector<std::string> tiles = level_.getTiles();
-        for (const std::string& row : tiles)
-        {
-            std::cerr << row << "\n";
-        }
     }
 
     void Game::run()
     {
         sf::Clock clock;
-
+        const sf::Time STEP = sf::milliseconds(8); // fixed simulation step
+        sf::Time accumulator = sf::Time::Zero;
         while (window_.isOpen()) 
         {
             processEvents();
 
-            float dt = clock.restart().asSeconds();
-            update(dt);
+            sf::Time frameTime = clock.restart();
+            if (frameTime > sf::milliseconds(250))
+            {
+                frameTime = sf::milliseconds(250);
+            }
+
+            accumulator += frameTime;
+
+            // Run simulation at fixed rate
+            while (accumulator >= STEP)
+            {
+                update(STEP);
+                accumulator -= STEP;
+            }
+
 
             render();   
         }
@@ -67,28 +65,29 @@ namespace Pacman
         }
     }
 
-   void Game::update(float dt) {
-    (void)dt;
-    if (state_ == GameState::MainMenu) 
+    void Game::update(sf::Time dt) 
     {
-        auto action = menu_.consumeAction();
-        if (action == MenuAction::StartGame) 
+        if (state_ == GameState::MainMenu) 
         {
-            Logger::instance().info("Menu: StartGame");
-            startNewGame();
-            state_ = GameState::Playing;
+            auto action = menu_.consumeAction();
+            if (action == MenuAction::StartGame) 
+            {
+                Logger::instance().info("Menu: StartGame");
+                startNewGame();
+                state_ = GameState::Playing;
+            } 
+            else if (action == MenuAction::Quit) 
+            {
+                Logger::instance().info("Menu: Quit");
+                window_.close();
+            }
         } 
-        else if (action == MenuAction::Quit) 
+        else if (state_ == GameState::Playing) 
         {
-            Logger::instance().info("Menu: Quit");
-            window_.close();
+            game_.update(dt);
+            // gameplay update later
         }
-    } 
-    else if (state_ == GameState::Playing) 
-    {
-        // gameplay update later
     }
-}
 
     void Game::render() 
     {

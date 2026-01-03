@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Level.h"
 #include "MainMenu.h"
 #include "GameState.h"
 #include "GameView.h"
@@ -14,7 +13,6 @@ namespace Pacman
     class Game 
     {
         private: 
-            Level level_; 
             int score_; 
             int lives_;
             sf::RenderWindow window_;
@@ -23,15 +21,13 @@ namespace Pacman
             GameView game_;
             
             void processEvents();
-            void update(float dt);
+            void update(sf::Time dt);
             void render();
             void startNewGame();
 
         public: 
             Game();
 
-            void run();
-            void printLevel() const;
-        
+            void run();        
     };
 }
