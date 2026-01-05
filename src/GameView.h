@@ -3,6 +3,7 @@
 #include "Maze.h"
 #include "Animation.h"
 #include "MoveableEntity.h"
+#include "TextureCache.h"
 
 #include <SFML/Graphics.hpp>
 #include <stdexcept>
@@ -13,7 +14,8 @@ namespace Pacman
     class GameView 
     {
         public:
-            GameView();
+            GameView() = delete;
+            explicit GameView(TextureCache& cache);
             void reset();
             void update(sf::Time dt);
             void render(sf::RenderTarget& window);
@@ -22,12 +24,11 @@ namespace Pacman
 
         private:
             sf::View worldView_;
-            sf::Texture mapTexture_;
-            sf::Texture spriteAtlasTexture_;
-            sf::Texture pelletTexture_;
-            std::optional<sf::Sprite> mapSprite_;
-            std::optional<sf::Sprite> pacManSprite_;
-            std::optional<sf::Sprite> pelletSprite_;
+            sf::Sprite mazeSprite_;
+            sf::Sprite pacManSprite_;
+            sf::Sprite pelletSprite_;
+            sf::Sprite powerPelletSprite_;
+
             Maze maze_;
             Animation pacAnim_;
             MoveableEntity pacmanEntity_;

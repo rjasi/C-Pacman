@@ -45,8 +45,8 @@ namespace Pacman
         }
 
         tiles_ = std::move(tempGrid);
-        height_ = colCount;
-        width_ = rowCount;
+        colCount_ = colCount;
+        rowCount_ = rowCount;
         return true;
     }
 
@@ -57,7 +57,7 @@ namespace Pacman
 
     bool Maze::isWall(int r, int c) const
     {
-        if (r > width_ || c > height_)
+        if (r > rowCount_ || c > colCount_)
         {
             return false;
         }
@@ -67,7 +67,7 @@ namespace Pacman
 
     bool Maze::isPellet(int r, int c) const
     {
-        if (r > width_ || c > height_)
+        if (r > rowCount_  || c > colCount_)
         {
             return false;
         }
@@ -75,10 +75,15 @@ namespace Pacman
         return tiles_[r][c] == PELLET;
     }
 
-    // std::string& Maze::operator[](std::size_t row) 
-    // {
-    //     return tiles_[row];
-    // }
+    bool Maze::isPowerPellet(int r, int c) const
+    {
+        if (r > rowCount_  || c > colCount_)
+        {
+            return false;
+        }
+
+        return tiles_[r][c] == POWER_PELLET;
+    }
 
     const std::string& Maze::operator[](std::size_t row) const 
     {
@@ -87,12 +92,12 @@ namespace Pacman
 
     int Maze::rowCount()
     {
-        return height_;
+        return rowCount_;
     }
 
     int Maze::colCount()
     {
-        return width_;
+        return colCount_;
     }
 
     sf::Vector2f Maze::origin() const 
@@ -128,17 +133,28 @@ namespace Pacman
             (std::abs(p.y - c.y) <= CENTER_EPS);
     }
 
-    // relative to maze origin
-    sf::Vector2f Maze::getTileCoordinates(int row, int col)
+    // from row, col on the maze, get screen coordinates
+    sf::Vector2f Maze::tileToWorld(int row, int col) const
     {
         return 
         {
             origin_.x + col*TILE_SIZE + TILE_SIZE/2, 
             origin_.y + row*TILE_SIZE+ TILE_SIZE/2// 0 indexed, + TILE_SIZE/2
         };
-    }
+    }  
 
+    // bool Maze::inBounds(int r, int c) const
+    // {
+    //     return r >= 0 && c >= 0 &&
+    //         r < rowCount_ && c < colCount_;
+    // }
 
+    // bool Maze::isTile(int r, int c, char value) const
+    // {
+    //     return inBounds(r, c) && tiles_[r][c] == value;
+    // }
 
-   
+    // bool Maze::isWall(int r, int c) const        { return isTile(r, c, WALL); }
+    // bool Maze::isPellet(int r, int c) const      { return isTile(r, c, PELLET); }
+    // bool Maze::isPowerPellet(int r, int c) const { return isTile(r, c, POWER_PELLET); }
 }

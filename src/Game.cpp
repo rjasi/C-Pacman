@@ -11,6 +11,8 @@ namespace Pacman
     menu_(window_.getSize()) 
     {
         state_ = GameState::MainMenu;
+        loadAllAssets();
+        gameView_ = std::make_unique<GameView>(textureCache_);
         window_.setFramerateLimit(60);
     }
 
@@ -60,7 +62,7 @@ namespace Pacman
             } 
             else if (state_ == GameState::Playing) 
             {
-                game_.handleEvent(*event);   
+                gameView_->handleEvent(*event);   
             }
         }
     }
@@ -84,7 +86,7 @@ namespace Pacman
         } 
         else if (state_ == GameState::Playing) 
         {
-            game_.update(dt);
+            gameView_->update(dt);
             // gameplay update later
         }
     }
@@ -96,10 +98,10 @@ namespace Pacman
         if (state_ == GameState::MainMenu) 
         {
             menu_.render(window_);
-        } else if (state_ == GameState::Playing) 
+        } 
+        else if (state_ == GameState::Playing) 
         {
-            game_.render(window_);
-            // draw gameplay later (level, pacman, ghosts)
+            gameView_->render(window_);
         }
 
         window_.display();
@@ -107,7 +109,16 @@ namespace Pacman
 
     void Game::startNewGame()
     {
-        game_.reset();
+        gameView_->reset();
     }
+
+    void Game::loadAllAssets()
+    {
+        textureCache_.load("atlas",  "assets/atlas.png",  false);
+        textureCache_.load("maze",   "assets/maze.png",   false);
+        textureCache_.load("pellet", "assets/pellet.png", false);
+        textureCache_.load("power_pellet", "assets/power_pellet.png", false);
+    }
+
 
 }
