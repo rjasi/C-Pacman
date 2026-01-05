@@ -32,13 +32,12 @@ namespace Pacman
         requested_ = d; 
     }
 
-    // this method causes titles to be skipped and give improper collision detection
     void MoveableEntity::update(sf::Time dt, const Maze& maze)
     {
         // Snap/turn only at tile centers 
-        if (nearTileCenter(pos_)) 
+        if (maze.nearTileCenter(pos_)) 
         {
-            pos_ = tileCenter(worldToTile(pos_));
+            pos_ = maze.tileCenter(maze.worldToTile(pos_));
 
             if (requested_ != Dir::None && canEnter(requested_, pos_, maze))
                 current_ = requested_;
@@ -49,18 +48,18 @@ namespace Pacman
 
         if (current_ != Dir::None) 
         {
-            sf::Vector2f step = dirVec(current_) * (30 * dt.asSeconds());
+            sf::Vector2f step = dirVec(current_) * (speed_ * dt.asSeconds());
             pos_ += step;
-
         }
     }
 
     float MoveableEntity::centerEps() const
     {
-        return 0.10f; // MAKE SURE THIS IS < dt* step 
+        return 0.40f; // MAKE SURE THIS IS < dirVec(current_) * (speed_ * dt.asSeconds())
         // issue: 
         // pos at 1.0, move 0.24, get 1.24 
         // if eps is 0.25, it wil snap to center of current tile so you never move
+        // setting too small will cause to almost never center if the speed is too high
     }
 
     float MoveableEntity::tileSize() const 
@@ -80,35 +79,12 @@ namespace Pacman
         }
     }
 
-
-    // where in the tile grid is current entity in based on its screen coordinates
-    sf::Vector2i MoveableEntity::worldToTile(sf::Vector2f p) const 
-    {
-        float T = tileSize();
-        return { (int)std::floor(p.x / T), (int)std::floor(p.y / T) };
-    }
-
-    // center of current sprite's tile 
-    sf::Vector2f MoveableEntity::tileCenter(sf::Vector2i t) const 
-    {
-        float T = tileSize();
-        return { (t.x + 0.5f) * T, (t.y + 0.5f) * T };
-    }
-
-    // use to snap to grid when sprite is close enough to the center of a tile
-    bool MoveableEntity::nearTileCenter(sf::Vector2f p) const 
-    {
-        sf::Vector2i t = worldToTile(p);
-        sf::Vector2f c = tileCenter(t);
-        return (std::abs(p.x - c.x) <= centerEps()) &&
-            (std::abs(p.y - c.y) <= centerEps());
-    }
-
+    
     bool MoveableEntity::canEnter(Dir d, sf::Vector2f pos, const Maze& maze) const
     {
         if (d == Dir::None) return false;
 
-        sf::Vector2i t = worldToTile(pos);
+        sf::Vector2i t = maze.worldToTile(pos);
         sf::Vector2i step{ (int)dirVec(d).x, (int)dirVec(d).y };
         sf::Vector2i next = t + step;
 

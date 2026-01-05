@@ -21,13 +21,10 @@ namespace Pacman
         public:
            explicit MainMenu(const sf::Vector2u& windowSize);
 
-            // Feed SFML events here (discrete input)
             void handleEvent(const sf::Event& event);
 
-            // Optional for animations later
             void update(float dt) {}
 
-            // Draw the menu
             void render(sf::RenderTarget& target) const;
 
             // Game reads this; if Start/Quit was selected, it returns that once

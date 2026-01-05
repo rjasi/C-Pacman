@@ -43,11 +43,6 @@ namespace Pacman
             float speed_ = 60.f;
 
             sf::Vector2f dirVec(Dir d) const;
-
-            sf::Vector2i worldToTile(sf::Vector2f p) const;
-            sf::Vector2f tileCenter(sf::Vector2i t) const;
-
-            bool nearTileCenter(sf::Vector2f p) const;
             bool canEnter(Dir d, sf::Vector2f pos, const Maze& maze) const;
     };
 };
