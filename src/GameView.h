@@ -1,9 +1,8 @@
 #pragma once
 
-#include "Maze.h"
 #include "Animation.h"
-#include "MoveableEntity.h"
 #include "TextureCache.h"
+#include "World.h"
 
 #include <SFML/Graphics.hpp>
 #include <stdexcept>
@@ -20,7 +19,6 @@ namespace Pacman
             void update(sf::Time dt);
             void render(sf::RenderTarget& window);
             void handleEvent(const sf::Event& event);
-            static constexpr int TILE_SIZE = 8;
 
         private:
             sf::View worldView_;
@@ -29,14 +27,12 @@ namespace Pacman
             sf::Sprite pelletSprite_;
             sf::Sprite powerPelletSprite_;
 
-            Maze maze_;
             Animation pacAnim_;
-            MoveableEntity pacmanEntity_;
+            World world_;
 
             bool assetsLoaded_ = false;
 
             void loadAssets();
             void drawPellets(sf::RenderTarget& window);
-            sf::Vector2f getTileCoordinates(int row, int col);
     };
 }

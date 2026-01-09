@@ -20,10 +20,15 @@ namespace Pacman
             static constexpr char WALL = '#';
             static constexpr char PELLET = '.';
             static constexpr char POWER_PELLET = 'o';
+            static constexpr char EMPTY = ' ';
 
+            Maze();
+
+            bool isInBounds(int r, int c) const;
             bool isWall(int r, int c) const;
             bool isPellet(int r, int c) const;
             bool isPowerPellet(int r, int c) const;
+            bool tryEatPellet(int r, int c);
 
             bool loadFromFile(const std::string& location);
 
@@ -31,8 +36,8 @@ namespace Pacman
 
             const std::string& operator[](std::size_t row) const;
 
-            int rowCount();
-            int colCount();
+            int rowCount() const;
+            int colCount() const;
 
             sf::Vector2f origin() const;
 

@@ -5,6 +5,16 @@
 
 namespace Pacman
 {
+    Maze::Maze()
+    {
+        // TODO maybe move this to an AssetManager class
+        if (!loadFromFile("assets/level1.txt"))
+        {
+            std::cerr << "ERROR LOADING";
+        }
+    }
+
+
     bool Maze::loadFromFile(const std::string& path)
     {
         std::ifstream file(path);
@@ -90,12 +100,12 @@ namespace Pacman
         return tiles_[row];
     }
 
-    int Maze::rowCount()
+    int Maze::rowCount() const
     {
         return rowCount_;
     }
 
-    int Maze::colCount()
+    int Maze::colCount() const
     {
         return colCount_;
     }
@@ -143,11 +153,27 @@ namespace Pacman
         };
     }  
 
-    // bool Maze::inBounds(int r, int c) const
-    // {
-    //     return r >= 0 && c >= 0 &&
-    //         r < rowCount_ && c < colCount_;
-    // }
+    bool Maze::tryEatPellet(int row, int col)
+    {
+        if(!isInBounds(row, col))
+        {
+            return false;;
+        }
+
+        if(tiles_[row][col] == PELLET)
+        {
+            tiles_[row][col] = EMPTY; 
+            return true;
+        }
+
+        return false;
+    }
+
+    bool Maze::isInBounds(int r, int c) const
+    {
+        return r >= 0 && c >= 0 &&
+            r < rowCount_ && c < colCount_;
+    }
 
     // bool Maze::isTile(int r, int c, char value) const
     // {
