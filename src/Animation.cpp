@@ -2,23 +2,25 @@
 
 namespace Pacman
 {
-    Animation::Animation(sf::Sprite& sprite,
-              const Atlas::AtlasRegion& region,
-              int frameCount,
-              sf::Time frameTime,
-              int row)
-    : sprite_(&sprite), 
+    Animation::Animation(sf::Texture& texture,
+                        const Atlas::AtlasRegion& region,
+                        int frameCount,
+                        sf::Time frameTime,
+                        sf::Vector2f origin,
+                        int row)
+    : sprite_(texture), 
     region_(region), 
     frameCount_(frameCount),
     frameTime_(frameTime),
     row_(row)
     {
+        sprite_.setOrigin(origin);
         apply();
     }
 
     void Animation::apply()
     {
-        sprite_->setTextureRect(Atlas::frameRect(region_, current_, row_));
+        sprite_.setTextureRect(Atlas::frameRect(region_, current_, row_));
     }
 
     void Animation::reset() 
@@ -30,7 +32,7 @@ namespace Pacman
 
     void Animation::update(sf::Time dt)
     {
-        if (!sprite_ || frameCount_ <= 0) 
+        if (frameCount_ <= 0) 
             return;
 
         elapsed_ += dt;
@@ -52,6 +54,11 @@ namespace Pacman
     void Animation::setFrameCount(int n) 
     { 
         frameCount_ = n; current_ = 0; apply(); 
+    }
+
+    sf::Sprite& Animation::sprite()
+    {
+        return sprite_;
     }
 
 }

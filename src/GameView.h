@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Animation.h"
+#include "AnimationLibrary.h"
 #include "TextureCache.h"
 #include "World.h"
 
@@ -14,7 +14,7 @@ namespace Pacman
     {
         public:
             GameView() = delete;
-            explicit GameView(TextureCache& cache);
+            explicit GameView(TextureCache& cache, AnimationLibrary* animationLibrary);
             void reset();
             void update(sf::Time dt);
             void render(sf::RenderTarget& window);
@@ -23,12 +23,11 @@ namespace Pacman
         private:
             sf::View worldView_;
             sf::Sprite mazeSprite_;
-            sf::Sprite pacManSprite_;
             sf::Sprite pelletSprite_;
             sf::Sprite powerPelletSprite_;
 
-            Animation pacAnim_;
             World world_;
+            AnimationLibrary* animationLibrary_;
 
             bool assetsLoaded_ = false;
 

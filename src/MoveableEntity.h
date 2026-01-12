@@ -1,20 +1,11 @@
 #pragma once
 
 #include "Maze.h"
-
+#include "Dir.h"
 #include <SFML/Graphics.hpp>
 
 namespace Pacman
 {
-    enum class Dir
-    {
-        None,
-        Left,
-        Right,
-        Up,
-        Down,
-    };
-    
     class MoveableEntity
     {
         public:

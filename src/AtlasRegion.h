@@ -16,7 +16,7 @@ namespace Pacman::Atlas
     inline sf::IntRect frameRect(const AtlasRegion& r, int frameIndex, int row = 0)
     {
         return sf::IntRect(
-            {r.origin.x + frameIndex * r.frameSize.x, r.origin.y + row        * r.frameSize.y },
+            {r.origin.x + frameIndex * r.frameSize.x, r.origin.y + row * r.frameSize.y },
             { r.frameSize.x, r.frameSize.y }
         );
     } 
@@ -24,9 +24,16 @@ namespace Pacman::Atlas
     //constants
     static constexpr AtlasRegion PacmanRight 
     {
-        {455, 0},   // origin
+        {456, 0},   // origin
         {16, 16}    // frame size
     };
+
+    static constexpr AtlasRegion BlinkyRight 
+    {
+        {456, 64},   // origin
+        {16, 16}    // frame size
+    };
+
 
 
 }

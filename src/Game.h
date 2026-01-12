@@ -1,5 +1,6 @@
 #pragma once
 
+#include "AnimationLibrary.h"
 #include "MainMenu.h"
 #include "GameState.h"
 #include "GameView.h"
@@ -14,15 +15,14 @@ namespace Pacman
     class Game 
     {
         private: 
-            int score_; 
-            int lives_;
             sf::RenderWindow window_;
             GameState state_ = GameState::MainMenu;
             MainMenu menu_;
 
             // unique ptr for delayed construction
             std::unique_ptr<GameView> gameView_;
-            
+            std::unique_ptr<AnimationLibrary> animationLibrary_;
+
             TextureCache textureCache_;
             
             void processEvents();
@@ -33,7 +33,6 @@ namespace Pacman
 
         public: 
             Game();
-
             void run();        
     };
 }
