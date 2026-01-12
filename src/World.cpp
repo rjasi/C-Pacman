@@ -5,6 +5,7 @@ namespace Pacman
     World::World()
     {
         pacmanEntity_.setPosition(maze_.tileToWorld(1,1));
+        blinky_.setPosition(maze_.tileToWorld(11,14));
     }
 
     void World::setPlayerRequestedDir(Dir d)
@@ -50,4 +51,10 @@ namespace Pacman
     {
         return powerPelletVisible_;
     }
+
+    const MoveableEntity& World::blinky() const
+    {
+        return blinky_;
+    }
+
 }

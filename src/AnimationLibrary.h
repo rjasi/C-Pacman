@@ -37,6 +37,8 @@ namespace Pacman
 
             DirectionalAnimation blinky;
             void loadAll(TextureCache& cache);
+            void update(sf::Time dt);
+            Animation blinkyRight_;
 
         private:
 
@@ -45,7 +47,6 @@ namespace Pacman
             // Animation pacmanLeft_;
             // Animation pacmanDown_;
 
-            Animation blinkyRight_;
 
             // sf::Sprite atlas_;
     };
