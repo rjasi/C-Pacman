@@ -169,6 +169,22 @@ namespace Pacman
         return false;
     }
 
+    bool Maze::tryEatPowerPellet(int row, int col)
+    {
+        if(!isInBounds(row, col))
+        {
+            return false;;
+        }
+
+        if(tiles_[row][col] == POWER_PELLET)
+        {
+            tiles_[row][col] = EMPTY; 
+            return true;
+        }
+
+        return false;
+    }
+
     bool Maze::isInBounds(int r, int c) const
     {
         return r >= 0 && c >= 0 &&

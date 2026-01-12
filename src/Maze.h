@@ -29,6 +29,7 @@ namespace Pacman
             bool isPellet(int r, int c) const;
             bool isPowerPellet(int r, int c) const;
             bool tryEatPellet(int r, int c);
+            bool tryEatPowerPellet(int r, int c);
 
             bool loadFromFile(const std::string& location);
 

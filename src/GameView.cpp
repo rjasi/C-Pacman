@@ -12,10 +12,6 @@ namespace Pacman
 
         mazeSprite_.setTexture(textCache.get("maze"));
 
-        auto& t = textCache.get("maze");
-        auto s = t.getSize();
-        std::cerr << "maze texture: " << s.x << "x" << s.y << "\n";
-
         pacManSprite_.setPosition(world_.maze().tileToWorld(1,1));
         pelletSprite_.setOrigin({4.f, 4.f});
         powerPelletSprite_.setOrigin({4.f, 4.f});

@@ -29,6 +29,11 @@ namespace Pacman
         {
             score_ += 10;
         }
+
+        if(maze_.tryEatPowerPellet(tile.y, tile.x))
+        {
+            score_ += 60;
+        }
     }
 
     const Maze& World::maze() const
