@@ -22,16 +22,110 @@ namespace Pacman::Atlas
     } 
 
     //constants
-    static constexpr AtlasRegion PacmanRight 
+    inline constexpr AtlasRegion PacmanRight 
     {
         {456, 0},   // origin
         {16, 16}    // frame size
     };
 
-    static constexpr AtlasRegion BlinkyRight 
+    inline constexpr AtlasRegion BlinkyRight 
     {
-        {456, 64},   // origin
-        {16, 16}    // frame size
+        {456, 64},
+        {16, 16}
+    };
+
+    inline constexpr AtlasRegion BlinkyLeft
+    {
+        {488, 64},
+        {16, 16}
+    };
+
+    inline constexpr AtlasRegion BlinkyUp
+    {
+        {520, 64},
+        {16, 16}
+    };
+
+    inline constexpr AtlasRegion BlinkyDown
+    {
+        {562, 64},
+        {16, 16}
+    };
+
+    //pinky
+    inline constexpr AtlasRegion PinkyRight 
+    {
+        {456, 80},
+        {16, 16}
+    };
+
+    inline constexpr AtlasRegion PinkyLeft
+    {
+        {488, 80},
+        {16, 16}
+    };
+
+    inline constexpr AtlasRegion PinkyUp
+    {
+        {520, 80},
+        {16, 16}
+    };
+
+    inline constexpr AtlasRegion PinkyDown
+    {
+        {562, 80},
+        {16, 16}
+    };
+
+    // inky
+
+    inline constexpr AtlasRegion InkyRight 
+    {
+        {456, 96},
+        {16, 16}
+    };
+
+    inline constexpr AtlasRegion InkyLeft
+    {
+        {488, 96},
+        {16, 16}
+    };
+
+    inline constexpr AtlasRegion InkyUp
+    {
+        {520, 96},
+        {16, 16}
+    };
+
+    inline constexpr AtlasRegion InkyDown
+    {
+        {562, 96},
+        {16, 16}
+    };
+
+    // clyde
+    inline constexpr AtlasRegion ClydeRight 
+    {
+        {456, 112},
+        {16, 16}
+    };
+
+    inline constexpr AtlasRegion ClydeLeft
+    {
+        {488, 112},
+        {16, 16}
+    };
+
+    inline constexpr AtlasRegion ClydeUp
+    {
+        {520, 112},
+        {16, 16}
+    };
+
+    inline constexpr AtlasRegion ClydeDown
+    {
+        {562, 122},
+        {16, 16}
     };
 
 

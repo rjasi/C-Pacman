@@ -17,7 +17,7 @@ namespace Pacman
                 const Atlas::AtlasRegion& region,
                 int frameCount,
                 sf::Time frameTime,
-                sf::Vector2f origin,
+                sf::Vector2f origin = {8.0f, 8.0f}, // all character sprites are 16x16 so center them at 8,8
                 int row = 0);
 
             void setRow(int row);
