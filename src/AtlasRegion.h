@@ -48,7 +48,7 @@ namespace Pacman::Atlas
 
     inline constexpr AtlasRegion BlinkyDown
     {
-        {562, 64},
+        {552, 64},
         {16, 16}
     };
 
@@ -73,7 +73,7 @@ namespace Pacman::Atlas
 
     inline constexpr AtlasRegion PinkyDown
     {
-        {562, 80},
+        {552, 80},
         {16, 16}
     };
 
@@ -99,7 +99,7 @@ namespace Pacman::Atlas
 
     inline constexpr AtlasRegion InkyDown
     {
-        {562, 96},
+        {552, 96},
         {16, 16}
     };
 
@@ -124,10 +124,8 @@ namespace Pacman::Atlas
 
     inline constexpr AtlasRegion ClydeDown
     {
-        {562, 122},
+        {552, 112},
         {16, 16}
     };
-
-
 
 }

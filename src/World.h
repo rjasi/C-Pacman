@@ -15,6 +15,10 @@ namespace Pacman
             Maze maze_;
             MoveableEntity pacmanEntity_;
             Ghost blinky_;
+            Ghost pinky_;
+            Ghost inky_;
+            Ghost clyde_;
+
             sf::Time blinkElapsed_ = sf::Time::Zero;
             sf::Time blinkPeriod_  = sf::milliseconds(250); 
             bool powerPelletVisible_ = true;
@@ -26,6 +30,9 @@ namespace Pacman
             const Maze& maze() const;
             const MoveableEntity& pacman() const;
             const MoveableEntity& blinky() const;
+            const MoveableEntity& pinky() const;
+            const MoveableEntity& inky() const;
+            const MoveableEntity& clyde() const;
 
             bool powerPelletVisible() const;
             void setPlayerRequestedDir(Dir d);

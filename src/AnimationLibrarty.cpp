@@ -58,6 +58,9 @@ namespace Pacman
 
     void AnimationLibrary::update(sf::Time dt)
     {
-
+        pinky.update(dt);
+        inky.update(dt);
+        blinky.update(dt);
+        clyde.update(dt);
     }
 }

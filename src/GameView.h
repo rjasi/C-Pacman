@@ -1,12 +1,14 @@
 #pragma once
 
 #include "AnimationLibrary.h"
+#include "Renderable.h"
 #include "TextureCache.h"
 #include "World.h"
 
 #include <SFML/Graphics.hpp>
 #include <stdexcept>
 #include <string>
+#include <vector>
 
 namespace Pacman
 {
@@ -20,13 +22,13 @@ namespace Pacman
             void render(sf::RenderTarget& window);
             void handleEvent(const sf::Event& event);
 
-            static constexpr sf::Vector2i INFRONT_DOOR = {1, 1};
-
         private:
             sf::View worldView_;
             sf::Sprite mazeSprite_;
             sf::Sprite pelletSprite_;
             sf::Sprite powerPelletSprite_;
+
+            std::vector<Renderable> renderables_;
 
             World world_;
             AnimationLibrary* animationLibrary_;

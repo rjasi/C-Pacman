@@ -9,15 +9,16 @@ namespace Pacman
     animationLibrary_(animationLibrary),
     powerPelletSprite_(textCache.get("power_pellet"))
     {
-
-
         pelletSprite_.setOrigin({4.f, 4.f});
         powerPelletSprite_.setOrigin({4.f, 4.f});
-
         mazeSprite_.setPosition(world_.maze().origin());
-
-
         assetsLoaded_ = true;
+
+        // Renderable x(&animationLibrary_->pinky, &world_.pinky());
+        renderables_.emplace_back(&animationLibrary_->pinky, &world_.pinky());
+        renderables_.emplace_back(&animationLibrary_->inky, &world_.inky());
+        renderables_.emplace_back(&animationLibrary_->clyde, &world_.clyde());
+
     }
 
     void GameView::reset() 
@@ -46,9 +47,16 @@ namespace Pacman
         }
         animationLibrary_->pacmanRight_.sprite().setPosition(world_.pacman().position());
         animationLibrary_->blinkyRight_.sprite().setPosition(world_.blinky().position());
-
+    
+        for(auto& renderable : renderables_)
+        {
+            renderable.draw(window);
+        }
+        
         window.draw(animationLibrary_->pacmanRight_.sprite());
         window.draw(animationLibrary_->blinkyRight_.sprite());
+        
+
     }
 
     void GameView::handleEvent(const sf::Event& event)
@@ -79,6 +87,8 @@ namespace Pacman
     {
         world_.update(dt);
         animationLibrary_->blinkyRight_.update(dt);
+        animationLibrary_->update(dt);
+
         // original pacman game seems to have mouth open when stopped
         if(world_.pacman().direction() != Dir::None)
         {

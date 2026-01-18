@@ -18,16 +18,15 @@ namespace Pacman
 
             Dir direction() const;
             void requestDirection(Dir d);
-
-            void update(sf::Time dt, const Maze& maze);
+            void setDirection(Dir d);
+            virtual void update(sf::Time dt, const Maze& maze);
             sf::Angle rotation() const;
             sf::Angle rotationRad() const;
 
-        protected:
             virtual float tileSize() const;
             virtual float centerEps() const;
 
-        private: 
+        protected: 
             sf::Vector2f pos_{};
             Dir current_ = Dir::Right;
             Dir requested_ = Dir::Right;

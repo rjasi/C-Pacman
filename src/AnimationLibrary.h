@@ -9,12 +9,20 @@ namespace Pacman
     class DirectionalAnimation
     {
         public: 
-            const Animation* up = nullptr;
-            const Animation* down = nullptr;
-            const Animation* left = nullptr;
-            const Animation* right = nullptr;
+            Animation* up = nullptr;
+            Animation* down = nullptr;
+            Animation* left = nullptr;
+            Animation* right = nullptr;
 
-            const Animation* clipFor(Dir d) const 
+            void update(sf::Time dt)
+            {
+                up->update(dt);
+                down->update(dt);
+                left->update(dt);
+                right->update(dt);
+            }
+
+            Animation* clipFor(Dir d) 
             {
                 switch (d) 
                 {
@@ -39,7 +47,7 @@ namespace Pacman
             DirectionalAnimation pinky;
             DirectionalAnimation inky;
             DirectionalAnimation clyde;
-            
+
             void update(sf::Time dt);
             Animation blinkyRight_;
 

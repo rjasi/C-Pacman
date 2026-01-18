@@ -32,6 +32,11 @@ namespace Pacman
         requested_ = d; 
     }
 
+    void MoveableEntity::setDirection(Dir d) 
+    { 
+        current_ = d; 
+    }
+
     void MoveableEntity::update(sf::Time dt, const Maze& maze)
     {
         // Snap/turn only at tile centers 
