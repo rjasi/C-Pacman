@@ -21,7 +21,11 @@ namespace Pacman
             case GhostState::InHouse:
                 paceInHouse(dt, maze);
                 break;
+            case GhostState::GettingToHouseCenter:
+                moveToDoor(dt, maze);
+                break;
             case GhostState::LeavingHouse:
+                moveToInfrontOfDoor(dt, maze);
                 break;
             case GhostState::Active:
                 break;
@@ -61,6 +65,85 @@ namespace Pacman
             sf::Vector2f step = dirVec(current_) * (speed_ * dt.asSeconds());
             pos_ += step;
         }
+    }
+
+    void Ghost::move(sf::Time dt)
+    {
+        sf::Vector2f step = dirVec(current_) * (speed_ * dt.asSeconds());
+        pos_ += step;
+    }
+
+    void Ghost::moveToDoor(sf::Time dt, const Maze& maze)
+    {
+        sf::Vector2f target = maze.tileToWorldOnBoundary(Maze::HOUSE_CENTER);
+
+        // first center y and clamp if close enougb
+        if (std::abs(pos_.y - target.y) <= Maze::CENTER_EPS)
+        {
+            pos_.y = target.y;
+            moveToExit(dt, maze);
+        } 
+        else if (pos_.y < target.y)
+        {
+            current_ = Dir::Down;
+            //move down
+            move(dt);
+        }
+        else if (pos_.y > target.y)
+        {
+            current_ = Dir::Up;
+            // move up
+            move(dt);
+        }
 
     }
+
+    void Ghost::moveToExit(sf::Time dt, const Maze& maze)
+    {
+        sf::Vector2f target = maze.tileToWorldOnBoundary(Maze::HOUSE_CENTER);
+
+        if (std::abs(pos_.x - target.x) <= Maze::CENTER_EPS)
+        {
+            pos_.x = target.x;
+            state_ = GhostState::LeavingHouse;
+            moveToInfrontOfDoor(dt, maze);
+        } 
+        else if (pos_.x < target.x)
+        {
+            current_ = Dir::Right;
+            move(dt);
+        }
+        else if (pos_.x > target.x)
+        {
+            current_ = Dir::Left;
+            move(dt);
+        }
+    }
+
+    void Ghost::moveToInfrontOfDoor(sf::Time dt, const Maze& maze)
+    {
+        sf::Vector2f target = maze.tileToWorldOnBoundary(Maze::INFRONT_DOOR);
+
+        // guranteed to be alinged on x from moveToExit so no need to check y 
+        // first center y and clamp if close enougb
+        if (std::abs(pos_.y - target.y) <= Maze::CENTER_EPS)
+        {
+            pos_.y = target.y;
+            state_ = GhostState::Active;
+        } 
+        else if (pos_.y < target.y)
+        {
+            current_ = Dir::Down;
+            //move down
+            move(dt);
+        }
+        else if (pos_.y > target.y)
+        {
+            current_ = Dir::Up;
+            // move up
+            move(dt);
+        }
+    }
+
+
 }

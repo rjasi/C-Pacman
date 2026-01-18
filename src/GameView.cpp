@@ -14,7 +14,6 @@ namespace Pacman
         mazeSprite_.setPosition(world_.maze().origin());
         assetsLoaded_ = true;
 
-        // Renderable x(&animationLibrary_->pinky, &world_.pinky());
         renderables_.emplace_back(&animationLibrary_->pinky, &world_.pinky());
         renderables_.emplace_back(&animationLibrary_->inky, &world_.inky());
         renderables_.emplace_back(&animationLibrary_->clyde, &world_.clyde());
@@ -54,7 +53,7 @@ namespace Pacman
         }
         
         window.draw(animationLibrary_->pacmanRight_.sprite());
-        window.draw(animationLibrary_->blinkyRight_.sprite());
+        // window.draw(animationLibrary_->blinkyRight_.sprite());
         
 
     }

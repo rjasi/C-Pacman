@@ -13,6 +13,7 @@ namespace Pacman
         pinky_.setDirection(Dir::Down);
         inky_.setPosition(maze_.tileToWorldOnBoundary(Maze::HOUSE_LEFT));
         inky_.setDirection(Dir::Up);
+        pinky_.setState(GhostState::GettingToHouseCenter);
         clyde_.setPosition(maze_.tileToWorldOnBoundary(Maze::HOUSE_RIGHT));
         clyde_.setDirection(Dir::Up);
     }
