@@ -1,11 +1,13 @@
 #include "World.h"
 
+#include <iostream>
+
 namespace Pacman
 {
     World::World()
     {
         pacmanEntity_.setPosition(maze_.tileToWorld(1,1));
-        blinky_.setPosition(maze_.tileToWorld(11,14));
+        blinky_.setPosition(maze_.tileToWorldOnBoundary(Maze::HOUSE_RIGHT));
     }
 
     void World::setPlayerRequestedDir(Dir d)

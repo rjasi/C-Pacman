@@ -21,6 +21,12 @@ namespace Pacman
             static constexpr char PELLET = '.';
             static constexpr char POWER_PELLET = 'o';
             static constexpr char EMPTY = ' ';
+            
+            static constexpr sf::Vector2i INFRONT_DOOR = {11, 13};
+            static constexpr sf::Vector2i HOUSE_CENTER = {14, 13};
+            static constexpr sf::Vector2i HOUSE_LEFT = {14, 11};
+            static constexpr sf::Vector2i HOUSE_RIGHT = {14, 15};
+
 
             Maze();
 
@@ -44,6 +50,9 @@ namespace Pacman
 
             sf::Vector2i worldToTile(sf::Vector2f world) const;
             sf::Vector2f tileToWorld(int row, int col) const;
+            sf::Vector2f tileToWorld(const sf::Vector2i& loc) const;
+            sf::Vector2f tileToWorldOnBoundary(int row, int col) const;
+            sf::Vector2f tileToWorldOnBoundary(sf::Vector2i loc) const;
 
             sf::Vector2f tileCenter(sf::Vector2i t) const;
             bool nearTileCenter(sf::Vector2f p) const;

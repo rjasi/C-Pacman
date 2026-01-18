@@ -143,7 +143,7 @@ namespace Pacman
             (std::abs(p.y - c.y) <= CENTER_EPS);
     }
 
-    // from row, col on the maze, get screen coordinates
+    // from row, col on the maze, get screen coordinates (centered)
     sf::Vector2f Maze::tileToWorld(int row, int col) const
     {
         return 
@@ -151,7 +151,35 @@ namespace Pacman
             origin_.x + col*TILE_SIZE + TILE_SIZE/2, 
             origin_.y + row*TILE_SIZE+ TILE_SIZE/2// 0 indexed, + TILE_SIZE/2
         };
+    } 
+
+    // pixel coordinates at right boundary at given tiles (used to place sprites at between tiles such as ghost spawn locations)
+    sf::Vector2f Maze::tileToWorldOnBoundary(int row, int col) const
+    {
+        return 
+        {
+            origin_.x + (col + 1) * TILE_SIZE, 
+            origin_.y + (row)*TILE_SIZE + TILE_SIZE/2
+        };
+    } 
+
+    // pixel coordinates at right boundary at given tiles (used to place sprites at between tiles such as ghost spawn locations)
+    sf::Vector2f Maze::tileToWorldOnBoundary(sf::Vector2i loc) const
+    {
+        return tileToWorldOnBoundary(loc.x, loc.y);
+    } 
+    
+    
+    
+    sf::Vector2f Maze::tileToWorld(const sf::Vector2i& loc) const
+    {
+        return 
+        {
+            origin_.x + loc.x*TILE_SIZE + TILE_SIZE/2, 
+            origin_.y + loc.y*TILE_SIZE+ TILE_SIZE/2// 0 indexed, + TILE_SIZE/2
+        };
     }  
+
 
     bool Maze::tryEatPellet(int row, int col)
     {

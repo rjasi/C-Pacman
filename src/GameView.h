@@ -20,6 +20,8 @@ namespace Pacman
             void render(sf::RenderTarget& window);
             void handleEvent(const sf::Event& event);
 
+            static constexpr sf::Vector2i INFRONT_DOOR = {1, 1};
+
         private:
             sf::View worldView_;
             sf::Sprite mazeSprite_;
