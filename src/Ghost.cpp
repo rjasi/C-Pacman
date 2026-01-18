@@ -6,7 +6,7 @@ namespace Pacman
 {
     Ghost::Ghost()
     {
-        speed_ = 30.0f;
+        speed_ = 20.0f;
     }
 
     void Ghost::setState(GhostState state)
@@ -16,29 +16,44 @@ namespace Pacman
 
     void Ghost::update(sf::Time dt, const Maze& maze)
     {
-        if (maze.nearTileCenter(pos_)) 
+        switch (state_)
         {
-            pos_ = maze.tileCenter(maze.worldToTile(pos_));
+            case GhostState::InHouse:
+                paceInHouse(dt, maze);
+                break;
+            case GhostState::LeavingHouse:
+                break;
+            case GhostState::Active:
+                break;
+            case GhostState::EatenReturning:
+                break;
+            case GhostState::Frightened:
+                break;
 
-            // if (requested_ != Dir::None && canEnter(requested_, pos_, maze))
-            //     current_ = requested_;
-
-            // if (!canEnter(current_, pos_, maze))
-            //     current_ = Dir::None;
         }
-        if (state_ == GhostState::InHouse)
-        {
-            // todo refactor when ghost changes state and send back into hous
-            if (current_ == Dir::Left || current_ == Dir::Right)
-            {
-                current_ = Dir::Up;
-            }
 
-            // when pacing, go up or down till wall then reverse direction
-            if(!canEnter(current_, pos_, maze))
-            {
-                current_ = current_ == Dir::Down ? Dir::Up : Dir::Down;
-            }
+        
+    }
+
+    void Ghost::paceInHouse(sf::Time dt, const Maze& maze)
+    {
+        // todo refactor when ghost changes state and send back into hous
+        if (current_ == Dir::Left || current_ == Dir::Right)
+        {
+            current_ = Dir::Up;
+        }
+
+        sf::Vector2f step = dirVec(current_) * (speed_ * dt.asSeconds());
+        sf::Vector2f nextPos = pos_ + step;
+
+        // when pacing, go up or down till wall then reverse direction
+        // note: maze.nearTileCenter(pos_)  won't work because ghosts are 
+        // aligned at tile boundary on x axis when pacing in the house
+        if (!canEnter(current_, nextPos, maze))
+        {
+            // todo maybe clamp to x boundary? 
+            // pos_ = maze.tileCenterClampX(maze.worldToTile(pos_));
+            current_ = current_ == Dir::Down ? Dir::Up : Dir::Down;
         }
 
         if (current_ != Dir::None) 

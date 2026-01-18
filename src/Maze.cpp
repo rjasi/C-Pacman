@@ -134,6 +134,19 @@ namespace Pacman
         };
     }
 
+    // todo rename: same as tileCenter but only center on y 
+    // for ghost pacing since they are aligned at tile boundary on 
+    // x axis
+    sf::Vector2f Maze::tileCenterClampX(sf::Vector2i t) const
+    {
+        return 
+        { 
+            origin_.x + (t.x) * TILE_SIZE, 
+            origin_.y + (t.y + 0.5f) * TILE_SIZE 
+        };
+    }
+
+
     // use to snap to grid when sprite is close enough to the center of a tile
     bool Maze::nearTileCenter(sf::Vector2f p) const 
     {
@@ -158,7 +171,7 @@ namespace Pacman
     {
         return 
         {
-            origin_.x + (col + 1) * TILE_SIZE, 
+            origin_.x + (col + 1) * TILE_SIZE - 0.4f, 
             origin_.y + (row)*TILE_SIZE + TILE_SIZE/2
         };
     } 

@@ -8,6 +8,7 @@ namespace Pacman
     {
         pacmanEntity_.setPosition(maze_.tileToWorld(1,1));
         blinky_.setPosition(maze_.tileToWorldOnBoundary(Maze::INFRONT_DOOR));
+        blinky_.setState(GhostState::Active);
         pinky_.setPosition(maze_.tileToWorldOnBoundary(Maze::HOUSE_CENTER));
         pinky_.setDirection(Dir::Down);
         inky_.setPosition(maze_.tileToWorldOnBoundary(Maze::HOUSE_LEFT));

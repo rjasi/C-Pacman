@@ -17,6 +17,7 @@ namespace Pacman
     {
         private:
             GhostState state_ = GhostState::InHouse;
+            void paceInHouse(sf::Time dt, const Maze& maze);
 
         public:
             Ghost();

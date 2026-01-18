@@ -12,9 +12,10 @@ namespace Pacman
             int rowCount_;
             int colCount_;
             sf::Vector2f origin_{ 320.f, 320.f }; // pixel location on screen
-            std::vector<std::string> tiles_;
 
         public:
+            std::vector<std::string> tiles_;
+
             static constexpr int TILE_SIZE = 8;
             static constexpr float CENTER_EPS = 0.40f;
             static constexpr char WALL = '#';
@@ -53,6 +54,8 @@ namespace Pacman
             sf::Vector2f tileToWorld(const sf::Vector2i& loc) const;
             sf::Vector2f tileToWorldOnBoundary(int row, int col) const;
             sf::Vector2f tileToWorldOnBoundary(sf::Vector2i loc) const;
+            sf::Vector2f tileCenterClampX(sf::Vector2i t) const;
+
 
             sf::Vector2f tileCenter(sf::Vector2i t) const;
             bool nearTileCenter(sf::Vector2f p) const;
