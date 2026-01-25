@@ -14,10 +14,11 @@ namespace Pacman
         mazeSprite_.setPosition(world_.maze().origin());
         assetsLoaded_ = true;
 
-        renderables_.emplace_back(&animationLibrary_->pinky, &world_.pinky());
-        renderables_.emplace_back(&animationLibrary_->inky, &world_.inky());
-        renderables_.emplace_back(&animationLibrary_->clyde, &world_.clyde());
-
+        renderables_.emplace_back(animationLibrary_->ghostResolvers_[GameCharactersIndex::BLINKY].get(), &world_.blinky());
+        renderables_.emplace_back(animationLibrary_->ghostResolvers_[GameCharactersIndex::PINKY].get(), &world_.pinky());
+        renderables_.emplace_back(animationLibrary_->ghostResolvers_[GameCharactersIndex::INKY].get(), &world_.inky());
+        renderables_.emplace_back(animationLibrary_->ghostResolvers_[GameCharactersIndex::CLYDE].get(), &world_.clyde());
+        renderables_.emplace_back(animationLibrary_->pacmanResolver_.get(), &world_.pacman());
     }
 
     void GameView::reset() 
@@ -45,7 +46,7 @@ namespace Pacman
             animationLibrary_->pacmanRight_.sprite().setRotation(world_.pacman().rotation());
         }
         animationLibrary_->pacmanRight_.sprite().setPosition(world_.pacman().position());
-        animationLibrary_->blinkyRight_.sprite().setPosition(world_.blinky().position());
+        // animationLibrary_->blinkyRight_.sprite().setPosition(world_.blinky().position());
     
         for(auto& renderable : renderables_)
         {

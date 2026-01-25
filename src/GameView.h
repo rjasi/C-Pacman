@@ -2,6 +2,7 @@
 
 #include "AnimationLibrary.h"
 #include "Renderable.h"
+#include "GhostEnum.h"
 #include "TextureCache.h"
 #include "World.h"
 

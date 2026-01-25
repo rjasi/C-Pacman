@@ -2,10 +2,10 @@
 
 namespace Pacman
 {
-    Renderable::Renderable(DirectionalAnimation* animationClips,
+    Renderable::Renderable(IAnimationResolver* animationResolver,
                         const MoveableEntity* entity)
-    : animationClips_(animationClips), 
-    entity_(entity)
+    : animationResolver_(animationResolver), 
+    entity_(*entity)
     {
         
     }
@@ -17,8 +17,8 @@ namespace Pacman
 
     void Renderable::draw(sf::RenderTarget& window)
     {
-        auto anim = animationClips_->clipFor(entity_->direction());
-        anim->sprite().setPosition(entity_->position());
-        window.draw(anim->sprite());
+        Animation& anim = animationResolver_->resolve(entity_);
+        anim.sprite().setPosition(entity_.position());
+        window.draw(anim.sprite());
     }
 }

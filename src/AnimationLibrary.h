@@ -3,55 +3,41 @@
 #include "Animation.h"
 #include "Dir.h"
 #include "TextureCache.h"
+#include "IAnimationResolver.h"
+#include "GhostEnum.h"
+#include "GhostAnimationPack.h"
+#include "DirectionalAnimation.h"
+#include "PacmanAnimationPack.h"
 
 namespace Pacman
 {
-    class DirectionalAnimation
-    {
-        public: 
-            Animation* up = nullptr;
-            Animation* down = nullptr;
-            Animation* left = nullptr;
-            Animation* right = nullptr;
-
-            void update(sf::Time dt)
-            {
-                up->update(dt);
-                down->update(dt);
-                left->update(dt);
-                right->update(dt);
-            }
-
-            Animation* clipFor(Dir d) 
-            {
-                switch (d) 
-                {
-                    case Dir::Up:    return up;
-                    case Dir::Down:  return down;
-                    case Dir::Left:  return left;
-                    case Dir::Right: return right;
-                    default:         return nullptr; // throw exception
-                }
-            }
-    };
-
     class AnimationLibrary
     {
         public: 
             AnimationLibrary(TextureCache& cache);
-
-            DirectionalAnimation pacman;
             Animation pacmanRight_; // for now just use pacmanRight and rotate 
 
-            DirectionalAnimation blinky;
-            DirectionalAnimation pinky;
-            DirectionalAnimation inky;
-            DirectionalAnimation clyde;
+            DirectionalAnimation pacman_normal;
+
+            DirectionalAnimation blinky_normal;
+            DirectionalAnimation pinky_normal;
+            DirectionalAnimation inky_normal;
+            DirectionalAnimation clyde_normal;
+
+            GhostAnimationPack blinky;
+            GhostAnimationPack pinky;
+            GhostAnimationPack inky;
+            GhostAnimationPack clyde;
+
+            PacmanAnimationPack pacman;
 
             void update(sf::Time dt);
             Animation blinkyRight_;
 
             static constexpr sf::Time ghostFrameTime = sf::milliseconds(80);
+
+            std::array<std::unique_ptr<IAnimationResolver>, 4> ghostResolvers_;
+            std::unique_ptr<IAnimationResolver> pacmanResolver_;
 
         private:
 
@@ -59,6 +45,7 @@ namespace Pacman
             // Animation pacmanUp_;
             // Animation pacmanLeft_;
             // Animation pacmanDown_;
+
 
             Animation blinkyLeft_;
             Animation blinkyUp_;

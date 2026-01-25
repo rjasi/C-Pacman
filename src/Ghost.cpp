@@ -14,6 +14,11 @@ namespace Pacman
         state_ = state;
     }
 
+    GhostState Ghost::state() const
+    {
+        return state_;
+    }
+
     void Ghost::update(sf::Time dt, const Maze& maze)
     {
         switch (state_)

@@ -1,19 +1,9 @@
 #pragma once
 
 #include "MoveableEntity.h"
-
+#include "GhostState.h"
 namespace Pacman
 {
-    enum class GhostState 
-    { 
-        InHouse, 
-        LeavingHouse,
-        GettingToHouseCenter,
-        Active, 
-        Frightened, 
-        EatenReturning 
-    };
-
     class Ghost : public MoveableEntity
     {
         private:
@@ -36,6 +26,7 @@ namespace Pacman
             Ghost();
             void update(sf::Time dt, const Maze& maze) override;
             void setState(GhostState state);
+            GhostState state() const;
 
 
     };

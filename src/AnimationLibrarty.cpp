@@ -4,7 +4,8 @@
 namespace Pacman
 {
     AnimationLibrary::AnimationLibrary(TextureCache& cache)
-    : pacmanRight_(cache.get("atlas"), Atlas::PacmanRight, 3, sf::milliseconds(60)),
+    : 
+    pacmanRight_(cache.get("atlas"), Atlas::PacmanRight, 3, sf::milliseconds(60)),
 
     blinkyRight_(cache.get("atlas"), Atlas::BlinkyRight, 2, ghostFrameTime),
     blinkyLeft_(cache.get("atlas"), Atlas::BlinkyLeft, 2, ghostFrameTime),
@@ -24,35 +25,26 @@ namespace Pacman
     clydeRight_(cache.get("atlas"), Atlas::ClydeRight, 2, ghostFrameTime),
     clydeLeft_(cache.get("atlas"), Atlas::ClydeLeft, 2, ghostFrameTime),
     clydeUp_(cache.get("atlas"), Atlas::ClydeUp, 2, ghostFrameTime),
-    clydeDown_(cache.get("atlas"), Atlas::ClydeDown, 2, ghostFrameTime)
+    clydeDown_(cache.get("atlas"), Atlas::ClydeDown, 2, ghostFrameTime),
+    
+    pacman_normal(&pacmanRight_, &pacmanRight_, &pacmanRight_, &pacmanRight_),
+    blinky_normal(&blinkyUp_, &blinkyDown_, &blinkyLeft_, &blinkyRight_),
+    pinky_normal(&pinkyUp_, &pinkyDown_, &pinkyLeft_, &pinkyRight_),
+    inky_normal(&inkyUp_, &inkyDown_, &inkyLeft_, &inkyRight_),
+    clyde_normal(&clydeUp_, &clydeDown_, &clydeLeft_, &clydeRight_),
+
+    pacman(&pacman_normal),
+    blinky(GameCharacters::Blinky, &blinky_normal),
+    pinky(GameCharacters::Pinky, &pinky_normal),
+    inky(GameCharacters::Inky, &inky_normal),
+    clyde(GameCharacters::Clyde, &clyde_normal)
     {
-        blinky = {
-            .right = &blinkyRight_,
-            .left = &blinkyLeft_,
-            .up = &blinkyUp_,
-            .down = &blinkyDown_
-        };
+        ghostResolvers_[GameCharactersIndex::BLINKY] = std::make_unique<GhostAnimationResolver>(&blinky);
+        ghostResolvers_[GameCharactersIndex::PINKY] = std::make_unique<GhostAnimationResolver>(&pinky);
+        ghostResolvers_[GameCharactersIndex::INKY] = std::make_unique<GhostAnimationResolver>(&inky);
+        ghostResolvers_[GameCharactersIndex::CLYDE] = std::make_unique<GhostAnimationResolver>(&clyde);
 
-        pinky = {
-            .right = &pinkyRight_,
-            .left = &pinkyLeft_,
-            .up = &pinkyUp_,
-            .down = &pinkyDown_
-        };
-
-        inky = {
-            .right = &inkyRight_,
-            .left = &inkyLeft_,
-            .up = &inkyUp_,
-            .down = &inkyDown_
-        };
-
-        clyde = {
-            .right = &clydeRight_,
-            .left = &clydeLeft_,
-            .up = &clydeUp_,
-            .down = &clydeDown_
-        };
+        pacmanResolver_ = std::make_unique<PacmanAnimationResolver>(&pacman);
     }
 
 

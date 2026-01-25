@@ -2,6 +2,7 @@
 
 #include "AnimationLibrary.h"
 #include "MoveableEntity.h"
+#include "IAnimationResolver.h"
 
 #include <SFML/Graphics.hpp>
 
@@ -10,10 +11,10 @@ namespace Pacman
     class Renderable
     {
         public:
-            Renderable(DirectionalAnimation* animationClips,
+            Renderable(IAnimationResolver* animationResolver,
                         const MoveableEntity* entity);
-            DirectionalAnimation* animationClips_;
-            const MoveableEntity* entity_;
+            IAnimationResolver* animationResolver_;
+            const MoveableEntity& entity_;
 
             void update(sf::Time dt);
             void draw(sf::RenderTarget& window);
