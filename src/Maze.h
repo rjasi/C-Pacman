@@ -58,6 +58,6 @@ namespace Pacman
 
 
             sf::Vector2f tileCenter(sf::Vector2i t) const;
-            bool nearTileCenter(sf::Vector2f p) const;
+            bool nearTileCenter(sf::Vector2f p, const float eps) const;
     };
 }

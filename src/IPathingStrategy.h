@@ -5,12 +5,12 @@
 
 // how to actually get to a tile based on some heuristic
 
-namespace pacman
+namespace Pacman
 {
     class IPathingStrategy
     {
         public: 
             virtual ~IPathingStrategy() = default;
-            virtual Dir chooseNext(const Maze& maze, const PathQuery& query) = 0;
+            virtual Dir chooseNext(const Maze& maze, const PathQuery& query) const = 0;
     };
 }

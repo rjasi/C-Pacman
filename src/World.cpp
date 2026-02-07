@@ -7,7 +7,7 @@ namespace Pacman
     World::World() 
     :
     blinkyTargetStrategy_({1,1}),
-    blinky_(blinkyTargetStrategy_)//,
+    blinky_(blinkyTargetStrategy_, greedyManhattanPathingStrategy_)//,
     // pinky_(pinkyTargetStrategy_),
     // inky_(inkyTargetStrategy_),
     // clyde_(clydeTargetStrategy_)
@@ -15,6 +15,7 @@ namespace Pacman
         pacmanEntity_.setPosition(maze_.tileToWorld(1,1));
         blinky_.setPosition(maze_.tileToWorldOnBoundary(Maze::INFRONT_DOOR));
         blinky_.setState(GhostState::Active);
+        blinky_.setDirection(Dir::Left);
         pinky_.setPosition(maze_.tileToWorldOnBoundary(Maze::HOUSE_CENTER));
         pinky_.setDirection(Dir::Down);
         inky_.setPosition(maze_.tileToWorldOnBoundary(Maze::HOUSE_LEFT));
@@ -47,10 +48,20 @@ namespace Pacman
     void World::update(sf::Time dt)
     {
         pacmanEntity_.update(dt, maze_);
+
+        TargetContext ctx
+        {
+            .pacman_tile = maze_.worldToTile(pacmanEntity_.position()),
+            .pacman_dir = pacmanEntity_.direction(),
+        };
+
+        blinky_.setTargetContext(ctx);
+        blinky_.update(dt, maze_);
         pinky_.update(dt, maze_);
         inky_.update(dt, maze_);
         clyde_.update(dt, maze_);
 
+        
         blinkElapsed_ += dt;
         if (blinkElapsed_ >= blinkPeriod_) 
         {
@@ -60,12 +71,12 @@ namespace Pacman
 
         sf::Vector2i tile = maze_.worldToTile(pacmanEntity_.position());
 
-        if(maze_.tryEatPellet(tile.y, tile.x))
+        if (maze_.tryEatPellet(tile.y, tile.x))
         {
             score_ += 10;
         }
 
-        if(maze_.tryEatPowerPellet(tile.y, tile.x))
+        if (maze_.tryEatPowerPellet(tile.y, tile.x))
         {
             score_ += 60;
         }

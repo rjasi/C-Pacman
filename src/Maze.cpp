@@ -67,9 +67,9 @@ namespace Pacman
 
     bool Maze::isWall(int r, int c) const
     {
-        if (r > rowCount_ || c > colCount_)
+        if (!isInBounds(r, c))
         {
-            return false;
+            return true;
         }
 
         return tiles_[r][c] == WALL;
@@ -77,7 +77,7 @@ namespace Pacman
 
     bool Maze::isPellet(int r, int c) const
     {
-        if (r > rowCount_  || c > colCount_)
+        if (!isInBounds(r, c))
         {
             return false;
         }
@@ -87,7 +87,7 @@ namespace Pacman
 
     bool Maze::isPowerPellet(int r, int c) const
     {
-        if (r > rowCount_  || c > colCount_)
+        if (!isInBounds(r, c))
         {
             return false;
         }
@@ -148,12 +148,12 @@ namespace Pacman
 
 
     // use to snap to grid when sprite is close enough to the center of a tile
-    bool Maze::nearTileCenter(sf::Vector2f p) const 
+    bool Maze::nearTileCenter(sf::Vector2f p, const float eps) const 
     {
         sf::Vector2i t = worldToTile(p);
         sf::Vector2f c = tileCenter(t);
-        return (std::abs(p.x - c.x) <= CENTER_EPS) &&
-            (std::abs(p.y - c.y) <= CENTER_EPS);
+        return (std::abs(p.x - c.x) <= eps) &&
+            (std::abs(p.y - c.y) <= eps);
     }
 
     // from row, col on the maze, get screen coordinates (centered)
@@ -181,8 +181,6 @@ namespace Pacman
     {
         return tileToWorldOnBoundary(loc.x, loc.y);
     } 
-    
-    
     
     sf::Vector2f Maze::tileToWorld(const sf::Vector2i& loc) const
     {

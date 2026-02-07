@@ -40,7 +40,7 @@ namespace Pacman
     void MoveableEntity::update(sf::Time dt, const Maze& maze)
     {
         // Snap/turn only at tile centers 
-        if (maze.nearTileCenter(pos_)) 
+        if (maze.nearTileCenter(pos_, centerEps())) 
         {
             pos_ = maze.tileCenter(maze.worldToTile(pos_));
 

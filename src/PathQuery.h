@@ -4,15 +4,14 @@
 
 #include <SFML/Graphics.hpp>
 
-namespace pacman
+namespace Pacman
 {
     class PathQuery
     {
-        sf::Vector2i current_tile;
-        Dir current_direction;
-        sf::Vector2i target_tile;
-
-        bool canReverse = true; 
-        
-    }
+        public:
+            sf::Vector2i current_tile;
+            Dir current_direction;
+            sf::Vector2i target_tile;
+            bool canReverse = false; 
+    };
 }

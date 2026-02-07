@@ -2,10 +2,11 @@
 
 #include "IPathingStrategy.h"
 
-namespace pacman
+namespace Pacman
 {
     class GreedyManhattanPathingStrategy : public IPathingStrategy
     {
-        
+        public:
+            Dir chooseNext(const Maze& maze, const PathQuery& query) const override;
     };
 }

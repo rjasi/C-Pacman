@@ -3,6 +3,8 @@
 #include "MoveableEntity.h"
 #include "GhostState.h"
 #include "IGhostTargetStrategy.h"
+#include "IPathingStrategy.h"
+#include "TargetContext.h"
 
 namespace Pacman
 {
@@ -10,7 +12,9 @@ namespace Pacman
     {
         private:
             GhostState state_ = GhostState::InHouse;
-            const IGhostTargetStrategy* ghostTargetStrategy_;
+            const IGhostTargetStrategy* ghostTargetStrategy_ = nullptr;
+            const IPathingStrategy* pathingStrategy_ = nullptr;
+            const TargetContext* targetContext_ = nullptr;
 
             void paceInHouse(sf::Time dt, const Maze& maze);
             void active(sf::Time dt, const Maze& maze);
@@ -27,14 +31,18 @@ namespace Pacman
 
             void move(sf::Time dt);
 
+            float centerEps() const override;
         public:
             Ghost();
             Ghost(const Ghost& ghost) = delete;
             Ghost& operator=(const Ghost& ghost) = delete;
-            
-            explicit Ghost(IGhostTargetStrategy& ghostTargetStrategy);
+            explicit Ghost(
+                const IGhostTargetStrategy& ghostTargetStrategy, 
+                const IPathingStrategy& pathingStrategy);
+
             void update(sf::Time dt, const Maze& maze) override;
             void setState(GhostState state);
+            void setTargetContext(const TargetContext& ctx);
             GhostState state() const;
 
     };

@@ -1,4 +1,5 @@
 #include "Ghost.h"
+#include "PathQuery.h"
 
 #include <iostream>
 
@@ -11,10 +12,11 @@ namespace Pacman
         speed_ = 20.0f;
     }
 
-    Ghost::Ghost(IGhostTargetStrategy& ghostTargetStrategy)
-    : ghostTargetStrategy_(&ghostTargetStrategy)
+    Ghost::Ghost(const IGhostTargetStrategy& ghostTargetStrategy, const IPathingStrategy& pathingStrategy)
+    : ghostTargetStrategy_(&ghostTargetStrategy),
+    pathingStrategy_(&pathingStrategy)
     {
-        speed_ = 20.0f;
+        speed_ = 50.0f;
     }
 
     void Ghost::setState(GhostState state)
@@ -41,6 +43,8 @@ namespace Pacman
                 moveToInfrontOfDoor(dt, maze);
                 break;
             case GhostState::Active:
+                active(dt, maze);
+                move(dt);
                 break;
             case GhostState::EatenReturning:
                 break;
@@ -54,6 +58,7 @@ namespace Pacman
 
     void Ghost::paceInHouse(sf::Time dt, const Maze& maze)
     {
+        speed_ = 20.f;
         // todo refactor when ghost changes state and send back into hous
         if (current_ == Dir::Left || current_ == Dir::Right)
         {
@@ -88,6 +93,7 @@ namespace Pacman
 
     void Ghost::moveToDoor(sf::Time dt, const Maze& maze)
     {
+        speed_ = 20.f;
         sf::Vector2f target = maze.tileToWorldOnBoundary(Maze::HOUSE_CENTER);
 
         // first center y and clamp if close enougb
@@ -113,6 +119,7 @@ namespace Pacman
 
     void Ghost::moveToExit(sf::Time dt, const Maze& maze)
     {
+        speed_ = 20.f;
         sf::Vector2f target = maze.tileToWorldOnBoundary(Maze::HOUSE_CENTER);
 
         if (std::abs(pos_.x - target.x) <= Maze::CENTER_EPS)
@@ -142,6 +149,7 @@ namespace Pacman
         if (std::abs(pos_.y - target.y) <= Maze::CENTER_EPS)
         {
             pos_.y = target.y;
+            current_ = Dir::Left; //todo randomly choose left or right
             state_ = GhostState::Active;
         } 
         else if (pos_.y < target.y)
@@ -158,14 +166,51 @@ namespace Pacman
         }
     }
 
+    // determine where to go
     void Ghost::active(sf::Time dt, const Maze& maze)
     {
-        if (ghostTargetStrategy_ == nullptr)
+        speed_ = 50.f;
+        // only choose direction at tile center
+        if (maze.nearTileCenter(pos_, centerEps())) 
+        {
+            pos_ = maze.tileCenter(maze.worldToTile(pos_));
+        }
+        else
         {
             return;
         }
 
+        if (ghostTargetStrategy_ == nullptr || pathingStrategy_ == nullptr || targetContext_ == nullptr)
+        {
+            return;
+        }
 
+        sf::Vector2i target = ghostTargetStrategy_->getTarget(*targetContext_);
+
+        PathQuery query = 
+        {
+            .current_tile = maze.worldToTile(pos_),
+            .current_direction = current_,
+            .target_tile = target,
+            .canReverse = false
+        };
+
+        current_ = pathingStrategy_->chooseNext(maze, query);
+        targetContext_ =  nullptr; // reset
+    }
+
+    void Ghost::setTargetContext(const TargetContext& ctx)
+    {
+        targetContext_ = &ctx;
+    }
+
+    float Ghost::centerEps() const
+    {
+        return 0.30f; // MAKE SURE THIS IS < dirVec(current_) * (speed_ * dt.asSeconds())
+        // issue: 
+        // pos at 1.0, move 0.24, get 1.24 
+        // if eps is 0.25, it wil snap to center of current tile so you never move
+        // setting too small will cause to almost never center if the speed is too high
     }
 
 

@@ -4,7 +4,7 @@
 #include "Maze.h"
 #include "MoveableEntity.h"
 #include "GhostTargetStrategies.h"
-
+#include "GreedyManhattanPathingStrategy.h"
 
 #include <SFML/Graphics.hpp>
 
@@ -21,6 +21,8 @@ namespace Pacman
             Ghost inky_;
             Ghost clyde_;
             BlinkyTargetStrategy blinkyTargetStrategy_;
+            GreedyManhattanPathingStrategy greedyManhattanPathingStrategy_;
+            
             // PinkyTargetStrategy inkyTargetStrategy_;
             // InkyTargetStrategy pinkyTargetStrategy_;
             // ClydeTargetStrategy clydeTargetStrategy_;

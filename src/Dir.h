@@ -4,7 +4,7 @@ namespace Pacman
 {
     enum class Dir
     {
-        None,
+        None = 0,
         Left,
         Right,
         Up,
