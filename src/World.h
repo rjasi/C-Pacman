@@ -3,6 +3,8 @@
 #include "Ghost.h"
 #include "Maze.h"
 #include "MoveableEntity.h"
+#include "GhostTargetStrategies.h"
+
 
 #include <SFML/Graphics.hpp>
 
@@ -18,6 +20,10 @@ namespace Pacman
             Ghost pinky_;
             Ghost inky_;
             Ghost clyde_;
+            BlinkyTargetStrategy blinkyTargetStrategy_;
+            // PinkyTargetStrategy inkyTargetStrategy_;
+            // InkyTargetStrategy pinkyTargetStrategy_;
+            // ClydeTargetStrategy clydeTargetStrategy_;
 
             sf::Time blinkElapsed_ = sf::Time::Zero;
             sf::Time blinkPeriod_  = sf::milliseconds(250); 

@@ -4,7 +4,15 @@
 
 namespace Pacman
 {
+
+    //todo remove this. temporary while not all IGhostTargetStrategy types are implemented yet
     Ghost::Ghost()
+    {
+        speed_ = 20.0f;
+    }
+
+    Ghost::Ghost(IGhostTargetStrategy& ghostTargetStrategy)
+    : ghostTargetStrategy_(&ghostTargetStrategy)
     {
         speed_ = 20.0f;
     }
@@ -149,6 +157,17 @@ namespace Pacman
             move(dt);
         }
     }
+
+    void Ghost::active(sf::Time dt, const Maze& maze)
+    {
+        if (ghostTargetStrategy_ == nullptr)
+        {
+            return;
+        }
+
+
+    }
+
 
 
 }

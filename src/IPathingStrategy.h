@@ -1,0 +1,16 @@
+#pragma once 
+
+#include "PathQuery.h"
+#include "Maze.h"
+
+// how to actually get to a tile based on some heuristic
+
+namespace pacman
+{
+    class IPathingStrategy
+    {
+        public: 
+            virtual ~IPathingStrategy() = default;
+            virtual Dir chooseNext(const Maze& maze, const PathQuery& query) = 0;
+    };
+}

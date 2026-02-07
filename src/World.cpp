@@ -4,7 +4,13 @@
 
 namespace Pacman
 {
-    World::World()
+    World::World() 
+    :
+    blinkyTargetStrategy_({1,1}),
+    blinky_(blinkyTargetStrategy_)//,
+    // pinky_(pinkyTargetStrategy_),
+    // inky_(inkyTargetStrategy_),
+    // clyde_(clydeTargetStrategy_)
     {
         pacmanEntity_.setPosition(maze_.tileToWorld(1,1));
         blinky_.setPosition(maze_.tileToWorldOnBoundary(Maze::INFRONT_DOOR));
