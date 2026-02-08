@@ -3,12 +3,27 @@
 
 #include <limits>
 #include <cmath>
+#include <vector>
+#include <random>
+
 
 namespace Pacman
 {
-    Dir GreedyManhattanPathingStrategy::chooseNext(const Maze& maze, const PathQuery& query) const
+    //todo move this to an RNG class
+    int randomInt(int min, int max)
     {
-        Dir best = Dir::None;
+        static std::random_device rd;              // non-deterministic seed
+        static std::mt19937 gen(rd());              // Mersenne Twister engine
+        std::uniform_int_distribution<int> dist(min, max);
+
+        return dist(gen);
+    }
+    
+    Dir GreedyManhattanPathingStrategy::chooseNext(const Maze& maze, PathQuery& query) const
+    {
+        std::vector<Dir> bestDirs;
+        bestDirs.reserve(4);
+
         int bestScore = std::numeric_limits<int>::max();
 
         // loop through valid dirs and pick the best
@@ -28,16 +43,23 @@ namespace Pacman
             int score = PathUtils::manhattanDistance(query.target_tile, nextStep);
             if (score < bestScore)
             {
-                best = d; 
+                bestDirs.clear(); 
+                bestDirs.push_back(d); 
                 bestScore = score;
+            }
+            else if (score == bestScore)
+            {
+                bestDirs.push_back(d); 
             }
         }
 
-        if (best == Dir::None)
+        if(bestDirs.size() <= 0)
         {
-            // not possible, in the grid there is always a valid move without reversing
+            //should not happen, but todo research on this
+            query.canReverse = true;
+            return chooseNext(maze, query);
         }
 
-        return best;
+        return bestDirs[randomInt(0, bestDirs.size() - 1)]; // size - 1 because rand function is inclusive
     }
 }

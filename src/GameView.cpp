@@ -29,8 +29,12 @@ namespace Pacman
         }
 
         // view takes in center of image, then size hence * 0.5 
-        worldView_ = sf::View({400.f, 300.f}, {800.f, 600.f});
+        // worldView_ = sf::View({400.f, 300.f}, {800.f, 600.f});
+        worldView_.setSize({224.f, 248.f});
+        worldView_.setCenter({224.f/2, 248.f/2});
 
+        // worldView_.zoom(0.8f);  
+        // worldView_.move({-260.f, -160.f});
         mazeSprite_.setPosition(world_.maze().origin());
     }
 

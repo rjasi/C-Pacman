@@ -45,6 +45,7 @@ namespace Pacman
             case GhostState::Active:
                 active(dt, maze);
                 move(dt);
+                warp();
                 break;
             case GhostState::EatenReturning:
                 break;
@@ -180,6 +181,11 @@ namespace Pacman
             return;
         }
 
+        if (isWarping(current_, pos_, maze))
+        {
+            return;
+        }
+
         if (ghostTargetStrategy_ == nullptr || pathingStrategy_ == nullptr || targetContext_ == nullptr)
         {
             return;
@@ -196,6 +202,7 @@ namespace Pacman
         };
 
         current_ = pathingStrategy_->chooseNext(maze, query);
+        
         targetContext_ =  nullptr; // reset
     }
 

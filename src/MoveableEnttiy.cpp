@@ -12,6 +12,21 @@ namespace Pacman
         return pos_; 
     }
 
+    void MoveableEntity::warp() 
+    { 
+
+        // warp from left to right
+        if (pos_.x < -8.0f)
+        {
+            pos_.x = 224.0f + 8.0f; 
+        }
+        // right to left
+        else if (pos_.x > 224.0f + 8.0f)
+        {
+            pos_.x = -8.0f;
+        }
+    }
+
     void MoveableEntity::setSpeed(float pxPerSec) 
     { 
         speed_ = pxPerSec; 
@@ -44,10 +59,11 @@ namespace Pacman
         {
             pos_ = maze.tileCenter(maze.worldToTile(pos_));
 
-            if (requested_ != Dir::None && canEnter(requested_, pos_, maze))
+            bool warping = isWarping(requested_, pos_, maze);
+            if (requested_ != Dir::None && canEnter(requested_, pos_, maze) && !warping)
                 current_ = requested_;
 
-            if (!canEnter(current_, pos_, maze))
+            if (!canEnter(current_, pos_, maze) && !warping)
                 current_ = Dir::None;
         }
 
@@ -56,6 +72,7 @@ namespace Pacman
             sf::Vector2f step = dirVec(current_) * (speed_ * dt.asSeconds());
             pos_ += step;
         }
+        warp();
     }
 
     float MoveableEntity::centerEps() const
@@ -85,6 +102,15 @@ namespace Pacman
     }
 
     
+    bool MoveableEntity::isWarping(Dir d, sf::Vector2f pos, const Maze& maze) const
+    {
+        sf::Vector2i t = maze.worldToTile(pos);
+        sf::Vector2i step{ (int)dirVec(d).x, (int)dirVec(d).y };
+        sf::Vector2i next = t + step;
+
+        return maze.isInWarpTile(next.y, next.x); // remember x = horizonal = column, y = vertical = row
+    }
+
     bool MoveableEntity::canEnter(Dir d, sf::Vector2f pos, const Maze& maze) const
     {
         if (d == Dir::None) return false;

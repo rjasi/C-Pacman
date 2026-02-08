@@ -27,6 +27,9 @@ namespace Pacman
             virtual float centerEps() const;
 
         protected: 
+            void warp();
+            bool isWarping(Dir d, sf::Vector2f pos, const Maze& maze) const;
+
             sf::Vector2f pos_{};
             Dir current_ = Dir::Right;
             Dir requested_ = Dir::Right;

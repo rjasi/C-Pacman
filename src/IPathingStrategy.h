@@ -11,6 +11,6 @@ namespace Pacman
     {
         public: 
             virtual ~IPathingStrategy() = default;
-            virtual Dir chooseNext(const Maze& maze, const PathQuery& query) const = 0;
+            virtual Dir chooseNext(const Maze& maze, PathQuery& query) const = 0;
     };
 }

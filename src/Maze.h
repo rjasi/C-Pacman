@@ -11,13 +11,14 @@ namespace Pacman
         private: 
             int rowCount_;
             int colCount_;
-            sf::Vector2f origin_{ 320.f, 320.f }; // pixel location on screen
+            sf::Vector2f origin_{ 0, 0 }; // pixel location on screen
 
         public:
             std::vector<std::string> tiles_;
 
             static constexpr int TILE_SIZE = 8;
             static constexpr float CENTER_EPS = 0.40f;
+            static constexpr int WARP_TILE_ROW = 14;
             static constexpr char WALL = '#';
             static constexpr char PELLET = '.';
             static constexpr char POWER_PELLET = 'o';
@@ -32,6 +33,7 @@ namespace Pacman
             Maze();
 
             bool isInBounds(int r, int c) const;
+            bool isInWarpTile(int r, int c) const;
             bool isWall(int r, int c) const;
             bool isPellet(int r, int c) const;
             bool isPowerPellet(int r, int c) const;
