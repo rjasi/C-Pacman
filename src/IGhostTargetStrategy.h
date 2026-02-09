@@ -1,6 +1,7 @@
 #pragma once 
 
 #include "TargetContext.h"
+#include "TileRC.h"
 
 #include <SFML/Graphics.hpp>
 
@@ -11,7 +12,7 @@ namespace Pacman
     {
         public:
             virtual ~IGhostTargetStrategy() = default;
-            virtual sf::Vector2i getTarget(const TargetContext& ctx) const = 0;
-            virtual sf::Vector2i scatterTarget(const TargetContext& ctx) const = 0;
+            virtual TileRC getTarget(const TargetContext& ctx) const = 0;
+            virtual TileRC scatterTarget(const TargetContext& ctx) const = 0;
     };
 }

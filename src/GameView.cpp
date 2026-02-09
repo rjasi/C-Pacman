@@ -112,14 +112,15 @@ namespace Pacman
         {
             for (int col = 0; col < maze.colCount(); col++)
             {
-                if (maze.isPellet(row, col))
+                TileRC tile{row, col};
+                if (maze.isPellet(tile))
                 {
-                    pelletSprite_.setPosition(maze.tileToWorld(row, col));
+                    pelletSprite_.setPosition(maze.tileToWorld(tile));
                     window.draw(pelletSprite_);
                 }
-                else if (maze.isPowerPellet(row, col) && world_.powerPelletVisible())
+                else if (maze.isPowerPellet(tile) && world_.powerPelletVisible())
                 {
-                    powerPelletSprite_.setPosition(maze.tileToWorld(row, col));
+                    powerPelletSprite_.setPosition(maze.tileToWorld(tile));
                     window.draw(powerPelletSprite_);
                 }
             }

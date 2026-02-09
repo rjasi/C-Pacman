@@ -1,7 +1,8 @@
 #pragma once
 
-#include <vector>
+#include "TileRC.h"
 
+#include <vector>
 #include <SFML/Graphics.hpp>
 
 namespace Pacman
@@ -24,21 +25,26 @@ namespace Pacman
             static constexpr char POWER_PELLET = 'o';
             static constexpr char EMPTY = ' ';
             
-            static constexpr sf::Vector2i INFRONT_DOOR = {11, 13};
-            static constexpr sf::Vector2i HOUSE_CENTER = {14, 13};
-            static constexpr sf::Vector2i HOUSE_LEFT = {14, 11};
-            static constexpr sf::Vector2i HOUSE_RIGHT = {14, 15};
+            // todo update to TileRC
+            static constexpr TileRC INFRONT_DOOR = {11, 13};
+            static constexpr TileRC HOUSE_CENTER = {14, 13};
+            static constexpr TileRC HOUSE_LEFT = {14, 11};
+            static constexpr TileRC HOUSE_RIGHT = {14, 15};
 
 
             Maze();
 
-            bool isInBounds(int r, int c) const;
-            bool isInWarpTile(int r, int c) const;
-            bool isWall(int r, int c) const;
-            bool isPellet(int r, int c) const;
-            bool isPowerPellet(int r, int c) const;
-            bool tryEatPellet(int r, int c);
-            bool tryEatPowerPellet(int r, int c);
+            bool isInBounds(TileRC& tile) const;
+            bool shouldWarp(TileRC& tile) const;
+            void applyWarp(sf::Vector2f& pos) const;
+
+            bool isInWarpTunnel(TileRC& tile) const;
+
+            bool isWall(TileRC& tile) const;
+            bool isPellet(TileRC& tile) const;
+            bool isPowerPellet(TileRC& tile) const;
+            bool tryEatPellet(const sf::Vector2f& worldPos);
+            bool tryEatPowerPellet(const sf::Vector2f& worldPos);
 
             bool loadFromFile(const std::string& location);
 
@@ -51,15 +57,15 @@ namespace Pacman
 
             sf::Vector2f origin() const;
 
-            sf::Vector2i worldToTile(sf::Vector2f world) const;
-            sf::Vector2f tileToWorld(int row, int col) const;
+            TileRC worldToTile(sf::Vector2f world) const;
+            sf::Vector2f tileToWorld(const TileRC& t) const;
             sf::Vector2f tileToWorld(const sf::Vector2i& loc) const;
-            sf::Vector2f tileToWorldOnBoundary(int row, int col) const;
+            sf::Vector2f tileToWorldOnBoundary(const TileRC& tile) const;
             sf::Vector2f tileToWorldOnBoundary(sf::Vector2i loc) const;
             sf::Vector2f tileCenterClampX(sf::Vector2i t) const;
 
 
-            sf::Vector2f tileCenter(sf::Vector2i t) const;
+            sf::Vector2f tileCenter(TileRC t) const;
             bool nearTileCenter(sf::Vector2f p, const float eps) const;
     };
 }

@@ -1,6 +1,7 @@
 #pragma once 
 
 #include "Dir.h"
+#include "TileRC.h"
 
 #include <SFML/Graphics.hpp>
 
@@ -10,9 +11,9 @@ namespace Pacman
     class TargetContext
     {
         public: 
-            sf::Vector2i pacman_tile;
+            TileRC pacman_tile;
             Dir pacman_dir;
-            sf::Vector2i blinky_tile;
+            TileRC blinky_tile;
             bool scatter_mode; 
     };
 }

@@ -2,19 +2,19 @@
 
 namespace Pacman
 {
-    BlinkyTargetStrategy::BlinkyTargetStrategy(const sf::Vector2i& corner)
+    BlinkyTargetStrategy::BlinkyTargetStrategy(const TileRC& corner)
     : corner_(corner)
     {
 
     }
 
     // Blinky always goes for pacman's current location
-    sf::Vector2i BlinkyTargetStrategy::getTarget(const TargetContext& ctx) const
+    TileRC BlinkyTargetStrategy::getTarget(const TargetContext& ctx) const
     {
         return ctx.pacman_tile;
     }
 
-    sf::Vector2i BlinkyTargetStrategy::scatterTarget(const TargetContext& ctx) const
+    TileRC BlinkyTargetStrategy::scatterTarget(const TargetContext& ctx) const
     {
         return corner_;
     }

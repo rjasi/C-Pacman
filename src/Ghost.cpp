@@ -191,7 +191,7 @@ namespace Pacman
             return;
         }
 
-        sf::Vector2i target = ghostTargetStrategy_->getTarget(*targetContext_);
+        TileRC target = ghostTargetStrategy_->getTarget(*targetContext_);
 
         PathQuery query = 
         {

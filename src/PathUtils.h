@@ -2,6 +2,7 @@
 #pragma once 
 
 #include "Dir.h"
+#include "TileRC.h"
 
 #include <SFML/Graphics.hpp>
 
@@ -10,9 +11,9 @@ namespace Pacman
     class PathUtils
     {
         public:
-            static int manhattanDistance(sf::Vector2i a, sf::Vector2i b)
+            static int manhattanDistance(TileRC& a, TileRC& b)
             {
-                return abs(a.x - b.x) + abs(a.y - b.y);
+                return abs(a.r - b.r) + abs(a.c - b.c);
             }
 
             static Dir opposite(Dir d) 
@@ -32,18 +33,18 @@ namespace Pacman
                 }
             }
 
-            static sf::Vector2i step(Dir dir, sf::Vector2i tile)
+            static TileRC step(Dir dir, TileRC& tile)
             {
                 switch (dir)
                 {
                     case Dir::Up:
-                        return {tile.x, tile.y - 1};
+                        return {tile.r - 1, tile.c};
                     case Dir::Down:
-                        return {tile.x, tile.y + 1};
+                        return {tile.r + 1, tile.c};
                     case Dir::Left:
-                        return {tile.x - 1, tile.y};
+                        return {tile.r, tile.c - 1};
                     case Dir::Right: 
-                        return {tile.x + 1, tile.y};
+                        return {tile.r, tile.c + 1};
                     default:
                         return tile;
                 }

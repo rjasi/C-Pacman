@@ -34,8 +34,8 @@ namespace Pacman
                 continue;
             }
 
-            sf::Vector2i nextStep = PathUtils::step(d, query.current_tile);
-            if (maze.isWall(nextStep.y, nextStep.x))
+            TileRC nextStep = PathUtils::step(d, query.current_tile);
+            if (maze.isWall(nextStep))
             {
                 continue;
             }
@@ -55,7 +55,8 @@ namespace Pacman
 
         if(bestDirs.size() <= 0)
         {
-            //should not happen, but todo research on this
+            // should not happen with maze design there is always at least 1 valid
+            // non reversing direction at any intersection, but todo research on this
             query.canReverse = true;
             return chooseNext(maze, query);
         }

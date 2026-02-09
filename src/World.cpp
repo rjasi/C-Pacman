@@ -12,7 +12,11 @@ namespace Pacman
     // inky_(inkyTargetStrategy_),
     // clyde_(clydeTargetStrategy_)
     {
-        pacmanEntity_.setPosition(maze_.tileToWorld(1,1));
+        pacmanEntity_.setPosition(maze_.tileToWorld(TileRC{1, 1}));
+
+        // TileRC x = Maze::INFRONT_DOOR;
+        // std::cerr << "c : " << x.c << " r : " << x.r << "\n";
+
         blinky_.setPosition(maze_.tileToWorldOnBoundary(Maze::INFRONT_DOOR));
         blinky_.setState(GhostState::Active);
         blinky_.setDirection(Dir::Left);
@@ -69,14 +73,12 @@ namespace Pacman
             powerPelletVisible_ = !powerPelletVisible_;
         }
 
-        sf::Vector2i tile = maze_.worldToTile(pacmanEntity_.position());
-
-        if (maze_.tryEatPellet(tile.y, tile.x))
+        if (maze_.tryEatPellet(pacmanEntity_.position()))
         {
             score_ += 10;
         }
 
-        if (maze_.tryEatPowerPellet(tile.y, tile.x))
+        if (maze_.tryEatPowerPellet(pacmanEntity_.position()))
         {
             score_ += 60;
         }

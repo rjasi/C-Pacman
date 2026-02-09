@@ -64,34 +64,34 @@ namespace Pacman
         return tiles_;
     }
 
-    bool Maze::isWall(int r, int c) const
+    bool Maze::isWall(TileRC& tile) const
     {
-        if (!isInBounds(r, c))
+        if (!isInBounds(tile))
         {
             return true;
         }
 
-        return tiles_[r][c] == WALL;
+        return tiles_[tile.r][tile.c] == WALL;
     }
 
-    bool Maze::isPellet(int r, int c) const
+    bool Maze::isPellet(TileRC& tile) const
     {
-        if (!isInBounds(r, c))
+        if (!isInBounds(tile))
         {
             return false;
         }
 
-        return tiles_[r][c] == PELLET;
+        return tiles_[tile.r][tile.c] == PELLET;
     }
 
-    bool Maze::isPowerPellet(int r, int c) const
+    bool Maze::isPowerPellet(TileRC& tile) const
     {
-        if (!isInBounds(r, c))
+        if (!isInBounds(tile))
         {
             return false;
         }
 
-        return tiles_[r][c] == POWER_PELLET;
+        return tiles_[tile.r][tile.c] == POWER_PELLET;
     }
 
     const std::string &Maze::operator[](std::size_t row) const
@@ -115,20 +115,24 @@ namespace Pacman
     }
 
     // where in the tile grid is current entity in based on its screen coordinates
-    sf::Vector2i Maze::worldToTile(sf::Vector2f world) const
+    TileRC Maze::worldToTile(sf::Vector2f world) const
     {
         // transformed Coordinates, subtract position on screen to 0,0
         sf::Vector2f transformed = world - origin_;
-        return {(int)std::floor(transformed.x / TILE_SIZE), (int)std::floor(transformed.y / TILE_SIZE)};
+        return 
+        {
+            (int)std::floor(transformed.y / TILE_SIZE), 
+            (int)std::floor(transformed.x / TILE_SIZE)
+        };
     }
 
     // center of current sprite's tile
     // take in int row and col position, add .5 for center then mult by tile size    sf::Vector2f Maze::tileCenter(sf::Vector2i t) const
-    sf::Vector2f Maze::tileCenter(sf::Vector2i t) const
+    sf::Vector2f Maze::tileCenter(TileRC t) const
     {
         return {
-            origin_.x + (t.x + 0.5f) * TILE_SIZE,
-            origin_.y + (t.y + 0.5f) * TILE_SIZE};
+            origin_.x + (t.c + 0.5f) * TILE_SIZE,
+            origin_.y + (t.r + 0.5f) * TILE_SIZE};
     }
 
     // todo rename: same as tileCenter but only center on y
@@ -144,33 +148,34 @@ namespace Pacman
     // use to snap to grid when sprite is close enough to the center of a tile
     bool Maze::nearTileCenter(sf::Vector2f p, const float eps) const
     {
-        sf::Vector2i t = worldToTile(p);
+        // current tile
+        TileRC t = worldToTile(p);
         sf::Vector2f c = tileCenter(t);
         return (std::abs(p.x - c.x) <= eps) &&
                (std::abs(p.y - c.y) <= eps);
     }
 
     // from row, col on the maze, get screen coordinates (centered)
-    sf::Vector2f Maze::tileToWorld(int row, int col) const
+    sf::Vector2f Maze::tileToWorld(const TileRC& tile) const
     {
         return {
-            origin_.x + col * TILE_SIZE + TILE_SIZE / 2,
-            origin_.y + row * TILE_SIZE + TILE_SIZE / 2 // 0 indexed, + TILE_SIZE/2
+            origin_.x + tile.c * TILE_SIZE + TILE_SIZE / 2,
+            origin_.y + tile.r * TILE_SIZE + TILE_SIZE / 2 // 0 indexed, + TILE_SIZE/2
         };
     }
 
     // pixel coordinates at right boundary at given tiles (used to place sprites at between tiles such as ghost spawn locations)
-    sf::Vector2f Maze::tileToWorldOnBoundary(int row, int col) const
+    sf::Vector2f Maze::tileToWorldOnBoundary(const TileRC& tile) const
     {
         return {
-            origin_.x + (col + 1) * TILE_SIZE - 0.4f,
-            origin_.y + (row)*TILE_SIZE + TILE_SIZE / 2};
+            origin_.x + (tile.c + 1) * TILE_SIZE - 0.4f,
+            origin_.y + (tile.r) * TILE_SIZE + TILE_SIZE / 2};
     }
 
     // pixel coordinates at right boundary at given tiles (used to place sprites at between tiles such as ghost spawn locations)
     sf::Vector2f Maze::tileToWorldOnBoundary(sf::Vector2i loc) const
     {
-        return tileToWorldOnBoundary(loc.x, loc.y);
+        return tileToWorldOnBoundary(TileRC(loc));
     }
 
     sf::Vector2f Maze::tileToWorld(const sf::Vector2i &loc) const
@@ -181,54 +186,67 @@ namespace Pacman
         };
     }
 
-    bool Maze::tryEatPellet(int row, int col)
+    bool Maze::tryEatPellet(const sf::Vector2f& worldPos)
     {
-        if (!isInBounds(row, col))
+        TileRC tile = worldToTile(worldPos);
+
+        if (!isInBounds(tile))
         {
             return false;
         }
 
-        if (tiles_[row][col] == PELLET)
+        if (tiles_[tile.r][tile.c] == PELLET)
         {
-            tiles_[row][col] = EMPTY;
+            tiles_[tile.r][tile.c] = EMPTY;
             return true;
         }
 
         return false;
     }
 
-    bool Maze::tryEatPowerPellet(int row, int col)
+    bool Maze::tryEatPowerPellet(const sf::Vector2f& worldPos)
     {
-        if (!isInBounds(row, col))
+        TileRC tile = worldToTile(worldPos);
+        if (!isInBounds(tile))
         {
             return false;
             ;
         }
 
-        if (tiles_[row][col] == POWER_PELLET)
+        if (tiles_[tile.r][tile.c] == POWER_PELLET)
         {
-            tiles_[row][col] = EMPTY;
+            tiles_[tile.r][tile.c] = EMPTY;
             return true;
         }
 
         return false;
     }
 
-    bool Maze::isInBounds(int r, int c) const
+    bool Maze::isInBounds(TileRC& tile) const
     {
-        return r >= 0 && c >= 0 &&
-               r < rowCount_ && c < colCount_;
+        return tile.r >= 0 && tile.c >= 0 &&
+               tile.r < rowCount_ && tile.c < colCount_;
     }
 
-    bool Maze::isInWarpTile(int r, int c) const
+    bool Maze::shouldWarp(TileRC& tile) const
     {
-        if(r == WARP_TILE_ROW && (c < 0 || c >= colCount_))
+        if(tile.r == WARP_TILE_ROW && (tile.c < 0 || tile.c >= colCount_))
         {
             return true;
         }
         return false;
     }
 
+    bool Maze::isInWarpTunnel(TileRC& tile) const
+    {
+        return false;
+    }
+
+    void Maze::applyWarp(sf::Vector2f& pos) const
+    {
+        TileRC tile = worldToTile(pos);
+        
+    }
 
     // bool Maze::isTile(int r, int c, char value) const
     // {

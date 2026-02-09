@@ -7,10 +7,10 @@ namespace Pacman
     class BlinkyTargetStrategy : public IGhostTargetStrategy
     {
         private:
-            sf::Vector2i corner_;
+            TileRC corner_;
         public:
-            explicit BlinkyTargetStrategy(const sf::Vector2i& corner);
-            sf::Vector2i getTarget(const TargetContext& ctx) const override;
-            sf::Vector2i scatterTarget(const TargetContext& ctx) const override;
+            explicit BlinkyTargetStrategy(const TileRC& corner);
+            TileRC getTarget(const TargetContext& ctx) const override;
+            TileRC scatterTarget(const TargetContext& ctx) const override;
     };
 }

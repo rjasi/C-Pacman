@@ -104,22 +104,26 @@ namespace Pacman
     
     bool MoveableEntity::isWarping(Dir d, sf::Vector2f pos, const Maze& maze) const
     {
-        sf::Vector2i t = maze.worldToTile(pos);
-        sf::Vector2i step{ (int)dirVec(d).x, (int)dirVec(d).y };
-        sf::Vector2i next = t + step;
+        //todo move this logic to maze does not belong here
+        // sf::Vector2i t = maze.worldToTile(pos);
+        // sf::Vector2i step{ (int)dirVec(d).x, (int)dirVec(d).y };
+        // sf::Vector2i next = t + step;
 
-        return maze.isInWarpTile(next.y, next.x); // remember x = horizonal = column, y = vertical = row
+        return false;
+        // return maze.isInWarpTile(next.y, next.x); // remember x = horizonal = column, y = vertical = row
     }
 
+    // check if next tile from current position and direction can be entered
     bool MoveableEntity::canEnter(Dir d, sf::Vector2f pos, const Maze& maze) const
     {
+        // to do move this logic to maze
         if (d == Dir::None) return false;
 
-        sf::Vector2i t = maze.worldToTile(pos);
-        sf::Vector2i step{ (int)dirVec(d).x, (int)dirVec(d).y };
-        sf::Vector2i next = t + step;
+        TileRC t = maze.worldToTile(pos);
+        TileRC step{ (int)dirVec(d).y, (int)dirVec(d).x };
+        TileRC next = t + step;
 
-        return !maze.isWall(next.y, next.x); // remember x = horizonal = column, y = vertical = row
+        return !maze.isWall(next); // remember x = horizonal = column, y = vertical = row
     }
 
     sf::Angle MoveableEntity::rotation() const
