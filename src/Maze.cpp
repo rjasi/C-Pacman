@@ -252,14 +252,14 @@ namespace Pacman
         TileRC tile = worldToTile(pos);
     }
 
-    bool Maze::canEnter(Dir d, sf::Vector2f pos, const Maze& maze) const
+    bool Maze::canEnterNextTile(Dir d, const sf::Vector2f& pos) const
     {
         if (d == Dir::None) return false;
 
-        TileRC tile = maze.worldToTile(pos);
+        TileRC tile = worldToTile(pos);
         TileRC next = PathUtils::step(d, tile);
 
-        return !maze.isWall(next);
+        return !isWall(next);
     }
 
     // bool Maze::isTile(int r, int c, char value) const

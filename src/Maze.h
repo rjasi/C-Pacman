@@ -67,7 +67,7 @@ namespace Pacman
             sf::Vector2f tileCenterClampX(sf::Vector2i t) const;
 
             // check if next tile from current position and direction can be entered
-            bool canEnter(Dir d, sf::Vector2f pos, const Maze& maze) const;
+            bool canEnterNextTile(Dir d, const sf::Vector2f& pos) const;
 
             sf::Vector2f tileCenter(TileRC t) const;
             sf::Vector2f tileCenter(const sf::Vector2f& worldPos) const;

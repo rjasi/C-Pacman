@@ -58,16 +58,17 @@ namespace Pacman
         if (maze.nearTileCenter(pos_, centerEps())) 
         {
             pos_ = maze.tileCenter(pos_);
-            bool canEnterRequested = maze.canEnter(requested_, pos_, maze);
+            bool canEnterRequested = maze.canEnterNextTile(requested_, pos_);
             bool warping = isWarping(requested_, pos_, maze);
             
-            // only change dir if next tile is enterable
+            // only change dir if next tile is enterable keep moving otherwise
             if (canEnterRequested)
             {
                 current_ = requested_;
             }
 
-            bool canEnterCurrent = maze.canEnter(current_, pos_, maze);
+            // only stop movement if current direction cannot go no more
+            bool canEnterCurrent = maze.canEnterNextTile(current_, pos_);
             if(!canEnterCurrent)
             {
                 current_ = Dir::None;

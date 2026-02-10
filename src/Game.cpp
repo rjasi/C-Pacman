@@ -115,7 +115,7 @@ namespace Pacman
 
     void Game::loadAllAssets()
     {
-        textureCache_.load("atlas",  "assets/atlas.png",  false);
+        textureCache_.load("atlas",  "assets/all_sprites_transparent_background.png",  false);
         textureCache_.load("maze",   "assets/maze.png",   false);
         textureCache_.load("pellet", "assets/pellet.png", false);
         textureCache_.load("power_pellet", "assets/power_pellet.png", false);

@@ -66,24 +66,22 @@ namespace Pacman
             current_ = Dir::Up;
         }
 
-        sf::Vector2f step = DirUtils::dirVecWorld(current_) * (speed_ * dt.asSeconds());
-        sf::Vector2f nextPos = pos_ + step;
+        // sf::Vector2f step = DirUtils::dirVecWorld(current_) * (speed_ * dt.asSeconds());
+        // sf::Vector2f nextPos = pos_ + step;
 
         // when pacing, go up or down till wall then reverse direction
         // note: maze.nearTileCenter(pos_)  won't work because ghosts are 
         // aligned at tile boundary on x axis when pacing in the house
-        if (!maze.canEnter(current_, nextPos, maze))
+
+        // todo maybe clamp to x boundary? 
+
+        if (!maze.canEnterNextTile(current_, pos_))
         {
-            // todo maybe clamp to x boundary? 
             // pos_ = maze.tileCenterClampX(maze.worldToTile(pos_));
             current_ = current_ == Dir::Down ? Dir::Up : Dir::Down;
         }
 
-        if (current_ != Dir::None) 
-        {
-            sf::Vector2f step = DirUtils::dirVecWorld(current_) * (speed_ * dt.asSeconds());
-            pos_ += step;
-        }
+        move(dt);
     }
 
     void Ghost::moveToDoor(sf::Time dt, const Maze& maze)
@@ -168,7 +166,7 @@ namespace Pacman
         // only choose direction at tile center
         if (maze.nearTileCenter(pos_, centerEps())) 
         {
-            pos_ = maze.tileCenter(maze.worldToTile(pos_));
+            pos_ = maze.tileCenter(pos_);
         }
         else
         {
