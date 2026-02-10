@@ -29,9 +29,8 @@ namespace Pacman
             void moveToExit(sf::Time dt, const Maze& maze);
             void moveToInfrontOfDoor(sf::Time dt, const Maze& maze);
 
-            void move(sf::Time dt);
-
             float centerEps() const override;
+            
         public:
             Ghost();
             Ghost(const Ghost& ghost) = delete;

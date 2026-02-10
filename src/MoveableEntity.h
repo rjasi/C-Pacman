@@ -29,13 +29,10 @@ namespace Pacman
         protected: 
             void warp();
             bool isWarping(Dir d, sf::Vector2f pos, const Maze& maze) const;
-
+            void move(sf::Time dt);
             sf::Vector2f pos_{};
             Dir current_ = Dir::Right;
             Dir requested_ = Dir::Right;
             float speed_ = 60.f;
-            
-            sf::Vector2f dirVec(Dir d) const;
-            bool canEnter(Dir d, sf::Vector2f pos, const Maze& maze) const;
     };
 };

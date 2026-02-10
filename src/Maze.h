@@ -1,6 +1,8 @@
 #pragma once
 
 #include "TileRC.h"
+#include "Dir.h"
+#include "PathUtils.h"
 
 #include <vector>
 #include <SFML/Graphics.hpp>
@@ -17,8 +19,8 @@ namespace Pacman
         public:
             std::vector<std::string> tiles_;
 
-            static constexpr int TILE_SIZE = 8;
-            static constexpr float CENTER_EPS = 0.40f;
+            static constexpr int TILE_SIZE = 8; // pixel size in world
+            static constexpr float CENTER_EPS = 0.40f; // remove
             static constexpr int WARP_TILE_ROW = 14;
             static constexpr char WALL = '#';
             static constexpr char PELLET = '.';
@@ -64,8 +66,12 @@ namespace Pacman
             sf::Vector2f tileToWorldOnBoundary(sf::Vector2i loc) const;
             sf::Vector2f tileCenterClampX(sf::Vector2i t) const;
 
+            // check if next tile from current position and direction can be entered
+            bool canEnter(Dir d, sf::Vector2f pos, const Maze& maze) const;
 
             sf::Vector2f tileCenter(TileRC t) const;
+            sf::Vector2f tileCenter(const sf::Vector2f& worldPos) const;
+
             bool nearTileCenter(sf::Vector2f p, const float eps) const;
     };
 }

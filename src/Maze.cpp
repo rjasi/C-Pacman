@@ -135,6 +135,11 @@ namespace Pacman
             origin_.y + (t.r + 0.5f) * TILE_SIZE};
     }
 
+    sf::Vector2f Maze::tileCenter(const sf::Vector2f& worldPos) const
+    {
+        return tileCenter(worldToTile(worldPos));
+    }
+
     // todo rename: same as tileCenter but only center on y
     // for ghost pacing since they are aligned at tile boundary on
     // x axis
@@ -245,7 +250,16 @@ namespace Pacman
     void Maze::applyWarp(sf::Vector2f& pos) const
     {
         TileRC tile = worldToTile(pos);
-        
+    }
+
+    bool Maze::canEnter(Dir d, sf::Vector2f pos, const Maze& maze) const
+    {
+        if (d == Dir::None) return false;
+
+        TileRC tile = maze.worldToTile(pos);
+        TileRC next = PathUtils::step(d, tile);
+
+        return !maze.isWall(next);
     }
 
     // bool Maze::isTile(int r, int c, char value) const

@@ -57,21 +57,24 @@ namespace Pacman
         // Snap/turn only at tile centers 
         if (maze.nearTileCenter(pos_, centerEps())) 
         {
-            pos_ = maze.tileCenter(maze.worldToTile(pos_));
-
+            pos_ = maze.tileCenter(pos_);
+            bool canEnterRequested = maze.canEnter(requested_, pos_, maze);
             bool warping = isWarping(requested_, pos_, maze);
-            if (requested_ != Dir::None && canEnter(requested_, pos_, maze) && !warping)
+            
+            // only change dir if next tile is enterable
+            if (canEnterRequested)
+            {
                 current_ = requested_;
+            }
 
-            if (!canEnter(current_, pos_, maze) && !warping)
+            bool canEnterCurrent = maze.canEnter(current_, pos_, maze);
+            if(!canEnterCurrent)
+            {
                 current_ = Dir::None;
+            }
         }
 
-        if (current_ != Dir::None) 
-        {
-            sf::Vector2f step = dirVec(current_) * (speed_ * dt.asSeconds());
-            pos_ += step;
-        }
+        move(dt);
         warp();
     }
 
@@ -88,19 +91,6 @@ namespace Pacman
     { 
         return 8.f; 
     }
-
-    sf::Vector2f MoveableEntity::dirVec(Dir d) const 
-    {
-        switch (d) 
-        {
-            case Dir::Right: return { 1.f,  0.f};
-            case Dir::Left:  return {-1.f,  0.f};
-            case Dir::Up:    return { 0.f, -1.f};
-            case Dir::Down:  return { 0.f,  1.f};
-            default:         return { 0.f,  0.f};
-        }
-    }
-
     
     bool MoveableEntity::isWarping(Dir d, sf::Vector2f pos, const Maze& maze) const
     {
@@ -113,18 +103,7 @@ namespace Pacman
         // return maze.isInWarpTile(next.y, next.x); // remember x = horizonal = column, y = vertical = row
     }
 
-    // check if next tile from current position and direction can be entered
-    bool MoveableEntity::canEnter(Dir d, sf::Vector2f pos, const Maze& maze) const
-    {
-        // to do move this logic to maze
-        if (d == Dir::None) return false;
-
-        TileRC t = maze.worldToTile(pos);
-        TileRC step{ (int)dirVec(d).y, (int)dirVec(d).x };
-        TileRC next = t + step;
-
-        return !maze.isWall(next); // remember x = horizonal = column, y = vertical = row
-    }
+    
 
     sf::Angle MoveableEntity::rotation() const
     {
@@ -136,5 +115,11 @@ namespace Pacman
             case Dir::Down:  return sf::degrees(90);
             default:         return sf::degrees(0);
         }
+    }
+
+    void MoveableEntity::move(sf::Time dt)
+    {
+        sf::Vector2f step = DirUtils::dirVecWorld(current_) * (speed_ * dt.asSeconds());
+        pos_ += step;
     }
 }

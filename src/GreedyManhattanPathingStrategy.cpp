@@ -29,7 +29,7 @@ namespace Pacman
         // loop through valid dirs and pick the best
         for (Dir d : {Dir::Up, Dir::Down, Dir::Left, Dir::Right})
         {
-            if (!query.canReverse && d == PathUtils::opposite(query.current_direction))
+            if (!query.canReverse && d == DirUtils::opposite(query.current_direction))
             {
                 continue;
             }
