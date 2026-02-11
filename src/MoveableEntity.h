@@ -34,5 +34,9 @@ namespace Pacman
             Dir current_ = Dir::Right;
             Dir requested_ = Dir::Right;
             float speed_ = 60.f;
+
+        private:
+            bool isTurning();
+            bool notPastTurningPoint(const Maze& maze);
     };
 };

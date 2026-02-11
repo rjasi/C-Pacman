@@ -73,5 +73,8 @@ namespace Pacman
             sf::Vector2f tileCenter(const sf::Vector2f& worldPos) const;
 
             bool nearTileCenter(sf::Vector2f p, const float eps) const;
+            bool nearTileCenterX(sf::Vector2f p, const float eps) const;
+            bool nearTileCenterY(sf::Vector2f p, const float eps) const;
+
     };
 }

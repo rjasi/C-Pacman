@@ -52,24 +52,70 @@ namespace Pacman
         current_ = d; 
     }
 
+    bool MoveableEntity::isTurning()
+    {
+        return current_ != DirUtils::opposite(requested_) 
+        && current_ != requested_ 
+        && requested_ != Dir::None;
+    }
+
+    bool MoveableEntity::notPastTurningPoint(const Maze& maze)
+    {
+        // don't start turns if past center of dir perpendicular current_
+        // otherwise sprite will be moved up without turning causing 
+        // a graphical bug
+        sf::Vector2f center = maze.tileCenter(pos_);
+        if ((current_ == Dir::Right && pos_.x > center.x)
+            || (current_ == Dir::Left && pos_.x < center.x)
+            || (current_ == Dir::Up && pos_.y < center.y)
+            || (current_ == Dir::Down && pos_.y > center.y)
+        
+        )
+        {
+            return false;
+        }
+        return true;
+    }
+
     void MoveableEntity::update(sf::Time dt, const Maze& maze)
     {
-        // Snap/turn only at tile centers 
-        if (maze.nearTileCenter(pos_, centerEps())) 
+        // diagonal movement, start early if at least 3 pixels aeay from center
+        if (isTurning() && notPastTurningPoint(maze) && (maze.nearTileCenterX(pos_, 3.0f) || maze.nearTileCenterY(pos_, 3.0f) ) && maze.canEnterNextTile(requested_, pos_))
         {
-            pos_ = maze.tileCenter(pos_);
-            bool canEnterRequested = maze.canEnterNextTile(requested_, pos_);
-            bool warping = isWarping(requested_, pos_, maze);
-            
-            // only change dir if next tile is enterable keep moving otherwise
-            if (canEnterRequested)
+            sf::Vector2f step = DirUtils::dirVecWorld(requested_) * (speed_ * dt.asSeconds());
+            pos_ += step;
+        }
+        
+        if(current_ == Dir:: None)
+        {
+            current_ = requested_;
+        }
+
+        // if travelling left to right, snap to x if close enough
+        if ((current_ == Dir::Left || current_ == Dir::Right) && maze.nearTileCenterX(pos_, centerEps()))
+        {
+            pos_.x = maze.tileCenter(pos_).x;
+
+            if (maze.canEnterNextTile(requested_, pos_))
             {
                 current_ = requested_;
             }
 
-            // only stop movement if current direction cannot go no more
-            bool canEnterCurrent = maze.canEnterNextTile(current_, pos_);
-            if(!canEnterCurrent)
+            if (!maze.canEnterNextTile(current_, pos_))
+            {
+                current_ = Dir::None;
+            }
+        }
+        else if ((current_ == Dir::Up || current_ == Dir::Down) && maze.nearTileCenterY(pos_, centerEps()))
+        {
+            pos_.y = maze.tileCenter(pos_).y;
+
+            if (maze.canEnterNextTile(requested_, pos_))
+            {
+                current_ = requested_;
+            }
+
+            if (!maze.canEnterNextTile(current_, pos_))
             {
                 current_ = Dir::None;
             }

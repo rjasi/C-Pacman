@@ -160,6 +160,24 @@ namespace Pacman
                (std::abs(p.y - c.y) <= eps);
     }
 
+    bool Maze::nearTileCenterX(sf::Vector2f p, const float eps) const
+    {
+        // current tile
+        TileRC t = worldToTile(p);
+        sf::Vector2f c = tileCenter(t);
+        return (std::abs(p.x - c.x) <= eps);
+    }
+
+    bool Maze::nearTileCenterY(sf::Vector2f p, const float eps) const
+    {
+        // current tile
+        TileRC t = worldToTile(p);
+        sf::Vector2f c = tileCenter(t);
+        return (std::abs(p.y - c.y) <= eps);
+    }
+
+
+
     // from row, col on the maze, get screen coordinates (centered)
     sf::Vector2f Maze::tileToWorld(const TileRC& tile) const
     {
