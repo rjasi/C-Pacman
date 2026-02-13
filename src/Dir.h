@@ -58,6 +58,16 @@ namespace Pacman
                         return Dir::None;
                 }
             }
+
+            static constexpr bool isHorizontal(Dir d) 
+            { 
+                return d == Dir::Left || d == Dir::Right; 
+            }
+
+            static constexpr bool isVertical(Dir d)
+            { 
+                return d == Dir::Up || d == Dir::Down; 
+            }
     };
     
 

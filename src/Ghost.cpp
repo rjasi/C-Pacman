@@ -162,7 +162,7 @@ namespace Pacman
     // determine where to go
     void Ghost::active(sf::Time dt, const Maze& maze)
     {
-        speed_ = 50.f;
+        speed_ = 65.f;
         // only choose direction at tile center
         if (maze.nearTileCenter(pos_, centerEps())) 
         {

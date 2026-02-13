@@ -59,7 +59,7 @@ namespace Pacman
         && requested_ != Dir::None;
     }
 
-    bool MoveableEntity::notPastTurningPoint(const Maze& maze)
+    bool MoveableEntity::notPastTurningPoint(const Maze& maze) const
     {
         // don't start turns if past center of dir perpendicular current_
         // otherwise sprite will be moved up without turning causing 
@@ -77,25 +77,149 @@ namespace Pacman
         return true;
     }
 
+    bool MoveableEntity::isPerpendicularTurn() const
+    {
+        return 
+        (DirUtils::isHorizontal(current_) && DirUtils::isVertical(requested_)) 
+        || (DirUtils::isVertical(current_) && DirUtils::isHorizontal(requested_));
+    }
+
+    bool MoveableEntity::inTurningWindow(const Maze& maze) const
+    {
+        // pacman can start turning 3 pixels before the center of a junction 
+
+        // currently going left or right, and next direction is up or down
+        // check if x is close enough
+        if (DirUtils::isHorizontal(current_) && DirUtils::isVertical(requested_))
+        {
+            return maze.nearTileCenterX(pos_, CORNERING_EPS);
+        }
+        // same going but if currently going up or down check if y is close enoughs
+        else if (DirUtils::isVertical(current_) && DirUtils::isHorizontal(requested_))
+        {
+            return maze.nearTileCenterY(pos_, CORNERING_EPS);
+        }
+
+        return false;
+    }
+
+
+    void MoveableEntity::tryStartEarlyCornering(sf::Time dt, const Maze& maze)
+    {
+        // logic: once a perpendicular turn is requested 
+        // if pacman is close enough to the center of a tile 
+        // and the next tile in requested direction is not a wall (enterable) (also a junction in this case)
+        // and not past turning point (allow slightly late input)
+        // then start turning
+
+        // below used to fix a visual bug
+        // ex: current_ = Right, press up, start going diagonally up
+        // and then immediately press right quickly. if quick enough pacman will have moved up a bit 
+        // but still going Right and now probably clipping maze
+        // prevent changing direction once commited
+        if (corneringContext_.corneringStarted)
+        {
+            return;
+        }
+
+        const bool turnRequested = isTurning();
+        const bool perpendicularTurn = isPerpendicularTurn();
+        const bool isNotPastTurnPoint = notPastTurningPoint(maze);
+        const bool isInTurningWindow = inTurningWindow(maze);
+        const bool nextTileInReqestedDirectionEnterable = maze.canEnterNextTile(requested_, pos_);
+        const bool canStartCornering = turnRequested && perpendicularTurn && isNotPastTurnPoint 
+        && isInTurningWindow && nextTileInReqestedDirectionEnterable;
+        
+        if (!canStartCornering)
+        {
+            return;
+        }
+
+        corneringContext_.corneringStarted = true;
+        corneringContext_.cornerDir = requested_;
+        corneringContext_.junctionTile = maze.worldToTile(pos_);
+    }
+
+    bool MoveableEntity::trySnapToTile(const Maze& maze, Dir d)
+    {
+        // if travelling left to right, snap to x if close enough
+
+        if (DirUtils::isHorizontal(d) && maze.nearTileCenterX(pos_, centerEps()))
+        {
+            pos_.x = maze.tileCenter(pos_).x;
+            return true;
+        }
+        // same logic but for up/down
+        else if (DirUtils::isVertical(d) && maze.nearTileCenterY(pos_, centerEps()))
+        {
+            pos_.y = maze.tileCenter(pos_).y;
+            return true;
+        }
+        else if (maze.nearTileCenter(pos_, centerEps())) // when direction is None center on both axis
+        {
+            pos_ = maze.tileCenter(pos_);
+            return true;
+        }
+        return false;
+    }
+
+    // cornering is finished when current_ dir movement axis snaps to junction tile
+    // i.e current_ =  left or right , snap to x center of junction tile when close enough
+    bool MoveableEntity::corneringFinished(const Maze& maze)
+    {
+        sf::Vector2f junctionCenter = maze.tileCenter(corneringContext_.junctionTile);
+
+        if (DirUtils::isHorizontal(current_))
+        {
+            return std::abs(junctionCenter.x - pos_.x) <= centerEps();
+        }
+        else if (DirUtils::isVertical(current_))
+        {
+            return std::abs(junctionCenter.y - pos_.y) <= centerEps();
+        }
+        return false;
+    }
+
+    void MoveableEntity::snapToJunction(const Maze& maze)
+    {
+        // only call when corneringFinished let us know we are close enough to snap to junction 
+        // seperate the logic to make things a bit more clear to understand
+        sf::Vector2f junctionCenter = maze.tileCenter(corneringContext_.junctionTile);
+        if (DirUtils::isHorizontal(current_))
+        {
+            pos_.x = junctionCenter.x;
+        }
+        else if (DirUtils::isVertical(current_))
+        {
+            pos_.y = junctionCenter.y;
+        }
+    }
+
+
     void MoveableEntity::update(sf::Time dt, const Maze& maze)
     {
         // diagonal movement, start early if at least 3 pixels aeay from center
-        if (isTurning() && notPastTurningPoint(maze) && (maze.nearTileCenterX(pos_, 3.0f) || maze.nearTileCenterY(pos_, 3.0f) ) && maze.canEnterNextTile(requested_, pos_))
-        {
-            sf::Vector2f step = DirUtils::dirVecWorld(requested_) * (speed_ * dt.asSeconds());
-            pos_ += step;
-        }
+
+        tryStartEarlyCornering(dt, maze);
         
-        if(current_ == Dir:: None)
+
+        // reverse direction immediately or set new direction immidiately if stopped
+        if ((current_ == Dir::None || current_ == DirUtils::opposite(requested_)) 
+            && !corneringContext_.corneringStarted)
         {
             current_ = requested_;
         }
 
-        // if travelling left to right, snap to x if close enough
-        if ((current_ == Dir::Left || current_ == Dir::Right) && maze.nearTileCenterX(pos_, centerEps()))
-        {
-            pos_.x = maze.tileCenter(pos_).x;
 
+        if (corneringContext_.corneringStarted && corneringFinished(maze))
+        {
+            snapToJunction(maze);
+            current_ = corneringContext_.cornerDir;
+            corneringContext_.clear();
+        }
+        // only check next tile once center snapped to current tile
+        else if (!corneringContext_.corneringStarted && trySnapToTile(maze, current_))
+        {
             if (maze.canEnterNextTile(requested_, pos_))
             {
                 current_ = requested_;
@@ -106,21 +230,8 @@ namespace Pacman
                 current_ = Dir::None;
             }
         }
-        else if ((current_ == Dir::Up || current_ == Dir::Down) && maze.nearTileCenterY(pos_, centerEps()))
-        {
-            pos_.y = maze.tileCenter(pos_).y;
 
-            if (maze.canEnterNextTile(requested_, pos_))
-            {
-                current_ = requested_;
-            }
-
-            if (!maze.canEnterNextTile(current_, pos_))
-            {
-                current_ = Dir::None;
-            }
-        }
-
+        move(dt, corneringContext_.cornerDir);
         move(dt);
         warp();
     }
@@ -169,4 +280,11 @@ namespace Pacman
         sf::Vector2f step = DirUtils::dirVecWorld(current_) * (speed_ * dt.asSeconds());
         pos_ += step;
     }
+
+    void MoveableEntity::move(sf::Time dt, Dir d)
+    {
+        sf::Vector2f step = DirUtils::dirVecWorld(d) * (speed_ * dt.asSeconds());
+        pos_ += step;
+    }
+
 }

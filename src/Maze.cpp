@@ -160,6 +160,16 @@ namespace Pacman
                (std::abs(p.y - c.y) <= eps);
     }
 
+    // // near a specific tile's center. Used when cornering incase of tile boundary flickder or drift if using current pos
+    // // of entity
+    // bool Maze::nearTileCenter(const TileRC& tile , const float eps) const
+    // {
+    //     // current tile
+    //     sf::Vector2f c = tileCenter(tile);
+    //     return (std::abs(p.x - c.x) <= eps) &&
+    //            (std::abs(p.y - c.y) <= eps);
+    // }
+
     bool Maze::nearTileCenterX(sf::Vector2f p, const float eps) const
     {
         // current tile
@@ -275,6 +285,14 @@ namespace Pacman
         if (d == Dir::None) return false;
 
         TileRC tile = worldToTile(pos);
+        TileRC next = PathUtils::step(d, tile);
+
+        return !isWall(next);
+    }
+
+    bool Maze::canEnterNextTile(Dir d, const TileRC& tile) const
+    {
+        if (d == Dir::None) return false;
         TileRC next = PathUtils::step(d, tile);
 
         return !isWall(next);

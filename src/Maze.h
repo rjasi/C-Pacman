@@ -35,6 +35,7 @@ namespace Pacman
 
 
             Maze();
+            Maze(const Maze& maze) = delete;
 
             bool isInBounds(TileRC& tile) const;
             bool shouldWarp(TileRC& tile) const;
@@ -68,11 +69,14 @@ namespace Pacman
 
             // check if next tile from current position and direction can be entered
             bool canEnterNextTile(Dir d, const sf::Vector2f& pos) const;
+            bool canEnterNextTile(Dir d, const TileRC& tile) const;
+
 
             sf::Vector2f tileCenter(TileRC t) const;
             sf::Vector2f tileCenter(const sf::Vector2f& worldPos) const;
 
             bool nearTileCenter(sf::Vector2f p, const float eps) const;
+
             bool nearTileCenterX(sf::Vector2f p, const float eps) const;
             bool nearTileCenterY(sf::Vector2f p, const float eps) const;
 
