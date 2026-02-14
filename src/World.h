@@ -5,6 +5,8 @@
 #include "MoveableEntity.h"
 #include "GhostTargetStrategies.h"
 #include "GreedyManhattanPathingStrategy.h"
+#include "LevelConfig.h"
+#include "GhostDirector.h"
 
 #include <SFML/Graphics.hpp>
 
@@ -24,6 +26,9 @@ namespace Pacman
             PinkyTargetStrategy pinkyTargetStrategy_;
             InkyTargetStrategy inkyTargetStrategy_;
             ClydeTargetStrategy clydeTargetStrategy_;
+            LevelConfig cfg_;
+            GhostDirector ghostDirector_;
+
 
             GreedyManhattanPathingStrategy greedyManhattanPathingStrategy_;
 

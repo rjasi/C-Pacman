@@ -1,6 +1,8 @@
-
+#pragma once
 
 #include "Ghost.h"
+#include "LevelConfig.h"
+
 
 namespace Pacman
 {
@@ -8,29 +10,19 @@ namespace Pacman
     {
         private:
             int phaseIndex_ = 0;
+            int pelletsEaten_ = 0;
+            std::vector<GameCharacters> ghostsPendingRelease_ = {GameCharacters::Pinky, GameCharacters::Inky, GameCharacters::Clyde};
+            LevelConfig cfg_;
+            
+            void tryReleaseGhost(const std::array<Ghost*, 4>& ghosts);
+
 
         public:
-            struct Config
-            {
-                struct Phase
-                {
-                    GhostMode mode;   // Scatter or Chase
-                    sf::Time  duration;
-                };
+            GhostDirector() = delete;
+            GhostDirector(const LevelConfig& cfg);
+            
+            void update(const std::array<Ghost*, 4>& ghosts, const Maze& maze, const TargetContext& ctx, sf::Time dt);
+            void pelletEaten();
 
-                // https://pacman.holenet.info/#CH2_Scatter_Chase_Repeat
-                // ghosts swap between scatter and chase for a few phases
-                std::vector<Phase> phases;                 // scatter/chase schedule
-                sf::Time frightenedDuration = sf::Time{};  // power pellet duration
-
-                
-                int pelletsToReleasePinky = 0;
-                int pelletsToReleaseInky  = 30;
-                int pelletsToReleaseClyde = 60;
-
-            };
-
-            void update(std::array<Ghost*>, sf::Time dt);
-
-    }
+    };
 }

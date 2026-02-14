@@ -10,10 +10,11 @@ namespace Pacman
     pinkyTargetStrategy_({PINKY_SCATTER_CORNER}),
     inkyTargetStrategy_({INKY_SCATTER_CORNER}),
     clydeTargetStrategy_({CLYDE_SCATTER_CORNER}),
-    blinky_(blinkyTargetStrategy_, greedyManhattanPathingStrategy_),
-    pinky_(pinkyTargetStrategy_, greedyManhattanPathingStrategy_),
-    inky_(inkyTargetStrategy_, greedyManhattanPathingStrategy_),
-    clyde_(clydeTargetStrategy_, greedyManhattanPathingStrategy_)
+    blinky_(blinkyTargetStrategy_, greedyManhattanPathingStrategy_, GameCharacters::Blinky),
+    pinky_(pinkyTargetStrategy_, greedyManhattanPathingStrategy_, GameCharacters::Pinky),
+    inky_(inkyTargetStrategy_, greedyManhattanPathingStrategy_, GameCharacters::Inky),
+    clyde_(clydeTargetStrategy_, greedyManhattanPathingStrategy_, GameCharacters::Clyde),
+    ghostDirector_(cfg_)
     {
         pacmanEntity_.setPosition(maze_.tileToWorld(TileRC{1, 1}));
 
@@ -56,26 +57,6 @@ namespace Pacman
     {
         pacmanEntity_.update(dt, maze_);
 
-        TargetContext ctx
-        {
-            .pacman_tile = maze_.worldToTile(pacmanEntity_.position()),
-            .pacman_dir = pacmanEntity_.direction(),
-            .blinky_tile = maze_.worldToTile(blinky_.position()),
-            .clyde_tile = maze_.worldToTile(clyde_.position())
-        };
-
-        blinky_.setTargetContext(ctx);
-        blinky_.update(dt, maze_);
-
-        pinky_.setTargetContext(ctx);
-        pinky_.update(dt, maze_);
-
-        inky_.setTargetContext(ctx);
-        inky_.update(dt, maze_);
-
-        clyde_.setTargetContext(ctx);
-        clyde_.update(dt, maze_);
-
         
         blinkElapsed_ += dt;
         if (blinkElapsed_ >= blinkPeriod_) 
@@ -87,12 +68,23 @@ namespace Pacman
         if (maze_.tryEatPellet(pacmanEntity_.position()))
         {
             score_ += 10;
+            ghostDirector_.pelletEaten();
         }
 
         if (maze_.tryEatPowerPellet(pacmanEntity_.position()))
         {
             score_ += 60;
         }
+
+        TargetContext ctx
+        {
+            .pacman_tile = maze_.worldToTile(pacmanEntity_.position()),
+            .pacman_dir = pacmanEntity_.direction(),
+            .blinky_tile = maze_.worldToTile(blinky_.position()),
+            .clyde_tile = maze_.worldToTile(clyde_.position())
+        };
+
+        ghostDirector_.update({&blinky_, &pinky_, &inky_, &clyde_}, maze_, ctx, dt);
     }
 
     const Maze& World::maze() const

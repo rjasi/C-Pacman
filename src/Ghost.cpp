@@ -6,11 +6,17 @@
 namespace Pacman
 {
 
-    Ghost::Ghost(const IGhostTargetStrategy& ghostTargetStrategy, const IPathingStrategy& pathingStrategy)
+    Ghost::Ghost(const IGhostTargetStrategy& ghostTargetStrategy, const IPathingStrategy& pathingStrategy, GameCharacters name)
     : ghostTargetStrategy_(&ghostTargetStrategy),
-    pathingStrategy_(&pathingStrategy)
+    pathingStrategy_(&pathingStrategy),
+    name_(name)
     {
         speed_ = 50.0f;
+    }
+
+    GameCharacters Ghost::name() const
+    {
+        return name_;
     }
 
     void Ghost::setState(GhostState state)

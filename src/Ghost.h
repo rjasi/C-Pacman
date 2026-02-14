@@ -2,6 +2,7 @@
 
 #include "MoveableEntity.h"
 #include "GhostState.h"
+#include "GhostEnum.h"
 #include "IGhostTargetStrategy.h"
 #include "IPathingStrategy.h"
 #include "TargetContext.h"
@@ -11,6 +12,7 @@ namespace Pacman
     class Ghost : public MoveableEntity
     {
         private:
+            GameCharacters name_;
             GhostState state_ = GhostState::InHouse;
             const IGhostTargetStrategy* ghostTargetStrategy_ = nullptr;
             const IPathingStrategy* pathingStrategy_ = nullptr;
@@ -37,12 +39,14 @@ namespace Pacman
             Ghost& operator=(const Ghost& ghost) = delete;
             explicit Ghost(
                 const IGhostTargetStrategy& ghostTargetStrategy, 
-                const IPathingStrategy& pathingStrategy);
+                const IPathingStrategy& pathingStrategy,
+                GameCharacters name);
 
             void update(sf::Time dt, const Maze& maze) override;
             void setState(GhostState state);
             void setTargetContext(const TargetContext& ctx);
             GhostState state() const;
+            GameCharacters name() const;
 
     };
 }
