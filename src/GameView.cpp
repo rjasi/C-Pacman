@@ -45,21 +45,15 @@ namespace Pacman
 
         drawPellets(window);
         // don't animate pacman if not moving 
-        if(world_.pacman().direction() != Dir::None)
+        if (world_.pacman().direction() != Dir::None)
         {
             animationLibrary_->pacmanRight_.sprite().setRotation(world_.pacman().rotation());
         }
-        animationLibrary_->pacmanRight_.sprite().setPosition(world_.pacman().position());
-        // animationLibrary_->blinkyRight_.sprite().setPosition(world_.blinky().position());
     
-        for(auto& renderable : renderables_)
+        for (auto& renderable : renderables_)
         {
             renderable.draw(window);
-        }
-        
-        window.draw(animationLibrary_->pacmanRight_.sprite());
-        // window.draw(animationLibrary_->blinkyRight_.sprite());
-        
+        }        
 
     }
 
@@ -90,7 +84,6 @@ namespace Pacman
     void GameView::update(sf::Time dt)
     {
         world_.update(dt);
-        animationLibrary_->blinkyRight_.update(dt);
         animationLibrary_->update(dt);
 
         // original pacman game seems to have mouth open when stopped

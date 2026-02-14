@@ -10,7 +10,7 @@ namespace Pacman
     class MoveableEntity
     {
         public:
-            static constexpr float CORNERING_EPS = 3.0f;
+            static constexpr float CORNERING_EPS = 4.0f;
             void setPosition(sf::Vector2f p);
 
             sf::Vector2f position() const;
