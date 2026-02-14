@@ -21,8 +21,16 @@ namespace Pacman
             Ghost inky_;
             Ghost clyde_;
             BlinkyTargetStrategy blinkyTargetStrategy_;
+            PinkyTargetStrategy pinkyTargetStrategy_;
+            InkyTargetStrategy inkyTargetStrategy_;
+            ClydeTargetStrategy clydeTargetStrategy_;
+
             GreedyManhattanPathingStrategy greedyManhattanPathingStrategy_;
-            
+
+            static constexpr TileRC BLINKY_SCATTER_CORNER = {-3, 27};
+            static constexpr TileRC PINKY_SCATTER_CORNER = {-3, 0};
+            static constexpr TileRC INKY_SCATTER_CORNER = {31, 27};
+            static constexpr TileRC CLYDE_SCATTER_CORNER = {31, 0};
             // PinkyTargetStrategy inkyTargetStrategy_;
             // InkyTargetStrategy pinkyTargetStrategy_;
             // ClydeTargetStrategy clydeTargetStrategy_;

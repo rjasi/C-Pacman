@@ -15,17 +15,9 @@ namespace Pacman
             TileRC() = default; 
 
             explicit TileRC(const sf::Vector2i& v)
+            : r(v.y), c(v.x)
             {
-                std::cerr << "here2\n";
-                r = v.y;
-                c = v.x;
-            }
 
-            explicit TileRC(sf::Vector2i& v)
-            {
-                std::cerr << "here1\n";
-                r = v.y;
-                c = v.x;
             }
 
             constexpr TileRC(const TileRC& tile)
@@ -46,10 +38,25 @@ namespace Pacman
 
             }
 
-            TileRC operator+(const TileRC& a)
+            TileRC operator+(const TileRC& a) const
             {
                 return {a.r + r, a.c + c};
             }
+
+            TileRC operator-(const TileRC& a) const
+            {
+                return {a.r - r, a.c - c};
+            }
+
+            TileRC operator*(int scalar) const
+            {
+                return {r * scalar, c * scalar};
+            }
     };
+
+    constexpr TileRC operator*(int scalar, const TileRC& tile)
+    {
+        return tile * scalar;
+    }
 
 }

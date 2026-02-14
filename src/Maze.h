@@ -27,7 +27,6 @@ namespace Pacman
             static constexpr char POWER_PELLET = 'o';
             static constexpr char EMPTY = ' ';
             
-            // todo update to TileRC
             static constexpr TileRC INFRONT_DOOR = {11, 13};
             static constexpr TileRC HOUSE_CENTER = {14, 13};
             static constexpr TileRC HOUSE_LEFT = {14, 11};

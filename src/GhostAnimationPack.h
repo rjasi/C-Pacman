@@ -36,7 +36,8 @@ namespace Pacman
             {
                 switch (state)
                 {
-                    case GhostState::Active:
+                    case GhostState::Chase:
+                    case GhostState::Scatter:
                     case GhostState::GettingToHouseCenter:
                     case GhostState::InHouse:
                     case GhostState::LeavingHouse:

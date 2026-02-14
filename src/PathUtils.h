@@ -18,6 +18,13 @@ namespace Pacman
                 return abs(a.r - b.r) + abs(a.c - b.c);
             }
 
+            static int euclidianDistanceSquared(const TileRC& a, const TileRC& b)
+            {
+                int y = a.r - b.r;
+                int x = a.c - b.c;
+                return x * x + y * y;
+            }
+
             static TileRC step(Dir d, const TileRC& tile)
             {
                 return DirUtils::dirVecTile(d) + tile;

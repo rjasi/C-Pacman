@@ -14,6 +14,6 @@ namespace Pacman
             TileRC pacman_tile;
             Dir pacman_dir;
             TileRC blinky_tile;
-            bool scatter_mode; 
+            TileRC clyde_tile;
     };
 }

@@ -6,11 +6,14 @@ namespace Pacman
 {
     World::World() 
     :
-    blinkyTargetStrategy_({1,1}),
-    blinky_(blinkyTargetStrategy_, greedyManhattanPathingStrategy_)//,
-    // pinky_(pinkyTargetStrategy_),
-    // inky_(inkyTargetStrategy_),
-    // clyde_(clydeTargetStrategy_)
+    blinkyTargetStrategy_(BLINKY_SCATTER_CORNER),
+    pinkyTargetStrategy_({PINKY_SCATTER_CORNER}),
+    inkyTargetStrategy_({INKY_SCATTER_CORNER}),
+    clydeTargetStrategy_({CLYDE_SCATTER_CORNER}),
+    blinky_(blinkyTargetStrategy_, greedyManhattanPathingStrategy_),
+    pinky_(pinkyTargetStrategy_, greedyManhattanPathingStrategy_),
+    inky_(inkyTargetStrategy_, greedyManhattanPathingStrategy_),
+    clyde_(clydeTargetStrategy_, greedyManhattanPathingStrategy_)
     {
         pacmanEntity_.setPosition(maze_.tileToWorld(TileRC{1, 1}));
 
@@ -18,7 +21,7 @@ namespace Pacman
         // std::cerr << "c : " << x.c << " r : " << x.r << "\n";
 
         blinky_.setPosition(maze_.tileToWorldOnBoundary(Maze::INFRONT_DOOR));
-        blinky_.setState(GhostState::Active);
+        blinky_.setState(GhostState::Chase);
         blinky_.setDirection(Dir::Left);
         pinky_.setPosition(maze_.tileToWorldOnBoundary(Maze::HOUSE_CENTER));
         pinky_.setDirection(Dir::Down);
@@ -57,12 +60,20 @@ namespace Pacman
         {
             .pacman_tile = maze_.worldToTile(pacmanEntity_.position()),
             .pacman_dir = pacmanEntity_.direction(),
+            .blinky_tile = maze_.worldToTile(blinky_.position()),
+            .clyde_tile = maze_.worldToTile(clyde_.position())
         };
 
         blinky_.setTargetContext(ctx);
         blinky_.update(dt, maze_);
+
+        pinky_.setTargetContext(ctx);
         pinky_.update(dt, maze_);
+
+        inky_.setTargetContext(ctx);
         inky_.update(dt, maze_);
+
+        clyde_.setTargetContext(ctx);
         clyde_.update(dt, maze_);
 
         

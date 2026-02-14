@@ -6,12 +6,6 @@
 namespace Pacman
 {
 
-    //todo remove this. temporary while not all IGhostTargetStrategy types are implemented yet
-    Ghost::Ghost()
-    {
-        speed_ = 20.0f;
-    }
-
     Ghost::Ghost(const IGhostTargetStrategy& ghostTargetStrategy, const IPathingStrategy& pathingStrategy)
     : ghostTargetStrategy_(&ghostTargetStrategy),
     pathingStrategy_(&pathingStrategy)
@@ -42,7 +36,12 @@ namespace Pacman
             case GhostState::LeavingHouse:
                 moveToInfrontOfDoor(dt, maze);
                 break;
-            case GhostState::Active:
+            case GhostState::Chase:
+                active(dt, maze);
+                move(dt);
+                warp();
+                break;
+            case GhostState::Scatter:
                 active(dt, maze);
                 move(dt);
                 warp();
@@ -143,7 +142,7 @@ namespace Pacman
         {
             pos_.y = target.y;
             current_ = Dir::Left; //todo randomly choose left or right
-            state_ = GhostState::Active;
+            state_ = GhostState::Chase;
         } 
         else if (pos_.y < target.y)
         {
@@ -162,7 +161,7 @@ namespace Pacman
     // determine where to go
     void Ghost::active(sf::Time dt, const Maze& maze)
     {
-        speed_ = 65.f;
+        speed_ = 50.f;
         // only choose direction at tile center
         if (maze.nearTileCenter(pos_, centerEps())) 
         {
@@ -183,7 +182,8 @@ namespace Pacman
             return;
         }
 
-        TileRC target = ghostTargetStrategy_->getTarget(*targetContext_);
+        TileRC target = state_ == GhostState::Chase ? ghostTargetStrategy_->getTarget(*targetContext_)
+                                                    : ghostTargetStrategy_->scatterTarget(*targetContext_);
 
         PathQuery query = 
         {

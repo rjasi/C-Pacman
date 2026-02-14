@@ -7,8 +7,9 @@ namespace Pacman
         InHouse, 
         LeavingHouse,
         GettingToHouseCenter,
-        Active, 
-        Frightened, 
+        Chase, 
+        Frightened,
+        Scatter, 
         EatenReturning 
     };
 }
