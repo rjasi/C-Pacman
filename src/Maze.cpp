@@ -64,7 +64,7 @@ namespace Pacman
         return tiles_;
     }
 
-    bool Maze::isWall(TileRC& tile) const
+    bool Maze::isWall(const TileRC& tile) const
     {
         if (!isInBounds(tile))
         {
@@ -255,7 +255,7 @@ namespace Pacman
         return false;
     }
 
-    bool Maze::isInBounds(TileRC& tile) const
+    bool Maze::isInBounds(const TileRC& tile) const
     {
         return tile.r >= 0 && tile.c >= 0 &&
                tile.r < rowCount_ && tile.c < colCount_;

@@ -36,13 +36,13 @@ namespace Pacman
             Maze();
             Maze(const Maze& maze) = delete;
 
-            bool isInBounds(TileRC& tile) const;
+            bool isInBounds(const TileRC& tile) const;
             bool shouldWarp(TileRC& tile) const;
             void applyWarp(sf::Vector2f& pos) const;
 
             bool isInWarpTunnel(TileRC& tile) const;
 
-            bool isWall(TileRC& tile) const;
+            bool isWall(const TileRC& tile) const;
             bool isPellet(TileRC& tile) const;
             bool isPowerPellet(TileRC& tile) const;
             bool tryEatPellet(const sf::Vector2f& worldPos);

@@ -1,5 +1,6 @@
 #include "GreedyManhattanPathingStrategy.h"
 #include "PathUtils.h"
+#include "Random.h"
 
 #include <limits>
 #include <cmath>
@@ -9,16 +10,6 @@
 
 namespace Pacman
 {
-    //todo move this to an RNG class
-    int randomInt(int min, int max)
-    {
-        static std::random_device rd;              // non-deterministic seed
-        static std::mt19937 gen(rd());              // Mersenne Twister engine
-        std::uniform_int_distribution<int> dist(min, max);
-
-        return dist(gen);
-    }
-    
     Dir GreedyManhattanPathingStrategy::chooseNext(const Maze& maze, PathQuery& query) const
     {
         std::vector<Dir> bestDirs;

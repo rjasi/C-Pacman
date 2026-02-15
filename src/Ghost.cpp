@@ -1,5 +1,6 @@
 #include "Ghost.h"
 #include "PathQuery.h"
+#include "Random.h"
 
 #include <iostream>
 
@@ -99,6 +100,9 @@ namespace Pacman
             case GhostState::EatenReturning:
                 break;
             case GhostState::Frightened:
+                frightened(dt, maze);
+                move(dt);
+                warp();
                 break;
 
         }
@@ -208,6 +212,63 @@ namespace Pacman
             move(dt);
         }
     }
+
+    // randomly choose directions at tile center except reverse if possible
+    void Ghost::frightened(sf::Time dt, const Maze& maze)
+    {
+        speed_ = 40.f;
+
+        
+        if (reverseRequested_) 
+        {
+            reverseRequested_ = false;
+            current_ = DirUtils::opposite(current_);
+            targetContext_ =  nullptr; 
+            return;
+        }
+
+        // only choose direction at tile center
+        if (maze.nearTileCenter(pos_, centerEps())) 
+        {
+            pos_ = maze.tileCenter(pos_);
+        }
+        else
+        {
+            return;
+        }
+
+        if (isWarping(current_, pos_, maze))
+        {
+            return;
+        }
+
+        std::vector<Dir> validDirs;
+        validDirs.reserve(4);
+
+        TileRC current_tile = maze.worldToTile(pos_);
+
+        for (Dir d : {Dir::Left, Dir::Right, Dir::Up, Dir::Down})
+        {
+            if (d == DirUtils::opposite(current_))
+            {
+                continue;
+            }
+
+            if (!maze.isWall(PathUtils::step(d, current_tile)))
+            {
+                validDirs.push_back(d);
+            }
+        }
+
+        if (validDirs.size() <= 0)
+        {
+            current_ = DirUtils::opposite(current_);
+            return; 
+        }
+    
+        current_ = validDirs[randomInt(0, validDirs.size() - 1)]; 
+    }
+
 
     // determine where to go
     void Ghost::active(sf::Time dt, const Maze& maze)

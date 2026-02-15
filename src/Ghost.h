@@ -7,6 +7,8 @@
 #include "IPathingStrategy.h"
 #include "TargetContext.h"
 
+#include <vector>
+
 namespace Pacman
 {
     class Ghost : public MoveableEntity
@@ -23,6 +25,7 @@ namespace Pacman
 
             void paceInHouse(sf::Time dt, const Maze& maze);
             void active(sf::Time dt, const Maze& maze);
+            void frightened(sf::Time dt, const Maze& maze);
 
             // scripted logic for exiting house
             // 1. align ghost on y axis with house center
