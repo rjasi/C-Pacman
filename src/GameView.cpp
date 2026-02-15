@@ -84,17 +84,24 @@ namespace Pacman
     void GameView::update(sf::Time dt)
     {
         world_.update(dt);
-        animationLibrary_->update(dt);
 
-        // original pacman game seems to have mouth open when stopped
-        if(world_.pacman().direction() != Dir::None)
+        if (world_.state() == WorldState::Playing)
         {
-            animationLibrary_->pacmanRight_.update(dt);
+            animationLibrary_->update(dt);
+            // original pacman game seems to have mouth open when stopped
+            if(world_.pacman().direction() != Dir::None)
+            {
+                animationLibrary_->pacmanRight_.update(dt);
+            }
+            else
+            {
+                animationLibrary_->pacmanRight_.reset();
+            }
+
         }
-        else
-        {
-            animationLibrary_->pacmanRight_.reset();
-        }
+
+
+        
     }
 
     void GameView::drawPellets(sf::RenderTarget& window)

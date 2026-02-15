@@ -3,8 +3,6 @@
 
 namespace Pacman
 {
-
-
     GhostDirector::GhostDirector(const LevelConfig& cfg)
     : cfg_(cfg)
     {

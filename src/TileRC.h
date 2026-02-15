@@ -52,6 +52,11 @@ namespace Pacman
             {
                 return {r * scalar, c * scalar};
             }
+
+            bool operator==(const TileRC& other) const
+            {
+                return r == other.r && c == other.c;
+            }
     };
 
     constexpr TileRC operator*(int scalar, const TileRC& tile)

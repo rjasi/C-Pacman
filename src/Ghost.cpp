@@ -7,10 +7,13 @@
 namespace Pacman
 {
 
-    Ghost::Ghost(const IGhostTargetStrategy& ghostTargetStrategy, const IPathingStrategy& pathingStrategy, GameCharacters name)
+    Ghost::Ghost(const IGhostTargetStrategy& ghostTargetStrategy, 
+        const IPathingStrategy& pathingStrategy, GameCharacters name,
+        const TileRC& houseTile)
     : ghostTargetStrategy_(&ghostTargetStrategy),
     pathingStrategy_(&pathingStrategy),
-    name_(name)
+    name_(name),
+    houseTile_(houseTile)
     {
         speed_ = 50.0f;
     }
@@ -188,7 +191,7 @@ namespace Pacman
 
     void Ghost::moveToInfrontOfDoor(sf::Time dt, const Maze& maze)
     {
-        sf::Vector2f target = maze.tileToWorldOnBoundary(Maze::INFRONT_DOOR);
+        sf::Vector2f target = maze.tileToWorldOnBoundary(Maze::INFRONT_DOOR_LEFT);
 
         // guranteed to be alinged on x from moveToExit so no need to check y 
         // first center y and clamp if close enougb

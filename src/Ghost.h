@@ -17,6 +17,7 @@ namespace Pacman
             GameCharacters name_;
             bool flashFrightened_ = false;
             bool reverseRequested_ = false;
+            TileRC houseTile_;
             GhostState state_ = GhostState::Chase;
             HouseState houseState_ = HouseState::InHouse;
             const IGhostTargetStrategy* ghostTargetStrategy_ = nullptr;
@@ -46,7 +47,8 @@ namespace Pacman
             explicit Ghost(
                 const IGhostTargetStrategy& ghostTargetStrategy, 
                 const IPathingStrategy& pathingStrategy,
-                GameCharacters name);
+                GameCharacters name,
+                const TileRC& houseTile);
 
             void update(sf::Time dt, const Maze& maze) override;
             void setState(GhostState state);

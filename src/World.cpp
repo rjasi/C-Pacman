@@ -10,18 +10,15 @@ namespace Pacman
     pinkyTargetStrategy_({PINKY_SCATTER_CORNER}),
     inkyTargetStrategy_({INKY_SCATTER_CORNER}),
     clydeTargetStrategy_({CLYDE_SCATTER_CORNER}),
-    blinky_(blinkyTargetStrategy_, greedyManhattanPathingStrategy_, GameCharacters::Blinky),
-    pinky_(pinkyTargetStrategy_, greedyManhattanPathingStrategy_, GameCharacters::Pinky),
-    inky_(inkyTargetStrategy_, greedyManhattanPathingStrategy_, GameCharacters::Inky),
-    clyde_(clydeTargetStrategy_, greedyManhattanPathingStrategy_, GameCharacters::Clyde),
+    blinky_(blinkyTargetStrategy_, greedyManhattanPathingStrategy_, GameCharacters::Blinky, Maze::HOUSE_CENTER),
+    pinky_(pinkyTargetStrategy_, greedyManhattanPathingStrategy_, GameCharacters::Pinky, Maze::HOUSE_CENTER),
+    inky_(inkyTargetStrategy_, greedyManhattanPathingStrategy_, GameCharacters::Inky, Maze::HOUSE_LEFT),
+    clyde_(clydeTargetStrategy_, greedyManhattanPathingStrategy_, GameCharacters::Clyde, Maze::HOUSE_RIGHT),
     ghostDirector_(cfg_)
     {
         pacmanEntity_.setPosition(maze_.tileToWorld(TileRC{1, 1}));
 
-        // TileRC x = Maze::INFRONT_DOOR;
-        // std::cerr << "c : " << x.c << " r : " << x.r << "\n";
-
-        blinky_.setPosition(maze_.tileToWorldOnBoundary(Maze::INFRONT_DOOR));
+        blinky_.setPosition(maze_.tileToWorldOnBoundary(Maze::INFRONT_DOOR_LEFT));
         blinky_.setState(GhostState::Chase);
         blinky_.setHouseState(HouseState::Outside);
         blinky_.setDirection(Dir::Left);
@@ -61,15 +58,46 @@ namespace Pacman
 
     void World::update(sf::Time dt)
     {
-        pacmanEntity_.update(dt, maze_);
+        advanceBlinkTimer(dt);
+        switch (state_)
+        {
+            case WorldState::Playing:
+                playing(dt);
+            case WorldState::GhostEaten:
+                ghostEaten(dt);
+            case WorldState::Died:
+            case WorldState::LevelCleared:
+                return;
+            default:
+                return;
+        }
+    }
 
-        
+    void World::ghostEaten(sf::Time dt)
+    {
+        eatenTimer_ += dt;
+        if (eatenTimer_ >= EATEN_PAUSE)
+        {
+            state_ = WorldState::Playing;
+            eatenGhost = nullptr;
+            eatenTimer_ = sf::Time{};
+        }
+    }
+
+    void World::advanceBlinkTimer(sf::Time dt)
+    {
         blinkElapsed_ += dt;
         if (blinkElapsed_ >= blinkPeriod_) 
         {
             blinkElapsed_ -= blinkPeriod_;
             powerPelletVisible_ = !powerPelletVisible_;
         }
+    }
+
+    void World::playing(sf::Time dt)
+    {
+
+        pacmanEntity_.update(dt, maze_);
 
         if (maze_.tryEatPellet(pacmanEntity_.position()))
         {
@@ -92,6 +120,7 @@ namespace Pacman
         };
 
         ghostDirector_.update({&blinky_, &pinky_, &inky_, &clyde_}, maze_, ctx, dt);
+        resolveCollision();
     }
 
     const Maze& World::maze() const
@@ -113,5 +142,34 @@ namespace Pacman
     {
         return blinky_;
     }
+
+    void World::resolveCollision()
+    {
+        TileRC pacmanTile = maze_.worldToTile(pacmanEntity_.position());
+
+        for (Ghost& ghost : { std::ref(blinky_), std::ref(pinky_),
+                      std::ref(inky_), std::ref(clyde_) })
+        {
+            TileRC ghostTile = maze_.worldToTile(ghost.position());
+
+            // todo check if frightened or actives
+            if (pacmanTile == ghostTile)
+            {
+                state_ = WorldState::GhostEaten;
+                eatenGhost = &ghost;
+                eatenTimer_ = sf::Time{};
+                return;
+            }
+
+            state_ = WorldState::Playing;
+            eatenGhost = nullptr;
+        }
+    }
+
+    WorldState World::state() const
+    {
+        return state_;
+    }
+
 
 }
