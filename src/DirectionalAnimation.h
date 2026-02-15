@@ -21,6 +21,20 @@ namespace Pacman
             {
 
             }
+
+            // for animations that are the same in any direction i.e frightened
+            DirectionalAnimation(
+                Animation* single
+            ) 
+            : up_(single), 
+            down_(single), 
+            left_(single), 
+            right_(single)
+            {
+
+            }
+            
+
             Animation* up_ = nullptr;
             Animation* down_ = nullptr;
             Animation* left_ = nullptr;

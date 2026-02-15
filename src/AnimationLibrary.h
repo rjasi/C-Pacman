@@ -24,6 +24,15 @@ namespace Pacman
             DirectionalAnimation inky_normal;
             DirectionalAnimation clyde_normal;
 
+            DirectionalAnimation blinky_fightened_ghost_directional_anim;
+            DirectionalAnimation blinky_fightened_ghost_flash_directional_anim;
+            DirectionalAnimation pinky_fightened_ghost_directional_anim;
+            DirectionalAnimation pinky_fightened_ghost_flash_directional_anim;
+            DirectionalAnimation inky_fightened_ghost_directional_anim;
+            DirectionalAnimation inky_fightened_ghost_flash_directional_anim;
+            DirectionalAnimation clyde_fightened_ghost_directional_anim;
+            DirectionalAnimation clyde_fightened_ghost_flash_directional_anim;
+
             GhostAnimationPack blinky;
             GhostAnimationPack pinky;
             GhostAnimationPack inky;
@@ -66,6 +75,14 @@ namespace Pacman
             Animation clydeUp_;
             Animation clydeDown_;
 
-            // sf::Sprite atlas_;
+
+            Animation blinky_frightened_ghost_;
+            Animation blinky_frightened_ghostFlash_;
+            Animation pinky_frightened_ghost_;
+            Animation pinky_frightened_ghostFlash_;
+            Animation inky_frightened_ghost_;
+            Animation inky_frightened_ghostFlash_;
+            Animation clyde_frightened_ghost_;
+            Animation clyde_frightened_ghostFlash_;
     };
 }

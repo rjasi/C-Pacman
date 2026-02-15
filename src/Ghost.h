@@ -13,8 +13,10 @@ namespace Pacman
     {
         private:
             GameCharacters name_;
+            bool flashFrightened_ = false;
             bool reverseRequested_ = false;
-            GhostState state_ = GhostState::InHouse;
+            GhostState state_ = GhostState::Chase;
+            HouseState houseState_ = HouseState::InHouse;
             const IGhostTargetStrategy* ghostTargetStrategy_ = nullptr;
             const IPathingStrategy* pathingStrategy_ = nullptr;
             const TargetContext* targetContext_ = nullptr;
@@ -45,10 +47,14 @@ namespace Pacman
 
             void update(sf::Time dt, const Maze& maze) override;
             void setState(GhostState state);
+            void setHouseState(HouseState state);
+            bool isOutsideHouse() const;
             void setTargetContext(const TargetContext& ctx);
             GhostState state() const;
+            HouseState houseState() const;
             GameCharacters name() const;
             void requestReverseDirection();
+            bool flashFrightened() const;
 
     };
 }

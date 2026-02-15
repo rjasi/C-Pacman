@@ -3,6 +3,7 @@
 #include "GhostEnum.h"
 #include "DirectionalAnimation.h"
 #include "GhostState.h"
+#include "Ghost.h"
 
 namespace Pacman
 {
@@ -13,15 +14,18 @@ namespace Pacman
             GameCharacters characterId;
             DirectionalAnimation* normal_;
             DirectionalAnimation* frightened_;
+            DirectionalAnimation* frightenedFlash_;
             DirectionalAnimation* eyes_;
 
         public:
             GhostAnimationPack(GameCharacters characterId, 
                                 DirectionalAnimation* normal,
                                 DirectionalAnimation* frightened = nullptr,
+                                DirectionalAnimation* frightenedFlash = nullptr,
                                 DirectionalAnimation* eyes =  nullptr)
                                 : normal_(normal),
                                 frightened_(frightened),
+                                frightenedFlash_(frightenedFlash),
                                 eyes_(eyes)
             {
 
@@ -32,20 +36,18 @@ namespace Pacman
                 normal_->update(dt);
             }
 
-            DirectionalAnimation& animationFor(GhostState state)
+            DirectionalAnimation& animationFor(const Ghost& ghost) const
             {
+                GhostState state = ghost.state();
                 switch (state)
                 {
                     case GhostState::Chase:
                     case GhostState::Scatter:
-                    case GhostState::GettingToHouseCenter:
-                    case GhostState::InHouse:
-                    case GhostState::LeavingHouse:
                         return *normal_;
                     case GhostState::EatenReturning:
                         return *normal_;
                     case GhostState::Frightened:
-                        return *normal_;
+                        return ghost.flashFrightened() ? *frightenedFlash_ : *frightened_;
                 }
             }
 

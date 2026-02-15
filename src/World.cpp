@@ -23,14 +23,20 @@ namespace Pacman
 
         blinky_.setPosition(maze_.tileToWorldOnBoundary(Maze::INFRONT_DOOR));
         blinky_.setState(GhostState::Chase);
+        blinky_.setHouseState(HouseState::Outside);
         blinky_.setDirection(Dir::Left);
+
         pinky_.setPosition(maze_.tileToWorldOnBoundary(Maze::HOUSE_CENTER));
         pinky_.setDirection(Dir::Down);
+        pinky_.setHouseState(HouseState::InHouse);
+        
         inky_.setPosition(maze_.tileToWorldOnBoundary(Maze::HOUSE_LEFT));
         inky_.setDirection(Dir::Up);
-        pinky_.setState(GhostState::GettingToHouseCenter);
+        inky_.setHouseState(HouseState::InHouse);
+
         clyde_.setPosition(maze_.tileToWorldOnBoundary(Maze::HOUSE_RIGHT));
         clyde_.setDirection(Dir::Up);
+        clyde_.setHouseState(HouseState::InHouse);
     }
 
     void World::setPlayerRequestedDir(Dir d)

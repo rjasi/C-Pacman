@@ -30,7 +30,7 @@ namespace Pacman
             Animation& resolve(const MoveableEntity& e) override 
             {
                 const Ghost& g = static_cast<const Ghost&>(e);
-                return animPack_->animationFor(g.state())
+                return animPack_->animationFor(g)
                                 .clipFor(g.direction());
             }
 

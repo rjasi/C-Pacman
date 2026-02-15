@@ -25,9 +25,24 @@ namespace Pacman
         reverseRequested_ = true;
     }
 
+    bool Ghost::flashFrightened() const
+    {
+        return flashFrightened_;
+    }
+
     void Ghost::setState(GhostState state)
     {
         state_ = state;
+    }
+
+    void Ghost::setHouseState(HouseState state)
+    {
+        houseState_ = state;
+    }
+
+    bool Ghost::isOutsideHouse() const
+    {
+        return houseState_ == HouseState::Outside;
     }
 
     GhostState Ghost::state() const
@@ -35,19 +50,36 @@ namespace Pacman
         return state_;
     }
 
+    HouseState Ghost::houseState() const
+    {
+        return houseState_;
+    }
+
     void Ghost::update(sf::Time dt, const Maze& maze)
     {
+        // scripted house state
+        if (!isOutsideHouse())
+        {
+            switch (houseState_)
+            {
+                case HouseState::InHouse:
+                    paceInHouse(dt, maze);
+                    break;
+                case HouseState::GettingToHouseCenter:
+                    moveToDoor(dt, maze);
+                    break;
+                case HouseState::LeavingHouse:
+                    moveToInfrontOfDoor(dt, maze);
+                    break;
+                default:
+                    break;
+            }
+            
+            return;
+        }
+
         switch (state_)
         {
-            case GhostState::InHouse:
-                paceInHouse(dt, maze);
-                break;
-            case GhostState::GettingToHouseCenter:
-                moveToDoor(dt, maze);
-                break;
-            case GhostState::LeavingHouse:
-                moveToInfrontOfDoor(dt, maze);
-                break;
             case GhostState::Chase:
                 active(dt, maze);
                 move(dt);
@@ -129,7 +161,7 @@ namespace Pacman
         if (std::abs(pos_.x - target.x) <= Maze::CENTER_EPS)
         {
             pos_.x = target.x;
-            state_ = GhostState::LeavingHouse;
+            houseState_ = HouseState::LeavingHouse;
             moveToInfrontOfDoor(dt, maze);
         } 
         else if (pos_.x < target.x)
@@ -154,7 +186,8 @@ namespace Pacman
         {
             pos_.y = target.y;
             current_ = Dir::Left; //todo randomly choose left or right
-            state_ = GhostState::Chase;
+            // state_ = GhostState::Chase; let ghost director handle this
+            houseState_ = HouseState::Outside;
         } 
         else if (pos_.y < target.y)
         {

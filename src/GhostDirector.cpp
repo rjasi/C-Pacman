@@ -48,7 +48,7 @@ namespace Pacman
         {
             return;
         }
-        else if (ghostToRelease->state() != GhostState::InHouse) // should not happen ghost pinky, inky and clyde always start InHouse
+        else if (ghostToRelease->isOutsideHouse()) // should not happen ghosts pinky, inky and clyde always start InHouse
         {
             ghostsPendingRelease_.erase(ghostsPendingRelease_.begin());
             return;
@@ -71,9 +71,9 @@ namespace Pacman
                 return;
         }
 
-        if (canRelease && ghostToRelease->state() == GhostState::InHouse)
+        if (canRelease && ghostToRelease->houseState() == HouseState::InHouse)
         {
-            ghostToRelease->setState(GhostState::GettingToHouseCenter);
+            ghostToRelease->setHouseState(HouseState::GettingToHouseCenter);
             ghostsPendingRelease_.erase(ghostsPendingRelease_.begin());
             return;
         }
@@ -87,6 +87,48 @@ namespace Pacman
         pelletsEaten_++;
     }
 
+    void GhostDirector::frightenMode(const std::array<Ghost*, 4>& ghosts, sf::Time dt)
+    {
+        if (frightened_ != true)
+        {
+            return;
+        }
+
+        frightenedElapsed_ += dt;
+
+        if (frightenedElapsed_ > cfg_.frightenedDuration)
+        {
+            frightened_ = false;
+            for (Ghost* ghost : ghosts)
+            {
+                if (ghost->state() == GhostState::Frightened)
+                {
+                    ghost->requestReverseDirection();
+                    ghost->setState(GhostState::Chase);
+                }
+            }
+            return; 
+        }
+
+        for (Ghost* ghost : ghosts)
+        {
+            if (ghost->state() == GhostState::Frightened)
+            {
+                ghost->requestReverseDirection();
+                ghost->setState(GhostState::Chase);
+            }
+        }
+
+        
+
+    }
+
+    bool GhostDirector::isActive(GhostState state) const
+    {
+        return state == GhostState::Chase || state == GhostState::Scatter;
+    }
+
+
     void GhostDirector::updatePhase(const std::array<Ghost*, 4>& ghosts)
     {
         // chase indefinitely once phases are done
@@ -94,7 +136,7 @@ namespace Pacman
         {
             for (Ghost* ghost : ghosts)
             {
-                if (ghost->state() == GhostState::Chase || ghost->state() == GhostState::Scatter)
+                if (ghost->isOutsideHouse() && isActive(ghost->state()))
                 {
                     ghost->setState(GhostState::Chase);
                 }
@@ -119,7 +161,7 @@ namespace Pacman
             {
                 for (Ghost* ghost : ghosts)
                 {
-                    if (ghost->state() == GhostState::Chase || ghost->state() == GhostState::Scatter)
+                    if (ghost->isOutsideHouse() && isActive(ghost->state()))
                     {
                         ghost->setState(GhostState::Chase);
                     }
@@ -130,7 +172,7 @@ namespace Pacman
             // reverse direction
             for (Ghost* ghost : ghosts)
             {
-                if (ghost->state() == GhostState::Chase || ghost->state() == GhostState::Scatter)
+                if (ghost->isOutsideHouse() && isActive(ghost->state()))
                 {
                     ghost->requestReverseDirection();
                 }
@@ -140,7 +182,7 @@ namespace Pacman
         Phase currentPhase =  cfg_.phases.front();
         for (Ghost* ghost : ghosts)
         {
-            if (ghost->state() == GhostState::Chase || ghost->state() == GhostState::Scatter)
+            if (ghost->isOutsideHouse() && isActive(ghost->state()))
             {
                 ghost->setState(currentPhase.mode);
             }
@@ -151,6 +193,13 @@ namespace Pacman
     {
         // currentPhase_ = cfg_.phases.front();
     }
+
+    void GhostDirector::powerPelletEaten()
+    {
+        frightened_ = true;
+        frightenedElapsed_ = sf::Time{};
+    }
+
 
 
 }

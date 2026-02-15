@@ -128,4 +128,16 @@ namespace Pacman::Atlas
         {16, 16}
     };
 
+    inline constexpr AtlasRegion FrightenedGhost
+    {
+        {584, 64},
+        {16, 16}
+    };
+
+    inline constexpr AtlasRegion FrightenedGhostFlash
+    {
+        {616, 64},
+        {16, 16}
+    };
+
 }

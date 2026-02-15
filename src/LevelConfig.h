@@ -32,7 +32,7 @@ namespace Pacman
                 {GhostState::Scatter, sf::seconds(5.0f)}
             };                 // scatter/chase schedule
 
-            sf::Time frightenedDuration = sf::Time{};  // power pellet duration
+            sf::Time frightenedDuration = sf::seconds(20.0f);  // power pellet duration
 
             int pelletsToReleasePinky = 0;
             int pelletsToReleaseInky  = 30;

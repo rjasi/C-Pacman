@@ -26,6 +26,15 @@ namespace Pacman
     clydeLeft_(cache.get("atlas"), Atlas::ClydeLeft, 2, ghostFrameTime),
     clydeUp_(cache.get("atlas"), Atlas::ClydeUp, 2, ghostFrameTime),
     clydeDown_(cache.get("atlas"), Atlas::ClydeDown, 2, ghostFrameTime),
+
+    blinky_frightened_ghost_(cache.get("atlas"), Atlas::FrightenedGhost, 2, ghostFrameTime),
+    blinky_frightened_ghostFlash_(cache.get("atlas"), Atlas::FrightenedGhost, 2, ghostFrameTime),
+    pinky_frightened_ghost_(cache.get("atlas"), Atlas::FrightenedGhost, 2, ghostFrameTime),
+    pinky_frightened_ghostFlash_(cache.get("atlas"), Atlas::FrightenedGhost, 2, ghostFrameTime),
+    inky_frightened_ghost_(cache.get("atlas"), Atlas::FrightenedGhost, 2, ghostFrameTime),
+    inky_frightened_ghostFlash_(cache.get("atlas"), Atlas::FrightenedGhost, 2, ghostFrameTime),
+    clyde_frightened_ghost_(cache.get("atlas"), Atlas::FrightenedGhost, 2, ghostFrameTime),
+    clyde_frightened_ghostFlash_(cache.get("atlas"), Atlas::FrightenedGhost, 2, ghostFrameTime),
     
     pacman_normal(&pacmanRight_, &pacmanRight_, &pacmanRight_, &pacmanRight_),
     blinky_normal(&blinkyUp_, &blinkyDown_, &blinkyLeft_, &blinkyRight_),
@@ -33,11 +42,20 @@ namespace Pacman
     inky_normal(&inkyUp_, &inkyDown_, &inkyLeft_, &inkyRight_),
     clyde_normal(&clydeUp_, &clydeDown_, &clydeLeft_, &clydeRight_),
 
+    blinky_fightened_ghost_directional_anim(&blinky_frightened_ghost_),
+    blinky_fightened_ghost_flash_directional_anim(&blinky_frightened_ghostFlash_),
+    pinky_fightened_ghost_directional_anim(&pinky_frightened_ghost_),
+    pinky_fightened_ghost_flash_directional_anim(&pinky_frightened_ghostFlash_),
+    inky_fightened_ghost_directional_anim(&inky_frightened_ghost_),
+    inky_fightened_ghost_flash_directional_anim(&inky_frightened_ghostFlash_),
+    clyde_fightened_ghost_directional_anim(&clyde_frightened_ghost_),
+    clyde_fightened_ghost_flash_directional_anim(&clyde_frightened_ghostFlash_),
+
     pacman(&pacman_normal),
-    blinky(GameCharacters::Blinky, &blinky_normal),
-    pinky(GameCharacters::Pinky, &pinky_normal),
-    inky(GameCharacters::Inky, &inky_normal),
-    clyde(GameCharacters::Clyde, &clyde_normal)
+    blinky(GameCharacters::Blinky, &blinky_normal, &blinky_fightened_ghost_directional_anim, &blinky_fightened_ghost_flash_directional_anim),
+    pinky(GameCharacters::Pinky, &pinky_normal, &pinky_fightened_ghost_directional_anim, &pinky_fightened_ghost_flash_directional_anim),
+    inky(GameCharacters::Inky, &inky_normal, &inky_fightened_ghost_directional_anim, &inky_fightened_ghost_flash_directional_anim),
+    clyde(GameCharacters::Clyde, &clyde_normal, &clyde_fightened_ghost_directional_anim, &clyde_fightened_ghost_flash_directional_anim)
     {
         ghostResolvers_[GameCharactersIndex::BLINKY] = std::make_unique<GhostAnimationResolver>(&blinky);
         ghostResolvers_[GameCharactersIndex::PINKY] = std::make_unique<GhostAnimationResolver>(&pinky);
