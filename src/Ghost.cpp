@@ -19,6 +19,12 @@ namespace Pacman
         return name_;
     }
 
+    // only used by GhostDirector to reverse direction on phase change
+    void Ghost::requestReverseDirection()
+    {
+        reverseRequested_ = true;
+    }
+
     void Ghost::setState(GhostState state)
     {
         state_ = state;
@@ -168,6 +174,19 @@ namespace Pacman
     void Ghost::active(sf::Time dt, const Maze& maze)
     {
         speed_ = 50.f;
+
+        // go in reverse direction at least one tick
+        // todo check if ghost possibly clips maze a bit
+        // i.e center on tile at wall on left. reversed is left
+        // clips wall for one tick? 
+        if (reverseRequested_) 
+        {
+            reverseRequested_ = false;
+            current_ = DirUtils::opposite(current_);
+            targetContext_ =  nullptr; 
+            return;
+        }
+
         // only choose direction at tile center
         if (maze.nearTileCenter(pos_, centerEps())) 
         {

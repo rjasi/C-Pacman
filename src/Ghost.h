@@ -13,6 +13,7 @@ namespace Pacman
     {
         private:
             GameCharacters name_;
+            bool reverseRequested_ = false;
             GhostState state_ = GhostState::InHouse;
             const IGhostTargetStrategy* ghostTargetStrategy_ = nullptr;
             const IPathingStrategy* pathingStrategy_ = nullptr;
@@ -47,6 +48,7 @@ namespace Pacman
             void setTargetContext(const TargetContext& ctx);
             GhostState state() const;
             GameCharacters name() const;
+            void requestReverseDirection();
 
     };
 }

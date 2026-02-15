@@ -78,6 +78,7 @@ namespace Pacman
 
             bool nearTileCenterX(sf::Vector2f p, const float eps) const;
             bool nearTileCenterY(sf::Vector2f p, const float eps) const;
+            bool isAtJunction(const sf::Vector2f& p) const;
 
     };
 }

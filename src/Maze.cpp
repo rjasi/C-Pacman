@@ -298,6 +298,22 @@ namespace Pacman
         return !isWall(next);
     }
 
+    bool Maze::isAtJunction(const sf::Vector2f& p) const
+    {
+        TileRC tile = worldToTile(p);
+        
+        for (Dir d : {Dir::Up, Dir::Down, Dir::Left, Dir::Right})
+        {
+            TileRC nextTile = PathUtils::step(d, tile);
+            if (isInBounds(nextTile) && !isWall(nextTile))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     // bool Maze::isTile(int r, int c, char value) const
     // {
     //     return inBounds(r, c) && tiles_[r][c] == value;

@@ -12,7 +12,9 @@ namespace Pacman
 
     void GhostDirector::update(const std::array<Ghost*, 4>& ghosts, const Maze& maze, const TargetContext& ctx, sf::Time dt)
     {
+        elapsed_ += dt;
         tryReleaseGhost(ghosts);
+        updatePhase(ghosts);
 
         for (Ghost* ghost : ghosts)
         {
@@ -83,5 +85,69 @@ namespace Pacman
     {
         pelletsEaten_++;
     }
+
+    void GhostDirector::updatePhase(const std::array<Ghost*, 4>& ghosts)
+    {
+        // chase indefinitely once phases are done
+        if (cfg_.phases.size() <= 0)
+        {
+            for (Ghost* ghost : ghosts)
+            {
+                if (ghost->state() == GhostState::Chase || ghost->state() == GhostState::Scatter)
+                {
+                    ghost->setState(GhostState::Chase);
+                }
+            }
+            return;
+        }
+
+        // when elapsed_ >= cfg_.phases.front().duration means it time for a phase change
+        while (cfg_.phases.size() > 0 && elapsed_ >= cfg_.phases.front().duration)
+        {
+            // remove done phase
+            cfg_.phases.erase(cfg_.phases.begin());
+
+            // spill remainder over to next phase
+            elapsed_ -= cfg_.phases.front().duration;
+
+            // if no more phases just put to chase mode
+            if (cfg_.phases.size() <= 0)
+            {
+                for (Ghost* ghost : ghosts)
+                {
+                    if (ghost->state() == GhostState::Chase || ghost->state() == GhostState::Scatter)
+                    {
+                        ghost->setState(GhostState::Chase);
+                    }
+                }
+                return; 
+            }
+
+            // reverse direction
+            for (Ghost* ghost : ghosts)
+            {
+                if (ghost->state() == GhostState::Chase || ghost->state() == GhostState::Scatter)
+                {
+                    ghost->requestReverseDirection();
+                }
+            }
+
+        }
+
+        Phase currentPhase =  cfg_.phases.front();
+        for (Ghost* ghost : ghosts)
+        {
+            if (ghost->state() == GhostState::Chase || ghost->state() == GhostState::Scatter)
+            {
+                ghost->setState(currentPhase.mode);
+            }
+        }
+    }
+
+    void GhostDirector::startLevel()
+    {
+        // currentPhase_ = cfg_.phases.front();
+    }
+
 
 }
