@@ -4,7 +4,7 @@ namespace Pacman
 {
     enum class GhostState 
     { 
-        InHouse, 
+        InHouse = 0, 
         LeavingHouse,
         GettingToHouseCenter,
         Chase, 

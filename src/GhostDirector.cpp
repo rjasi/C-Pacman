@@ -1,4 +1,5 @@
 #include "GhostDirector.h"
+#include <iostream>
 
 namespace Pacman
 {
@@ -104,11 +105,14 @@ namespace Pacman
         // when elapsed_ >= cfg_.phases.front().duration means it time for a phase change
         while (cfg_.phases.size() > 0 && elapsed_ >= cfg_.phases.front().duration)
         {
-            // remove done phase
-            cfg_.phases.erase(cfg_.phases.begin());
 
+            // std::cerr << "GHOST PHASE :" << static_cast<int>(ghosts[0]->state()) << "\n";
+            
             // spill remainder over to next phase
             elapsed_ -= cfg_.phases.front().duration;
+
+            // remove done phase
+            cfg_.phases.erase(cfg_.phases.begin());
 
             // if no more phases just put to chase mode
             if (cfg_.phases.size() <= 0)
@@ -131,7 +135,6 @@ namespace Pacman
                     ghost->requestReverseDirection();
                 }
             }
-
         }
 
         Phase currentPhase =  cfg_.phases.front();
