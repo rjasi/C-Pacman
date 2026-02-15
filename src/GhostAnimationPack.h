@@ -33,7 +33,9 @@ namespace Pacman
 
             void update(sf::Time dt)
             {
-                normal_->update(dt);
+                if (normal_ != nullptr) normal_->update(dt);
+                if (frightened_ != nullptr) frightened_->update(dt);
+                if (frightenedFlash_ != nullptr) frightenedFlash_->update(dt);
             }
 
             DirectionalAnimation& animationFor(const Ghost& ghost) const

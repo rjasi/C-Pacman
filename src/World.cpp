@@ -79,7 +79,8 @@ namespace Pacman
 
         if (maze_.tryEatPowerPellet(pacmanEntity_.position()))
         {
-            score_ += 60;
+            score_ += 50;
+            ghostDirector_.powerPelletEaten();
         }
 
         TargetContext ctx

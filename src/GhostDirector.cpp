@@ -13,9 +13,21 @@ namespace Pacman
 
     void GhostDirector::update(const std::array<Ghost*, 4>& ghosts, const Maze& maze, const TargetContext& ctx, sf::Time dt)
     {
-        elapsed_ += dt;
         tryReleaseGhost(ghosts);
-        updatePhase(ghosts);
+
+        if (powerPelletEaten_)
+        {
+            startFrightenedMode(ghosts);
+        }
+
+        if (!frightened_)
+        {
+            updatePhase(ghosts, dt);
+        }
+        else 
+        {
+            frightenMode(ghosts, dt);
+        }
 
         for (Ghost* ghost : ghosts)
         {
@@ -101,26 +113,43 @@ namespace Pacman
             frightened_ = false;
             for (Ghost* ghost : ghosts)
             {
+                ghost->setFlashFrightened(false);
+
                 if (ghost->state() == GhostState::Frightened)
                 {
-                    ghost->requestReverseDirection();
                     ghost->setState(GhostState::Chase);
                 }
-            }
-            return; 
-        }
 
-        for (Ghost* ghost : ghosts)
-        {
-            if (ghost->state() == GhostState::Frightened)
-            {
-                ghost->requestReverseDirection();
-                ghost->setState(GhostState::Chase);
+                if (ghost->isOutsideHouse())
+                {
+                    ghost->requestReverseDirection();
+                }
             }
         }
 
         
+        sf::Time flashThreshHold = FRIGHTENED_FLASH_DURATION * 2.0f * (float) cfg_.frightenedFlashes;
 
+        if (cfg_.frightenedDuration - frightenedElapsed_ <= flashThreshHold)
+        {
+            frightenedFlashElapsed_ += dt;
+            //std::cerr << frightenedElapsed_ << "\n";
+        }
+        else
+        {
+            // reset when frightenedElapsed_ sets reset i.e ghost duration extended 
+            frightenedFlashElapsed_ = sf::Time{};
+        }
+
+        if (frightenedFlashElapsed_ >= FRIGHTENED_FLASH_DURATION)
+        {
+            frightenedFlashElapsed_ -= FRIGHTENED_FLASH_DURATION;
+            // std::cerr << "flip" << "\n";
+            for (Ghost* ghost : ghosts)
+            {
+                ghost->setFlashFrightened(!ghost->flashFrightened());
+            }
+        }
     }
 
     bool GhostDirector::isActive(GhostState state) const
@@ -129,8 +158,10 @@ namespace Pacman
     }
 
 
-    void GhostDirector::updatePhase(const std::array<Ghost*, 4>& ghosts)
+    void GhostDirector::updatePhase(const std::array<Ghost*, 4>& ghosts, sf::Time dt)
     {
+        elapsed_ += dt;
+
         // chase indefinitely once phases are done
         if (cfg_.phases.size() <= 0)
         {
@@ -194,12 +225,28 @@ namespace Pacman
         // currentPhase_ = cfg_.phases.front();
     }
 
-    void GhostDirector::powerPelletEaten()
+    void GhostDirector::startFrightenedMode(const std::array<Ghost*, 4>& ghosts)
     {
+        powerPelletEaten_ = false;
         frightened_ = true;
         frightenedElapsed_ = sf::Time{};
+        frightenedFlashElapsed_ = sf::Time{};
+
+
+        for (Ghost* ghost : ghosts)
+        {
+            if (ghost->isOutsideHouse())
+            {
+                ghost->requestReverseDirection();
+            }
+            ghost->setState(GhostState::Frightened);
+            ghost->setFlashFrightened(false);
+        }
     }
 
 
-
+    void GhostDirector::powerPelletEaten()
+    {
+        powerPelletEaten_ = true;
+    }
 }

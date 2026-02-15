@@ -55,6 +55,7 @@ namespace Pacman
             GameCharacters name() const;
             void requestReverseDirection();
             bool flashFrightened() const;
+            void setFlashFrightened(bool frightened);
 
     };
 }

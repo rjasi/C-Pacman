@@ -30,6 +30,12 @@ namespace Pacman
         return flashFrightened_;
     }
 
+    void Ghost::setFlashFrightened(bool frightened)
+    {
+        flashFrightened_ = frightened;
+    }
+
+
     void Ghost::setState(GhostState state)
     {
         state_ = state;

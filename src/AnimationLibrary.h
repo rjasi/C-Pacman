@@ -44,6 +44,7 @@ namespace Pacman
             Animation blinkyRight_;
 
             static constexpr sf::Time ghostFrameTime = sf::milliseconds(80);
+            static constexpr sf::Time ghostFrightenedFrameTime = sf::seconds(0.25f);
 
             std::array<std::unique_ptr<IAnimationResolver>, 4> ghostResolvers_;
             std::unique_ptr<IAnimationResolver> pacmanResolver_;

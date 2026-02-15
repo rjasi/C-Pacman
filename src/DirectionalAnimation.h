@@ -7,6 +7,9 @@ namespace Pacman
 {
     class DirectionalAnimation
     {
+        private:
+            bool single_ = false;
+
         public:
             DirectionalAnimation(
                 Animation* up,
@@ -19,7 +22,7 @@ namespace Pacman
             left_(left), 
             right_(right)
             {
-
+                single_ = false;
             }
 
             // for animations that are the same in any direction i.e frightened
@@ -31,7 +34,7 @@ namespace Pacman
             left_(single), 
             right_(single)
             {
-
+                single_ = true;
             }
             
 
@@ -42,10 +45,18 @@ namespace Pacman
 
             void update(sf::Time dt)
             {
-                up_->update(dt);
-                down_->update(dt);
-                left_->update(dt);
-                right_->update(dt);
+                if (!single_)
+                {
+                    up_->update(dt);
+                    down_->update(dt);
+                    left_->update(dt);
+                    right_->update(dt);
+                }
+                else
+                {
+                    up_->update(dt);
+                }
+                
             }
 
             Animation& clipFor(Dir d) 
