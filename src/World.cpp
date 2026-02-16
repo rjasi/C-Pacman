@@ -16,7 +16,7 @@ namespace Pacman
     clyde_(clydeTargetStrategy_, greedyManhattanPathingStrategy_, GameCharacters::Clyde, Maze::HOUSE_RIGHT),
     ghostDirector_(cfg_)
     {
-        pacmanEntity_.setPosition(maze_.tileToWorld(TileRC{1, 1}));
+        pacmanEntity_.setPosition(maze_.tileToWorld(TileRC{1, 11}));
 
         blinky_.setPosition(maze_.tileToWorldOnBoundary(Maze::INFRONT_DOOR_LEFT));
         blinky_.setState(GhostState::Chase);
@@ -59,9 +59,7 @@ namespace Pacman
     void World::update(sf::Time dt)
     {
         advanceBlinkTimer(dt);
-
-        auto pos = maze_.tileToWorld(Maze::INFRONT_DOOR_LEFT);
-        popups_.push_back({pos, "ABC DEF", sf::seconds(5.0f), TextColors::WHITE});
+        updatePopups(dt);
 
         switch (state_)
         {
@@ -124,7 +122,7 @@ namespace Pacman
         };
 
         ghostDirector_.update({&blinky_, &pinky_, &inky_, &clyde_}, maze_, ctx, dt);
-        // resolveCollision();
+        resolveCollision();
     }
 
     const Maze& World::maze() const
@@ -149,6 +147,11 @@ namespace Pacman
 
     void World::resolveCollision()
     {
+        static int count = 0;
+        if(count > 0)
+        {
+            return;
+        }
         TileRC pacmanTile = maze_.worldToTile(pacmanEntity_.position());
 
         for (Ghost& ghost : { std::ref(blinky_), std::ref(pinky_),
@@ -159,6 +162,8 @@ namespace Pacman
             // todo check if frightened or actives
             if (pacmanTile == ghostTile)
             {
+                popups_.push_back({{12.f, 12.f}, "ABC DEF", sf::seconds(5.0f), TextColors::WHITE});
+                count++;
                 state_ = WorldState::GhostEaten;
                 eatenGhost = &ghost;
                 eatenTimer_ = sf::Time{};

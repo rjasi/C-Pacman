@@ -69,9 +69,11 @@ namespace Pacman
                     if (hasSprite(c))
                     {
                         auto sprite = getTextSprite(c);
-                        currentPos.x  += TEXT_TILE_W;
                         sprite.setPosition(currentPos);
+                        sprite.setOrigin({TEXT_TILE_W/2, TEXT_TILE_H/2}); // center origin
                         window.draw(sprite);
+                        currentPos.x  += TEXT_TILE_W;
+
                         // std::cerr << "drawn\n";
                     }
                     else 

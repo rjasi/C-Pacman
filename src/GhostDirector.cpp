@@ -230,7 +230,6 @@ namespace Pacman
         frightenedElapsed_ = sf::Time{};
         frightenedFlashElapsed_ = sf::Time{};
 
-
         for (Ghost* ghost : ghosts)
         {
             if (ghost->isOutsideHouse())
