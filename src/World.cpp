@@ -77,6 +77,7 @@ namespace Pacman
         }
     }
 
+    // briefly pause the game when ghost is eaten and show a popup of the score
     void World::ghostEaten(sf::Time dt)
     {
         eatenTimer_ += dt;
@@ -154,11 +155,11 @@ namespace Pacman
 
     void World::resolveCollision()
     {
-        static int count = 0;
-        if (count > 0)
+        if (state_ != WorldState::Playing)
         {
-            return;
+            return; 
         }
+        
         TileRC pacmanTile = maze_.worldToTile(pacmanEntity_.position());
 
         for (Ghost& ghost : { std::ref(blinky_), std::ref(pinky_),
@@ -166,17 +167,30 @@ namespace Pacman
         {
             TileRC ghostTile = maze_.worldToTile(ghost.position());
 
-            // todo check if frightened or actives
             if (pacmanTile == ghostTile)
             {
-                scorePopups_.push_back(ScorePopup{maze_.tileCenter(pacmanTile), EATEN_PAUSE, TextColors::WHITE, Scores::BlueScore1600});
-                count++;
-                state_ = WorldState::GhostEaten;
-                eatenGhost = &ghost;
-                eatenTimer_ = sf::Time{};
-                pacmanEntity_.setVisible(false);
-                ghost.setVisible(false);
-                return;
+
+                if (ghost.state() == GhostState::Chase || ghost.state() == GhostState::Scatter)
+                {
+                    // todo live lost 
+                }
+                else if (ghost.state() == GhostState::Frightened)
+                {
+
+                    ghostDirector_.ghostEaten();
+                    scorePopups_.push_back(ScorePopup{maze_.tileCenter(pacmanTile), EATEN_PAUSE, 
+                        getGhostEatenScore(ghostDirector_.ghostEatenCount())});
+                    state_ = WorldState::GhostEaten;
+                    eatenGhost = &ghost;
+                    // todo return to house for now just teleport to a random place
+                    ghost.setPosition({12.f, 12.f});
+                    // ghost.setState(GhostState::EatenReturning);
+
+                    eatenTimer_ = sf::Time{};
+                    pacmanEntity_.setVisible(false);
+                    ghost.setVisible(false);
+                    return;
+                }  
             }
 
             state_ = WorldState::Playing;
@@ -198,6 +212,24 @@ namespace Pacman
     {
         return scorePopups_;
     }
+
+    Scores World::getGhostEatenScore(int ghostsEaten) const
+    {
+        switch (ghostsEaten)
+        {
+            case 1:
+                return Scores::BlueScore200;
+            case 2:
+                return Scores::BlueScore400;
+            case 3:
+                return Scores::BlueScore800;
+            // 4 or more is 1600. This would catch 0 too but impossile to be called with 0
+            // this function is only call when a ghost is eaten so minimum is 1
+            default:
+                return Scores::BlueScore1600;
+        }
+    }
+
 
     
     void World::updatePopups(sf::Time dt)

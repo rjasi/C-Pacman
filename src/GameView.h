@@ -22,7 +22,7 @@ namespace Pacman
             explicit GameView(TextureCache& cache, 
                 AnimationLibrary* animationLibrary,
                 TileFontLibrary* tileFontLibrary,
-                ScorePopupRenderder* scorePopupRenderder);
+                ScorePopupRenderer* scorePopupRenderer);
             void reset();
             void update(sf::Time dt);
             void render(sf::RenderTarget& window);
@@ -39,7 +39,7 @@ namespace Pacman
             World world_;
             AnimationLibrary* animationLibrary_;
             TileFontLibrary* tileFontLibrary_;
-            ScorePopupRenderder* scorePopupRenderder_;
+            ScorePopupRenderer* scorePopupRenderer_;
             bool assetsLoaded_ = false;
 
             void loadAssets();

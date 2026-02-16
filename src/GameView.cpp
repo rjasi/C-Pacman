@@ -4,13 +4,13 @@
 namespace Pacman
 {
     GameView::GameView(TextureCache& textCache, AnimationLibrary* animationLibrary, TileFontLibrary* tileFontLibrary, 
-        ScorePopupRenderder* scorePopupRenderder)
+        ScorePopupRenderer* scorePopupRenderer)
     : mazeSprite_(textCache.get("maze")),
     pelletSprite_(textCache.get("pellet")),
     animationLibrary_(animationLibrary),
     powerPelletSprite_(textCache.get("power_pellet")),
     tileFontLibrary_(tileFontLibrary),
-    scorePopupRenderder_(scorePopupRenderder)
+    scorePopupRenderer_(scorePopupRenderer)
     {
         pelletSprite_.setOrigin({4.f, 4.f});
         powerPelletSprite_.setOrigin({4.f, 4.f});
@@ -147,7 +147,7 @@ namespace Pacman
     
     void GameView::drawPopup(sf::RenderTarget& window, const ScorePopup& popup)
     {
-        scorePopupRenderder_->render(window, popup);
+        scorePopupRenderer_->render(window, popup);
     }
 }
 

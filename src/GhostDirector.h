@@ -15,6 +15,7 @@ namespace Pacman
 
             int phaseIndex_ = 0;
             int pelletsEaten_ = 0;
+            int ghostEaten_ = 0;
             sf::Time elapsed_ = sf::Time{};
             sf::Time frightenedElapsed_ = sf::Time{};
             sf::Time frightenedFlashElapsed_ = sf::Time{};
@@ -39,6 +40,8 @@ namespace Pacman
             void update(const std::array<Ghost*, 4>& ghosts, const Maze& maze, const TargetContext& ctx, sf::Time dt);
             void pelletEaten();
             void powerPelletEaten();
+            void ghostEaten();
+            int ghostEatenCount() const;
 
             void startLevel();
 

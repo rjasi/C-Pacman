@@ -14,10 +14,10 @@ namespace Pacman
         loadAllAssets();
         animationLibrary_ = std::make_unique<AnimationLibrary>(textureCache_);
         tileFontLibrary_ = std::make_unique<TileFontLibrary>(textureCache_);
-        scorePopupRenderder_ = std::make_unique<ScorePopupRenderder>(textureCache_);
+        scorePopupRenderer_ = std::make_unique<ScorePopupRenderer>(textureCache_);
 
         tileFontLibrary_->load();
-        gameView_ = std::make_unique<GameView>(textureCache_,  animationLibrary_.get(), tileFontLibrary_.get(), scorePopupRenderder_.get());
+        gameView_ = std::make_unique<GameView>(textureCache_,  animationLibrary_.get(), tileFontLibrary_.get(), scorePopupRenderer_.get());
         window_.setFramerateLimit(60);
     }
 

@@ -25,7 +25,7 @@ namespace Pacman
             std::unique_ptr<GameView> gameView_;
             std::unique_ptr<AnimationLibrary> animationLibrary_;
             std::unique_ptr<TileFontLibrary> tileFontLibrary_;
-            std::unique_ptr<ScorePopupRenderder> scorePopupRenderder_;
+            std::unique_ptr<ScorePopupRenderer> scorePopupRenderer_;
 
             TextureCache textureCache_;
             

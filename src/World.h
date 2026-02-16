@@ -78,6 +78,7 @@ namespace Pacman
             void ghostEaten(sf::Time dt);
             void advanceBlinkTimer(sf::Time dt);
             void updatePopups(sf::Time dt);
+            Scores getGhostEatenScore(int ghostsEaten) const;
 
         public:
             World();

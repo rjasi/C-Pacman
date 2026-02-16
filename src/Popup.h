@@ -14,18 +14,15 @@ namespace Pacman
         public:
             sf::Vector2f pos;
             sf::Time durationRemaining;
-            TextColors color;
             virtual ~Popup() = default;
 
             Popup
             (
                 sf::Vector2f pos, 
-                sf::Time durationRemaining,
-                TextColors color
+                sf::Time durationRemaining
             )
             : pos(pos), 
-            durationRemaining(durationRemaining), 
-            color(color)
+            durationRemaining(durationRemaining)
             {
 
             }
@@ -40,12 +37,15 @@ namespace Pacman
                 sf::Time durationRemaining,
                 TextColors color,
                 std::string text)
-            : Popup(pos, durationRemaining, color), 
+            : Popup(pos, durationRemaining), 
+            color(color),
             text(text)
             {
 
             }
             std::string text;
+            TextColors color;
+
     };
 
     enum class Scores
@@ -71,9 +71,8 @@ namespace Pacman
             ( 
                 sf::Vector2f pos,
                 sf::Time durationRemaining,
-                TextColors color,
                 Scores score
-            ) : Popup(pos, durationRemaining, color), 
+            ) : Popup(pos, durationRemaining), 
             score(score)
             {
 

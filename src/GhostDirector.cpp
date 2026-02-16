@@ -225,6 +225,22 @@ namespace Pacman
 
     void GhostDirector::startFrightenedMode(const std::array<Ghost*, 4>& ghosts)
     {
+        // startFrightenedMode is also called when frightened mode is extended
+        // if this is not an extension, then reset ghosts eaten score
+        if (!frightened_)
+        {
+            ghostEaten_ = 0;
+
+            // only reverse direction on new frightended trigger. if extended then no need to reverse direction
+            for (Ghost* ghost : ghosts)
+            {
+                if (ghost->isOutsideHouse())
+                {
+                    ghost->requestReverseDirection();
+                }
+            }
+        }
+
         powerPelletEaten_ = false;
         frightened_ = true;
         frightenedElapsed_ = sf::Time{};
@@ -232,10 +248,6 @@ namespace Pacman
 
         for (Ghost* ghost : ghosts)
         {
-            if (ghost->isOutsideHouse())
-            {
-                ghost->requestReverseDirection();
-            }
             ghost->setState(GhostState::Frightened);
             ghost->setFlashFrightened(false);
         }
@@ -245,5 +257,15 @@ namespace Pacman
     void GhostDirector::powerPelletEaten()
     {
         powerPelletEaten_ = true;
+    }
+
+    void GhostDirector::ghostEaten()
+    {
+        ghostEaten_++;
+    }
+
+    int GhostDirector::ghostEatenCount() const
+    {
+        return ghostEaten_;
     }
 }
