@@ -28,7 +28,9 @@ namespace Pacman
 
             virtual float tileSize() const;
             virtual float centerEps() const;
-
+            virtual ~MoveableEntity() = default;
+            bool visible() const;
+            void setVisible(bool visible);  
         protected: 
             void warp();
             bool isWarping(Dir d, sf::Vector2f pos, const Maze& maze) const;
@@ -39,8 +41,7 @@ namespace Pacman
             Dir requested_ = Dir::Right;
             float speed_ = 60.f;
             bool visible_ = true;
-            bool visible() const;
-            void setVisible(bool visible);
+            
 
         private:
             // hold info about when cornering started

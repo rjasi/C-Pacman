@@ -17,6 +17,10 @@ namespace Pacman
 
     void Renderable::draw(sf::RenderTarget& window)
     {
+        if (!entity_.visible())
+        {
+            return;
+        }
         Animation& anim = animationResolver_->resolve(entity_);
         anim.sprite().setPosition(entity_.position());
         window.draw(anim.sprite());

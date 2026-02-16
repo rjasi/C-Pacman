@@ -53,7 +53,7 @@ namespace Pacman
                 return sprite;
             }
 
-            void render(sf::RenderTarget& window, const Popup& popup) const
+            void render(sf::RenderTarget& window, const TextPopup& popup) const
             {
                 sf::Vector2f currentPos = popup.pos;
                 int index = 0;

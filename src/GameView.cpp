@@ -3,12 +3,14 @@
 #include <iostream>
 namespace Pacman
 {
-    GameView::GameView(TextureCache& textCache, AnimationLibrary* animationLibrary, TileFontLibrary* tileFontLibrary)
+    GameView::GameView(TextureCache& textCache, AnimationLibrary* animationLibrary, TileFontLibrary* tileFontLibrary, 
+        ScorePopupRenderder* scorePopupRenderder)
     : mazeSprite_(textCache.get("maze")),
     pelletSprite_(textCache.get("pellet")),
     animationLibrary_(animationLibrary),
     powerPelletSprite_(textCache.get("power_pellet")),
-    tileFontLibrary_(tileFontLibrary)
+    tileFontLibrary_(tileFontLibrary),
+    scorePopupRenderder_(scorePopupRenderder)
     {
         pelletSprite_.setOrigin({4.f, 4.f});
         powerPelletSprite_.setOrigin({4.f, 4.f});
@@ -56,11 +58,16 @@ namespace Pacman
             renderable.draw(window);
         }
         
-        for (const Popup& popup : world_.popups())
+        for (const TextPopup& popup : world_.textPopups())
         {
-            TileFont& textRenderer = tileFontLibrary_->get(popup.color);
-            textRenderer.render(window, popup);
+            drawPopup(window, popup);
         }
+
+        for (const ScorePopup& popup : world_.scorePopups())
+        {
+            drawPopup(window, popup);
+        }
+
 
     }
 
@@ -106,8 +113,6 @@ namespace Pacman
             }
 
         }
-
-
         
     }
 
@@ -132,6 +137,17 @@ namespace Pacman
                 }
             }
         }
+    }
+
+    void GameView::drawPopup(sf::RenderTarget& window, const TextPopup& popup)
+    {
+            const TileFont& textRenderer = tileFontLibrary_->get(popup.color);
+            textRenderer.render(window, popup);
+    }
+    
+    void GameView::drawPopup(sf::RenderTarget& window, const ScorePopup& popup)
+    {
+        scorePopupRenderder_->render(window, popup);
     }
 }
 

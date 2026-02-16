@@ -6,6 +6,7 @@
 #include "TextureCache.h"
 #include "World.h"
 #include "TileFontLibrary.h"
+#include "ScorePopupRenderer.h"
 
 #include <SFML/Graphics.hpp>
 #include <stdexcept>
@@ -20,7 +21,8 @@ namespace Pacman
             GameView() = delete;
             explicit GameView(TextureCache& cache, 
                 AnimationLibrary* animationLibrary,
-                TileFontLibrary* tileFontLibrary);
+                TileFontLibrary* tileFontLibrary,
+                ScorePopupRenderder* scorePopupRenderder);
             void reset();
             void update(sf::Time dt);
             void render(sf::RenderTarget& window);
@@ -37,9 +39,13 @@ namespace Pacman
             World world_;
             AnimationLibrary* animationLibrary_;
             TileFontLibrary* tileFontLibrary_;
+            ScorePopupRenderder* scorePopupRenderder_;
             bool assetsLoaded_ = false;
 
             void loadAssets();
             void drawPellets(sf::RenderTarget& window);
+            void drawPopup(sf::RenderTarget& window, const TextPopup& popup);
+            void drawPopup(sf::RenderTarget& window, const ScorePopup& popup);
+
     };
 }

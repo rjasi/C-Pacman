@@ -33,7 +33,7 @@ namespace Pacman
             //     return tileFonts_[static_cast<size_t>(color)];
             // }
 
-            TileFont& get(TextColors color)
+            const TileFont& get(TextColors color)
             {
                 return tileFonts_[color];
             }
@@ -67,6 +67,7 @@ namespace Pacman
 
                         }
                     }
+
                     TileFont tile{rects, has, atlas_};
                     tileFonts_[color] = tile;
                 }

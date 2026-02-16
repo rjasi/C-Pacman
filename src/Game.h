@@ -6,6 +6,7 @@
 #include "GameView.h"
 #include "TextureCache.h"
 #include "TileFontLibrary.h"
+#include "ScorePopupRenderer.h"
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
@@ -24,6 +25,7 @@ namespace Pacman
             std::unique_ptr<GameView> gameView_;
             std::unique_ptr<AnimationLibrary> animationLibrary_;
             std::unique_ptr<TileFontLibrary> tileFontLibrary_;
+            std::unique_ptr<ScorePopupRenderder> scorePopupRenderder_;
 
             TextureCache textureCache_;
             

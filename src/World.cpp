@@ -65,8 +65,10 @@ namespace Pacman
         {
             case WorldState::Playing:
                 playing(dt);
+                break;
             case WorldState::GhostEaten:
                 ghostEaten(dt);
+                break;
             case WorldState::Died:
             case WorldState::LevelCleared:
                 return;
@@ -81,6 +83,11 @@ namespace Pacman
         if (eatenTimer_ >= EATEN_PAUSE)
         {
             state_ = WorldState::Playing;
+            if (eatenGhost != nullptr)
+            {
+                eatenGhost->setVisible(true);
+            }
+            pacmanEntity_.setVisible(true);
             eatenGhost = nullptr;
             eatenTimer_ = sf::Time{};
         }
@@ -148,7 +155,7 @@ namespace Pacman
     void World::resolveCollision()
     {
         static int count = 0;
-        if(count > 0)
+        if (count > 0)
         {
             return;
         }
@@ -162,11 +169,13 @@ namespace Pacman
             // todo check if frightened or actives
             if (pacmanTile == ghostTile)
             {
-                popups_.push_back({{12.f, 12.f}, "ABC DEF", sf::seconds(5.0f), TextColors::WHITE});
+                scorePopups_.push_back(ScorePopup{maze_.tileCenter(pacmanTile), EATEN_PAUSE, TextColors::WHITE, Scores::BlueScore1600});
                 count++;
                 state_ = WorldState::GhostEaten;
                 eatenGhost = &ghost;
                 eatenTimer_ = sf::Time{};
+                pacmanEntity_.setVisible(false);
+                ghost.setVisible(false);
                 return;
             }
 
@@ -180,19 +189,39 @@ namespace Pacman
         return state_;
     }
 
-    const std::vector<Popup>& World::popups() const
+    const std::vector<TextPopup>& World::textPopups() const
     {
-        return popups_;
+        return textPopups_;
     }
+
+    const std::vector<ScorePopup>& World::scorePopups() const
+    {
+        return scorePopups_;
+    }
+
     
     void World::updatePopups(sf::Time dt)
     {
-        for (auto it = popups_.begin(); it != popups_.end(); )
+        // todo later combine into one?
+        for (auto it = textPopups_.begin(); it != textPopups_.end(); )
         {
             it->durationRemaining -= dt;
             if (it->durationRemaining <= sf::Time::Zero)
             {
-                it = popups_.erase(it); 
+                it = textPopups_.erase(it); 
+            }
+            else
+            {
+                ++it;
+            }
+        }
+
+        for (auto it = scorePopups_.begin(); it != scorePopups_.end(); )
+        {
+            it->durationRemaining -= dt;
+            if (it->durationRemaining <= sf::Time::Zero)
+            {
+                it = scorePopups_.erase(it); 
             }
             else
             {

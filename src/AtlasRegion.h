@@ -13,7 +13,7 @@ namespace Pacman::Atlas
 
     // returns region of sprite sheet of a single frame relative to origin
     // use with sprite to specify a which area to display
-    inline sf::IntRect frameRect(const AtlasRegion& r, int frameIndex, int row = 0)
+    inline sf::IntRect frameRect(const AtlasRegion& r, int frameIndex = 0, int row = 0)
     {
         // IntRect is {{left (x), top (y)}, {width, height}}
         return sf::IntRect(
@@ -138,6 +138,30 @@ namespace Pacman::Atlas
     inline constexpr AtlasRegion FrightenedGhostFlash
     {
         {616, 64},
+        {16, 16}
+    };
+
+    inline constexpr AtlasRegion BlueScore200
+    {
+        {456, 128},
+        {16, 16}
+    };
+
+    inline constexpr AtlasRegion BlueScore400
+    {
+        {472, 128},
+        {16, 16}
+    };
+
+    inline constexpr AtlasRegion BlueScore800
+    {
+        {488, 128},
+        {16, 16}
+    };
+
+    inline constexpr AtlasRegion BlueScore1600
+    {
+        {504, 128},
         {16, 16}
     };
 

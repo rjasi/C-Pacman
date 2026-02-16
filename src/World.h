@@ -50,7 +50,8 @@ namespace Pacman
             LevelConfig cfg_;
             GhostDirector ghostDirector_;
             
-            std::vector<Popup> popups_;
+            std::vector<TextPopup> textPopups_;
+            std::vector<ScorePopup> scorePopups_;
 
             // pause for 1 sec 
             static constexpr sf::Time EATEN_PAUSE = sf::seconds(2.0f);
@@ -92,6 +93,7 @@ namespace Pacman
             void setPlayerRequestedDir(Dir d);
             void update(sf::Time dt); 
             WorldState state() const;
-            const std::vector<Popup>& popups() const;
+            const std::vector<TextPopup>& textPopups() const;
+            const std::vector<ScorePopup>& scorePopups() const;
     };
 }
