@@ -27,6 +27,8 @@ namespace Pacman
             static constexpr char POWER_PELLET = 'o';
             static constexpr char EMPTY = ' ';
             
+            static constexpr TileRC SAFE_SPORT = {20,15}; // todo mode where safe spot works
+            static constexpr TileRC PACMAN_SPAWN_POINT = {23, 13};
             static constexpr TileRC INFRONT_DOOR_LEFT = {11, 13};
             static constexpr TileRC INFRONT_DOOR_RIGHT = {11, 13};
             static constexpr TileRC HOUSE_CENTER = {14, 13};
@@ -62,7 +64,7 @@ namespace Pacman
 
             TileRC worldToTile(sf::Vector2f world) const;
             sf::Vector2f tileToWorld(const TileRC& t) const;
-            sf::Vector2f tileToWorld(const sf::Vector2i& loc) const;
+            // sf::Vector2f tileToWorld(const sf::Vector2i& loc) const;
             sf::Vector2f tileToWorldOnBoundary(const TileRC& tile) const;
             sf::Vector2f tileToWorldOnBoundary(sf::Vector2i loc) const;
             sf::Vector2f tileCenterClampX(sf::Vector2i t) const;

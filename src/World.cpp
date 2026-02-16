@@ -16,7 +16,8 @@ namespace Pacman
     clyde_(clydeTargetStrategy_, greedyManhattanPathingStrategy_, GameCharacters::Clyde, Maze::HOUSE_RIGHT),
     ghostDirector_(cfg_)
     {
-        pacmanEntity_.setPosition(maze_.tileToWorld(TileRC{1, 11}));
+        pacmanEntity_.setPosition(maze_.tileToWorldOnBoundary(Maze::PACMAN_SPAWN_POINT));
+        // pacmanEntity_.setPosition(maze_.tileToWorld({20,15}));
 
         blinky_.setPosition(maze_.tileToWorldOnBoundary(Maze::INFRONT_DOOR_LEFT));
         blinky_.setState(GhostState::Chase);
@@ -159,7 +160,7 @@ namespace Pacman
         {
             return; 
         }
-        
+
         TileRC pacmanTile = maze_.worldToTile(pacmanEntity_.position());
 
         for (Ghost& ghost : { std::ref(blinky_), std::ref(pinky_),

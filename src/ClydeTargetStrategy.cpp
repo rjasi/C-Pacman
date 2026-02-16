@@ -12,8 +12,8 @@ namespace Pacman
 
     TileRC ClydeTargetStrategy::getTarget(const TargetContext& ctx) const
     {
-        // if dist between clyde and pacman <= 8 tiles then chase pacman otherwise scatter
-        if (PathUtils::euclidianDistanceSquared(ctx.pacman_tile, ctx.clyde_tile) <= 64)
+        // if dist between clyde and pacman >= 8 tiles then chase pacman otherwise scatter
+        if (PathUtils::euclidianDistanceSquared(ctx.pacman_tile, ctx.clyde_tile) >= 64)
         {
             return ctx.pacman_tile;
         } 

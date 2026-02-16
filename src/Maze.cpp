@@ -211,13 +211,13 @@ namespace Pacman
         return tileToWorldOnBoundary(TileRC(loc));
     }
 
-    sf::Vector2f Maze::tileToWorld(const sf::Vector2i &loc) const
-    {
-        return {
-            origin_.x + loc.x * TILE_SIZE + TILE_SIZE / 2,
-            origin_.y + loc.y * TILE_SIZE + TILE_SIZE / 2 // 0 indexed, + TILE_SIZE/2
-        };
-    }
+    // sf::Vector2f Maze::tileToWorld(const sf::Vector2i &loc) const
+    // {
+    //     return {
+    //         origin_.x + loc.x * TILE_SIZE + TILE_SIZE / 2,
+    //         origin_.y + loc.y * TILE_SIZE + TILE_SIZE / 2 // 0 indexed, + TILE_SIZE/2
+    //     };
+    // }
 
     bool Maze::tryEatPellet(const sf::Vector2f& worldPos)
     {
