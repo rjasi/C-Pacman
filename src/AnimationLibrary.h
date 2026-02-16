@@ -33,6 +33,11 @@ namespace Pacman
             DirectionalAnimation clyde_fightened_ghost_directional_anim;
             DirectionalAnimation clyde_fightened_ghost_flash_directional_anim;
 
+            DirectionalAnimation blinkyEyesDirectionalAnim_;
+            DirectionalAnimation pinkyEyesDirectionalAnim_;
+            DirectionalAnimation inkyEyesDirectionalAnim_;
+            DirectionalAnimation clydeEyesDirectionalAnim_;
+
             GhostAnimationPack blinky;
             GhostAnimationPack pinky;
             GhostAnimationPack inky;
@@ -41,7 +46,6 @@ namespace Pacman
             PacmanAnimationPack pacman;
 
             void update(sf::Time dt);
-            Animation blinkyRight_;
 
             static constexpr sf::Time ghostFrameTime = sf::milliseconds(80);
             static constexpr sf::Time ghostFrightenedFrameTime = sf::seconds(0.25f);
@@ -50,8 +54,7 @@ namespace Pacman
             std::unique_ptr<IAnimationResolver> pacmanResolver_;
 
         private:
-
-            
+            static DirArray<Animation> makeEyes(TextureCache& cache);
             // Animation pacmanUp_;
             // Animation pacmanLeft_;
             // Animation pacmanDown_;
@@ -60,6 +63,7 @@ namespace Pacman
             Animation blinkyLeft_;
             Animation blinkyUp_;
             Animation blinkyDown_;
+            Animation blinkyRight_;
 
             Animation pinkyRight_;
             Animation pinkyLeft_;
@@ -76,7 +80,6 @@ namespace Pacman
             Animation clydeUp_;
             Animation clydeDown_;
 
-
             Animation blinky_frightened_ghost_;
             Animation blinky_frightened_ghostFlash_;
             Animation pinky_frightened_ghost_;
@@ -85,5 +88,11 @@ namespace Pacman
             Animation inky_frightened_ghostFlash_;
             Animation clyde_frightened_ghost_;
             Animation clyde_frightened_ghostFlash_;
+
+            DirArray<Animation> blinkyEyes_;
+            DirArray<Animation> pinkyEyes_;
+            DirArray<Animation> inkyEyes_;
+            DirArray<Animation> clydeEyes_;
+
     };
 }

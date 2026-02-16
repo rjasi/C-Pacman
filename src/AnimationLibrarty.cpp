@@ -35,6 +35,10 @@ namespace Pacman
     inky_frightened_ghostFlash_(cache.get("atlas"), Atlas::FrightenedGhostFlash, 2, ghostFrightenedFrameTime),
     clyde_frightened_ghost_(cache.get("atlas"), Atlas::FrightenedGhost, 2, ghostFrightenedFrameTime),
     clyde_frightened_ghostFlash_(cache.get("atlas"), Atlas::FrightenedGhostFlash, 2, ghostFrightenedFrameTime),
+    blinkyEyes_(makeEyes(cache)),
+    pinkyEyes_(makeEyes(cache)),
+    inkyEyes_(makeEyes(cache)),
+    clydeEyes_(makeEyes(cache)),
     
     pacman_normal(&pacmanRight_, &pacmanRight_, &pacmanRight_, &pacmanRight_),
     blinky_normal(&blinkyUp_, &blinkyDown_, &blinkyLeft_, &blinkyRight_),
@@ -51,11 +55,16 @@ namespace Pacman
     clyde_fightened_ghost_directional_anim(&clyde_frightened_ghost_),
     clyde_fightened_ghost_flash_directional_anim(&clyde_frightened_ghostFlash_),
 
+    blinkyEyesDirectionalAnim_(blinkyEyes_),
+    pinkyEyesDirectionalAnim_(pinkyEyes_),
+    inkyEyesDirectionalAnim_(inkyEyes_),
+    clydeEyesDirectionalAnim_(clydeEyes_),
+
     pacman(&pacman_normal),
-    blinky(GameCharacters::Blinky, &blinky_normal, &blinky_fightened_ghost_directional_anim, &blinky_fightened_ghost_flash_directional_anim),
-    pinky(GameCharacters::Pinky, &pinky_normal, &pinky_fightened_ghost_directional_anim, &pinky_fightened_ghost_flash_directional_anim),
-    inky(GameCharacters::Inky, &inky_normal, &inky_fightened_ghost_directional_anim, &inky_fightened_ghost_flash_directional_anim),
-    clyde(GameCharacters::Clyde, &clyde_normal, &clyde_fightened_ghost_directional_anim, &clyde_fightened_ghost_flash_directional_anim)
+    blinky(GameCharacters::Blinky, &blinky_normal, &blinky_fightened_ghost_directional_anim, &blinky_fightened_ghost_flash_directional_anim, &blinkyEyesDirectionalAnim_),
+    pinky(GameCharacters::Pinky, &pinky_normal, &pinky_fightened_ghost_directional_anim, &pinky_fightened_ghost_flash_directional_anim, &pinkyEyesDirectionalAnim_),
+    inky(GameCharacters::Inky, &inky_normal, &inky_fightened_ghost_directional_anim, &inky_fightened_ghost_flash_directional_anim, &inkyEyesDirectionalAnim_),
+    clyde(GameCharacters::Clyde, &clyde_normal, &clyde_fightened_ghost_directional_anim, &clyde_fightened_ghost_flash_directional_anim, &clydeEyesDirectionalAnim_)
     {
         ghostResolvers_[GameCharactersIndex::BLINKY] = std::make_unique<GhostAnimationResolver>(&blinky);
         ghostResolvers_[GameCharactersIndex::PINKY] = std::make_unique<GhostAnimationResolver>(&pinky);
@@ -73,4 +82,17 @@ namespace Pacman
         blinky.update(dt);
         clyde.update(dt);
     }
+
+
+    DirArray<Animation> AnimationLibrary::makeEyes(TextureCache& cache) 
+    {
+        auto& atlas = cache.get("atlas");
+        return
+        {
+            Animation(atlas, Atlas::GhostEyesRight, 1, sf::Time::Zero),
+            Animation(atlas, Atlas::GhostEyesLeft,  1, sf::Time::Zero),
+            Animation(atlas, Atlas::GhostEyesUp,    1, sf::Time::Zero),
+            Animation(atlas, Atlas::GhostEyesDown,  1, sf::Time::Zero),
+        };
+}
 }

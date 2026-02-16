@@ -165,4 +165,28 @@ namespace Pacman::Atlas
         {16, 16}
     };
 
+    inline constexpr AtlasRegion GhostEyesRight
+    {
+        {584, 80},
+        {16, 16}
+    };
+
+    inline constexpr AtlasRegion GhostEyesLeft
+    {
+        {600, 80},
+        {16, 16}
+    };
+
+    inline constexpr AtlasRegion GhostEyesUp
+    {
+        {616, 80},
+        {16, 16}
+    };
+
+    inline constexpr AtlasRegion GhostEyesDown
+    {
+        {632, 80},
+        {16, 16}
+    };
+
 }

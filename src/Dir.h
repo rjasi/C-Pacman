@@ -6,11 +6,11 @@ namespace Pacman
 {
     enum class Dir
     {
-        None = 0,
+        Right = 0,
         Left,
-        Right,
         Up,
         Down,
+        None
     };
 
     class DirUtils
@@ -68,7 +68,29 @@ namespace Pacman
             { 
                 return d == Dir::Up || d == Dir::Down; 
             }
-    };
-    
 
+            static constexpr std::size_t toIndex(Dir d) 
+            {
+                return static_cast<std::size_t>(d);
+            }
+    };
+
+
+    
+    template <class T>
+    class DirArray 
+    {
+        public:
+            std::array<T, 4> a;
+
+            T& operator[](Dir d) 
+            { 
+                return a[DirUtils::toIndex(d)]; 
+            }
+
+            const T& operator[](Dir d) const 
+            { 
+                return a[DirUtils::toIndex(d)]; 
+            }
+    };
 }
