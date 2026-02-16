@@ -38,4 +38,6 @@ add_custom_command(
         $<TARGET_FILE_DIR:pacman>/assets
 )
 
+
+
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)

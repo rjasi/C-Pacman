@@ -15,6 +15,7 @@ namespace Pacman::Atlas
     // use with sprite to specify a which area to display
     inline sf::IntRect frameRect(const AtlasRegion& r, int frameIndex, int row = 0)
     {
+        // IntRect is {{left (x), top (y)}, {width, height}}
         return sf::IntRect(
             {r.origin.x + frameIndex * r.frameSize.x, r.origin.y + row * r.frameSize.y },
             { r.frameSize.x, r.frameSize.y }

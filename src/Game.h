@@ -5,6 +5,7 @@
 #include "GameState.h"
 #include "GameView.h"
 #include "TextureCache.h"
+#include "TileFontLibrary.h"
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
@@ -22,6 +23,7 @@ namespace Pacman
             // unique ptr for delayed construction
             std::unique_ptr<GameView> gameView_;
             std::unique_ptr<AnimationLibrary> animationLibrary_;
+            std::unique_ptr<TileFontLibrary> tileFontLibrary_;
 
             TextureCache textureCache_;
             

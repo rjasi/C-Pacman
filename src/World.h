@@ -7,6 +7,11 @@
 #include "GreedyManhattanPathingStrategy.h"
 #include "LevelConfig.h"
 #include "GhostDirector.h"
+#include "TextColors.h"
+#include "Popup.h"
+
+#include <string>
+#include <vector>
 
 #include <SFML/Graphics.hpp>
 
@@ -44,6 +49,8 @@ namespace Pacman
             ClydeTargetStrategy clydeTargetStrategy_;
             LevelConfig cfg_;
             GhostDirector ghostDirector_;
+            
+            std::vector<Popup> popups_;
 
             // pause for 1 sec 
             static constexpr sf::Time EATEN_PAUSE = sf::seconds(2.0f);
@@ -69,6 +76,7 @@ namespace Pacman
             void playing(sf::Time dt);
             void ghostEaten(sf::Time dt);
             void advanceBlinkTimer(sf::Time dt);
+            void updatePopups(sf::Time dt);
 
         public:
             World();
@@ -84,5 +92,6 @@ namespace Pacman
             void setPlayerRequestedDir(Dir d);
             void update(sf::Time dt); 
             WorldState state() const;
+            const std::vector<Popup>& popups() const;
     };
 }

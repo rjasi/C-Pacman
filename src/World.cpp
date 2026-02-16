@@ -59,6 +59,10 @@ namespace Pacman
     void World::update(sf::Time dt)
     {
         advanceBlinkTimer(dt);
+
+        auto pos = maze_.tileToWorld(Maze::INFRONT_DOOR_LEFT);
+        popups_.push_back({pos, "ABC DEF", sf::seconds(5.0f), TextColors::WHITE});
+
         switch (state_)
         {
             case WorldState::Playing:
@@ -120,7 +124,7 @@ namespace Pacman
         };
 
         ghostDirector_.update({&blinky_, &pinky_, &inky_, &clyde_}, maze_, ctx, dt);
-        resolveCollision();
+        // resolveCollision();
     }
 
     const Maze& World::maze() const
@@ -170,6 +174,28 @@ namespace Pacman
     {
         return state_;
     }
+
+    const std::vector<Popup>& World::popups() const
+    {
+        return popups_;
+    }
+    
+    void World::updatePopups(sf::Time dt)
+    {
+        for (auto it = popups_.begin(); it != popups_.end(); )
+        {
+            it->durationRemaining -= dt;
+            if (it->durationRemaining <= sf::Time::Zero)
+            {
+                it = popups_.erase(it); 
+            }
+            else
+            {
+                ++it;
+            }
+        }
+    }
+
 
 
 }

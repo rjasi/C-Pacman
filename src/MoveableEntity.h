@@ -2,6 +2,7 @@
 
 #include "Maze.h"
 #include "Dir.h"
+
 #include <SFML/Graphics.hpp>
 
 namespace Pacman
@@ -37,6 +38,9 @@ namespace Pacman
             Dir current_ = Dir::Right;
             Dir requested_ = Dir::Right;
             float speed_ = 60.f;
+            bool visible_ = true;
+            bool visible() const;
+            void setVisible(bool visible);
 
         private:
             // hold info about when cornering started

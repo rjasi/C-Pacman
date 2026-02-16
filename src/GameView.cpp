@@ -3,11 +3,12 @@
 #include <iostream>
 namespace Pacman
 {
-    GameView::GameView(TextureCache& textCache, AnimationLibrary* animationLibrary)
+    GameView::GameView(TextureCache& textCache, AnimationLibrary* animationLibrary, TileFontLibrary* tileFontLibrary)
     : mazeSprite_(textCache.get("maze")),
     pelletSprite_(textCache.get("pellet")),
     animationLibrary_(animationLibrary),
-    powerPelletSprite_(textCache.get("power_pellet"))
+    powerPelletSprite_(textCache.get("power_pellet")),
+    tileFontLibrary_(tileFontLibrary)
     {
         pelletSprite_.setOrigin({4.f, 4.f});
         powerPelletSprite_.setOrigin({4.f, 4.f});
@@ -53,7 +54,13 @@ namespace Pacman
         for (auto& renderable : renderables_)
         {
             renderable.draw(window);
-        }        
+        }
+        
+        for (const Popup& popup : world_.popups())
+        {
+            TileFont& textRenderer = tileFontLibrary_->get(popup.color);
+            textRenderer.render(window, popup);
+        }
 
     }
 

@@ -13,7 +13,9 @@ namespace Pacman
         state_ = GameState::MainMenu;
         loadAllAssets();
         animationLibrary_ = std::make_unique<AnimationLibrary>(textureCache_);
-        gameView_ = std::make_unique<GameView>(textureCache_,  animationLibrary_.get());
+        tileFontLibrary_ = std::make_unique<TileFontLibrary>(textureCache_);
+        tileFontLibrary_->load();
+        gameView_ = std::make_unique<GameView>(textureCache_,  animationLibrary_.get(), tileFontLibrary_.get());
         window_.setFramerateLimit(60);
     }
 
@@ -119,6 +121,8 @@ namespace Pacman
         textureCache_.load("maze",   "assets/maze.png",   false);
         textureCache_.load("pellet", "assets/pellet.png", false);
         textureCache_.load("power_pellet", "assets/power_pellet.png", false);
+        textureCache_.load("text", "assets/text.png", false);
+
         // animationLibrary_.loadAll();
     }
 

@@ -287,4 +287,15 @@ namespace Pacman
         pos_ += step;
     }
 
+    bool MoveableEntity::visible() const
+    {
+        return visible_;
+    }
+
+    void MoveableEntity::setVisible(bool visible)
+    {
+        visible_ = visible;
+    }
+
+
 }

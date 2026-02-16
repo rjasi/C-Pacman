@@ -5,6 +5,7 @@
 #include "GhostEnum.h"
 #include "TextureCache.h"
 #include "World.h"
+#include "TileFontLibrary.h"
 
 #include <SFML/Graphics.hpp>
 #include <stdexcept>
@@ -17,7 +18,9 @@ namespace Pacman
     {
         public:
             GameView() = delete;
-            explicit GameView(TextureCache& cache, AnimationLibrary* animationLibrary);
+            explicit GameView(TextureCache& cache, 
+                AnimationLibrary* animationLibrary,
+                TileFontLibrary* tileFontLibrary);
             void reset();
             void update(sf::Time dt);
             void render(sf::RenderTarget& window);
@@ -33,7 +36,7 @@ namespace Pacman
 
             World world_;
             AnimationLibrary* animationLibrary_;
-
+            TileFontLibrary* tileFontLibrary_;
             bool assetsLoaded_ = false;
 
             void loadAssets();
