@@ -12,6 +12,11 @@ namespace Pacman
 
     enum class HouseState 
     { 
-        InHouse, GettingToHouseCenter, LeavingHouse, Outside 
+        InHouse, 
+        LeavingGettingToHouseCenter, 
+        Exiting,
+        Outside,
+        EnteringGettingToHouseCenter,
+        GettingToCorner,
     };
 }

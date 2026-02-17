@@ -75,12 +75,52 @@ namespace Pacman
                 case HouseState::InHouse:
                     paceInHouse(dt, maze);
                     break;
-                case HouseState::GettingToHouseCenter:
-                    moveToDoor(dt, maze);
+       
+                case HouseState::LeavingGettingToHouseCenter:
+                    // scripted logic here: 
+                    // assume ghost is pacing up and down first
+                    // need to first align vertically of house center
+                    // then need to align horizontally of house center
+                    // finally ghost is aligned and can leave
+
+                    if(!moveToHouseVerticalCenter(dt, maze))
+                        return; 
+
+                    if(!moveToTileHorizontalCenter(dt, maze, Maze::HOUSE_CENTER))
+                        return; 
+
+                    houseState_ = HouseState::Exiting;
                     break;
-                case HouseState::LeavingHouse:
+                case HouseState::Exiting:
+                    // will set the state to outside once done
+                    // maybe change the api to keep it consistent
                     moveToInfrontOfDoor(dt, maze);
                     break;
+                case HouseState::EnteringGettingToHouseCenter:
+                    // scripted logic here: 
+                    // when ghostEaten path finding is done. it will be on either 
+                    // Maze::INFRONT_DOOR_LEFT or INFRONT_DOOR_RIGHT
+                    // so center horizontally first to house center
+                    // the verticaly to the house center
+
+                    if(!moveToHouseHorizontalCenter(dt, maze))
+                        return; 
+
+                    if(!moveToHouseVerticalCenter(dt, maze))
+                        return; 
+                    
+                    houseState_ = HouseState::GettingToCorner;
+                    break;
+                case HouseState::GettingToCorner:
+                    if (!moveToTileHorizontalCenter(dt, maze, houseTile_))
+                        return;
+                    
+                    state_ = GhostState::Chase;
+                    // todo make ghost director determine when to release ghost
+                    // for now just release immiediately
+                    houseState_ = HouseState::LeavingGettingToHouseCenter;
+                    justEnteredHouse_ = true;
+                    return;
                 default:
                     break;
             }
@@ -101,6 +141,8 @@ namespace Pacman
                 warp();
                 break;
             case GhostState::EatenReturning:
+                eatenReturning(dt, maze);
+                move(dt);
                 break;
             case GhostState::Frightened:
                 frightened(dt, maze);
@@ -140,7 +182,7 @@ namespace Pacman
         move(dt);
     }
 
-    void Ghost::moveToDoor(sf::Time dt, const Maze& maze)
+    bool Ghost::moveToHouseVerticalCenter(sf::Time dt, const Maze& maze)
     {
         speed_ = 20.f;
         sf::Vector2f target = maze.tileToWorldOnBoundary(Maze::HOUSE_CENTER);
@@ -149,7 +191,7 @@ namespace Pacman
         if (std::abs(pos_.y - target.y) <= Maze::CENTER_EPS)
         {
             pos_.y = target.y;
-            moveToExit(dt, maze);
+            return true;
         } 
         else if (pos_.y < target.y)
         {
@@ -164,9 +206,12 @@ namespace Pacman
             move(dt);
         }
 
+        return false;
+
     }
 
-    void Ghost::moveToExit(sf::Time dt, const Maze& maze)
+
+    bool Ghost::moveToHouseHorizontalCenter(sf::Time dt, const Maze& maze)
     {
         speed_ = 20.f;
         sf::Vector2f target = maze.tileToWorldOnBoundary(Maze::HOUSE_CENTER);
@@ -174,8 +219,7 @@ namespace Pacman
         if (std::abs(pos_.x - target.x) <= Maze::CENTER_EPS)
         {
             pos_.x = target.x;
-            houseState_ = HouseState::LeavingHouse;
-            moveToInfrontOfDoor(dt, maze);
+            return true;
         } 
         else if (pos_.x < target.x)
         {
@@ -187,12 +231,39 @@ namespace Pacman
             current_ = Dir::Left;
             move(dt);
         }
+
+        return false;
     }
 
+    bool Ghost::moveToTileHorizontalCenter(sf::Time dt, const Maze& maze, const TileRC& targetTile)
+    {
+        speed_ = 20.f;
+        sf::Vector2f target = maze.tileToWorldOnBoundary(targetTile);
+
+        if (std::abs(pos_.x - target.x) <= Maze::CENTER_EPS)
+        {
+            pos_.x = target.x;
+            return true;
+        } 
+        else if (pos_.x < target.x)
+        {
+            current_ = Dir::Right;
+            move(dt);
+        }
+        else if (pos_.x > target.x)
+        {
+            current_ = Dir::Left;
+            move(dt);
+        }
+
+        return false;
+    }
+
+    // actually exit the house
     void Ghost::moveToInfrontOfDoor(sf::Time dt, const Maze& maze)
     {
         sf::Vector2f target = maze.tileToWorldOnBoundary(Maze::INFRONT_DOOR_LEFT);
-
+        speed_ = 40.f;
         // guranteed to be alinged on x from moveToExit so no need to check y 
         // first center y and clamp if close enougb
         if (std::abs(pos_.y - target.y) <= Maze::CENTER_EPS)
@@ -216,12 +287,57 @@ namespace Pacman
         }
     }
 
+    void Ghost::eatenReturning(sf::Time dt, const Maze& maze)
+    {
+        // only need path finding when outside house
+        // once pathfinding is done it sets houseState_ = HouseState::EnteringGettingToHouseCenter;
+        // from then on scripted movements will take over
+        if (!isOutsideHouse())
+        {
+            return;
+        }
+
+        speed_ = 60.f;
+        if (maze.nearTileCenter(pos_, centerEps())) 
+        {
+            pos_ = maze.tileCenter(pos_);
+        }
+        else
+        {
+            return;
+        }
+
+        if (ghostTargetStrategy_ == nullptr || pathingStrategy_ == nullptr || targetContext_ == nullptr)
+        {
+            return;
+        }
+
+        TileRC currentTile = maze.worldToTile(pos_);
+        if (currentTile == Maze::INFRONT_DOOR_LEFT || currentTile == Maze::INFRONT_DOOR_RIGHT)
+        {
+            houseState_ = HouseState::EnteringGettingToHouseCenter;
+            return;
+        }
+
+        PathQuery query = 
+        {
+            .current_tile = maze.worldToTile(pos_),
+            .current_direction = current_,
+            .target_tile = Maze::INFRONT_DOOR_LEFT, // according to pacman dossier it always targets that tile
+            .canReverse = false
+        };
+
+        current_ = pathingStrategy_->chooseNext(maze, query);
+        
+        targetContext_ =  nullptr; // reset
+    }
+
+
     // randomly choose directions at tile center except reverse if possible
     void Ghost::frightened(sf::Time dt, const Maze& maze)
     {
         speed_ = 40.f;
 
-        
         if (reverseRequested_) 
         {
             reverseRequested_ = false;
@@ -339,6 +455,7 @@ namespace Pacman
         // if eps is 0.25, it wil snap to center of current tile so you never move
         // setting too small will cause to almost never center if the speed is too high
     }
+    
 
 
 

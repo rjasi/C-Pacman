@@ -182,9 +182,10 @@ namespace Pacman
                     scorePopups_.push_back(ScorePopup{maze_.tileCenter(pacmanTile), EATEN_PAUSE, 
                         getGhostEatenScore(ghostDirector_.ghostEatenCount())});
                     state_ = WorldState::GhostEaten;
+                    ghost.setState(GhostState::EatenReturning);
                     eatenGhost = &ghost;
                     // todo return to house for now just teleport to a random place
-                    ghost.setPosition({12.f, 12.f});
+                    // ghost.setPosition({12.f, 12.f});
                     // ghost.setState(GhostState::EatenReturning);
 
                     eatenTimer_ = sf::Time{};

@@ -30,7 +30,7 @@ namespace Pacman
             static constexpr TileRC SAFE_SPORT = {20,15}; // todo mode where safe spot works
             static constexpr TileRC PACMAN_SPAWN_POINT = {23, 13};
             static constexpr TileRC INFRONT_DOOR_LEFT = {11, 13};
-            static constexpr TileRC INFRONT_DOOR_RIGHT = {11, 13};
+            static constexpr TileRC INFRONT_DOOR_RIGHT = {11, 14};
             static constexpr TileRC HOUSE_CENTER = {14, 13};
             static constexpr TileRC HOUSE_LEFT = {14, 11};
             static constexpr TileRC HOUSE_RIGHT = {14, 15};

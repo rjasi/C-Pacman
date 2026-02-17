@@ -17,6 +17,7 @@ namespace Pacman
             GameCharacters name_;
             bool flashFrightened_ = false;
             bool reverseRequested_ = false;
+            bool justEnteredHouse_ = false;
             TileRC houseTile_;
             GhostState state_ = GhostState::Chase;
             HouseState houseState_ = HouseState::InHouse;
@@ -27,6 +28,7 @@ namespace Pacman
             void paceInHouse(sf::Time dt, const Maze& maze);
             void active(sf::Time dt, const Maze& maze);
             void frightened(sf::Time dt, const Maze& maze);
+            void eatenReturning(sf::Time dt, const Maze& maze);
 
             // scripted logic for exiting house
             // 1. align ghost on y axis with house center
@@ -34,9 +36,10 @@ namespace Pacman
             // 3. then move to INFRONT_HOUSE
             // 4. done
             // todo: split the states, doing too much 
-            void moveToDoor(sf::Time dt, const Maze& maze);
-            void moveToExit(sf::Time dt, const Maze& maze);
+            bool moveToHouseVerticalCenter(sf::Time dt, const Maze& maze);
+            bool moveToHouseHorizontalCenter(sf::Time dt, const Maze& maze);
             void moveToInfrontOfDoor(sf::Time dt, const Maze& maze);
+            bool moveToTileHorizontalCenter(sf::Time dt, const Maze& maze, const TileRC& targetTile);
 
             float centerEps() const override;
 

@@ -58,7 +58,7 @@ namespace Pacman
         {
             return;
         }
-        else if (ghostToRelease->isOutsideHouse()) // should not happen ghosts pinky, inky and clyde always start InHouse
+        else if (ghostToRelease->isOutsideHouse()) // should not happen but fail safe
         {
             ghostsPendingRelease_.erase(ghostsPendingRelease_.begin());
             return;
@@ -77,13 +77,13 @@ namespace Pacman
             case GameCharacters::Clyde:
                 canRelease = pelletsEaten_ >= cfg_.pelletsToReleaseClyde;
                 break;
-            default: // should never happen
+            default:
                 return;
         }
 
         if (canRelease && ghostToRelease->houseState() == HouseState::InHouse)
         {
-            ghostToRelease->setHouseState(HouseState::GettingToHouseCenter);
+            ghostToRelease->setHouseState(HouseState::LeavingGettingToHouseCenter);
             ghostsPendingRelease_.erase(ghostsPendingRelease_.begin());
             return;
         }
@@ -234,7 +234,7 @@ namespace Pacman
             // only reverse direction on new frightended trigger. if extended then no need to reverse direction
             for (Ghost* ghost : ghosts)
             {
-                if (ghost->isOutsideHouse())
+                if (ghost->isOutsideHouse() && isActive(ghost->state()))
                 {
                     ghost->requestReverseDirection();
                 }
@@ -248,7 +248,10 @@ namespace Pacman
 
         for (Ghost* ghost : ghosts)
         {
-            ghost->setState(GhostState::Frightened);
+            if (isActive(ghost->state()))
+            {
+                ghost->setState(GhostState::Frightened);
+            }
             ghost->setFlashFrightened(false);
         }
     }

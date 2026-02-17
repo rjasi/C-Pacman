@@ -47,7 +47,7 @@ namespace Pacman
                     case GhostState::Scatter:
                         return *normal_;
                     case GhostState::EatenReturning:
-                        return *normal_;
+                        return *eyes_;
                     case GhostState::Frightened:
                         return ghost.flashFrightened() ? *frightenedFlash_ : *frightened_;
                 }
