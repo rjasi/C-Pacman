@@ -262,9 +262,9 @@ namespace Pacman
         powerPelletEaten_ = true;
     }
 
-    void GhostDirector::ghostEaten()
+    int GhostDirector::ghostEaten()
     {
-        ghostEaten_++;
+        return ++ghostEaten_;
     }
 
     int GhostDirector::ghostEatenCount() const

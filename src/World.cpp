@@ -1,11 +1,13 @@
 #include "World.h"
 
+
 #include <iostream>
 
 namespace Pacman
 {
     World::World() 
     :
+    maze_(ScreenConfig::MazeOrigin),
     blinkyTargetStrategy_(BLINKY_SCATTER_CORNER),
     pinkyTargetStrategy_({PINKY_SCATTER_CORNER}),
     inkyTargetStrategy_({INKY_SCATTER_CORNER}),
@@ -17,7 +19,6 @@ namespace Pacman
     ghostDirector_(cfg_)
     {
         pacmanEntity_.setPosition(maze_.tileToWorldOnBoundary(Maze::PACMAN_SPAWN_POINT));
-        // pacmanEntity_.setPosition(maze_.tileToWorld({20,15}));
 
         blinky_.setPosition(maze_.tileToWorldOnBoundary(Maze::INFRONT_DOOR_LEFT));
         blinky_.setState(GhostState::Chase);
@@ -180,17 +181,15 @@ namespace Pacman
 
                     ghostDirector_.ghostEaten();
                     scorePopups_.push_back(ScorePopup{maze_.tileCenter(pacmanTile), EATEN_PAUSE, 
-                        getGhostEatenScore(ghostDirector_.ghostEatenCount())});
+                        getGhostEatenScoreType(ghostDirector_.ghostEatenCount())});
                     state_ = WorldState::GhostEaten;
+                    // todo maybe have ghost director change the state
                     ghost.setState(GhostState::EatenReturning);
                     eatenGhost = &ghost;
-                    // todo return to house for now just teleport to a random place
-                    // ghost.setPosition({12.f, 12.f});
-                    // ghost.setState(GhostState::EatenReturning);
-
                     eatenTimer_ = sf::Time{};
                     pacmanEntity_.setVisible(false);
                     ghost.setVisible(false);
+                    score_ += getGhostEatenScore(ghostDirector_.ghostEatenCount());
                     return;
                 }  
             }
@@ -215,7 +214,7 @@ namespace Pacman
         return scorePopups_;
     }
 
-    Scores World::getGhostEatenScore(int ghostsEaten) const
+    Scores World::getGhostEatenScoreType(int ghostsEaten) const
     {
         switch (ghostsEaten)
         {
@@ -232,8 +231,23 @@ namespace Pacman
         }
     }
 
+    int World::getGhostEatenScore(int ghostsEaten) const
+    {
+        switch (ghostsEaten)
+        {
+            case 1:
+                return 200;
+            case 2:
+                return 400;
+            case 3:
+                return 800;
+            // 4 or more is 1600. This would catch 0 too but impossile to be called with 0
+            // this function is only call when a ghost is eaten so minimum is 1
+            default:
+                return 1600;
+        }
+    }
 
-    
     void World::updatePopups(sf::Time dt)
     {
         // todo later combine into one?
@@ -264,6 +278,15 @@ namespace Pacman
         }
     }
 
+    int World::score() const
+    {
+        return score_;
+    }
+
+    int World::lives() const
+    {
+        return lives_;
+    }
 
 
 }

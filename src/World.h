@@ -9,7 +9,9 @@
 #include "GhostDirector.h"
 #include "TextColors.h"
 #include "Popup.h"
+#include "ScreenConfig.h"
 
+#include <cstdint>
 #include <string>
 #include <vector>
 
@@ -68,17 +70,20 @@ namespace Pacman
             // InkyTargetStrategy pinkyTargetStrategy_;
             // ClydeTargetStrategy clydeTargetStrategy_;
 
+            // power pellet blinking
             sf::Time blinkElapsed_ = sf::Time::Zero;
-            sf::Time blinkPeriod_  = sf::milliseconds(250); 
+            sf::Time blinkPeriod_  = sf::milliseconds(150); 
             bool powerPelletVisible_ = true;
             int score_ = 0;
+            int lives_ = 3;
 
             void resolveCollision();
             void playing(sf::Time dt);
             void ghostEaten(sf::Time dt);
             void advanceBlinkTimer(sf::Time dt);
             void updatePopups(sf::Time dt);
-            Scores getGhostEatenScore(int ghostsEaten) const;
+            int getGhostEatenScore(int ghostsEaten) const;
+            Scores getGhostEatenScoreType(int ghostsEaten) const;
 
         public:
             World();
@@ -96,5 +101,7 @@ namespace Pacman
             WorldState state() const;
             const std::vector<TextPopup>& textPopups() const;
             const std::vector<ScorePopup>& scorePopups() const;
+            int score() const;
+            int lives() const;
     };
 }

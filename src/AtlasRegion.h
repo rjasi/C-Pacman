@@ -9,6 +9,10 @@ namespace Pacman::Atlas
         public:
             sf::Vector2i origin;
             sf::Vector2i frameSize;
+            sf::IntRect IntRect() const
+            {
+                return {origin, frameSize};
+            }
     };
 
     // returns region of sprite sheet of a single frame relative to origin
@@ -26,6 +30,12 @@ namespace Pacman::Atlas
     inline constexpr AtlasRegion PacmanRight 
     {
         {456, 0},   // origin
+        {16, 16}    // frame size
+    };
+
+    inline constexpr AtlasRegion PacmanLives
+    {
+        {584, 16},   // origin
         {16, 16}    // frame size
     };
 

@@ -53,7 +53,7 @@ namespace Pacman
                 return sprite;
             }
 
-            void render(sf::RenderTarget& window, const TextPopup& popup) const
+            void render(sf::RenderTarget& window, const TextPopup& popup, bool center = true) const
             {
                 sf::Vector2f currentPos = popup.pos;
                 int index = 0;
@@ -70,7 +70,14 @@ namespace Pacman
                     {
                         auto sprite = getTextSprite(c);
                         sprite.setPosition(currentPos);
-                        sprite.setOrigin({TEXT_TILE_W/2, TEXT_TILE_H/2}); // center origin
+                        if (center)
+                        {
+                            sprite.setOrigin({TEXT_TILE_W/2, TEXT_TILE_H/2}); // center origin
+                        }
+                        else
+                        {
+                            sprite.setOrigin({0, 0}); // top left is sfml default
+                        }
                         window.draw(sprite);
                         currentPos.x  += TEXT_TILE_W;
 
@@ -83,6 +90,12 @@ namespace Pacman
                 }
              
 
+            }
+
+            // todo maybe refactor Popup since not every text is a popup
+            void render(sf::RenderTarget& window, TextColors color, const std::string& text, const sf::Vector2f& pos) const
+            {
+                render(window, {pos, sf::Time::Zero, color, text}, false);
             }
 
     };

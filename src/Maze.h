@@ -36,7 +36,7 @@ namespace Pacman
             static constexpr TileRC HOUSE_RIGHT = {14, 15};
 
 
-            Maze();
+            Maze(const sf::Vector2f& origin);
             Maze(const Maze& maze) = delete;
 
             bool isInBounds(const TileRC& tile) const;

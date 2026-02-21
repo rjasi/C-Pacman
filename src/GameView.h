@@ -7,6 +7,8 @@
 #include "World.h"
 #include "TileFontLibrary.h"
 #include "ScorePopupRenderer.h"
+#include "ScreenConfig.h"
+#include "UiLayout.h"
 
 #include <SFML/Graphics.hpp>
 #include <stdexcept>
@@ -33,10 +35,12 @@ namespace Pacman
             sf::Sprite mazeSprite_;
             sf::Sprite pelletSprite_;
             sf::Sprite powerPelletSprite_;
+            sf::Sprite pacmanLivesSprite_;
 
             std::vector<Renderable> renderables_;
 
             World world_;
+            UiLayout uiLayout_;
             AnimationLibrary* animationLibrary_;
             TileFontLibrary* tileFontLibrary_;
             ScorePopupRenderer* scorePopupRenderer_;
@@ -46,6 +50,6 @@ namespace Pacman
             void drawPellets(sf::RenderTarget& window);
             void drawPopup(sf::RenderTarget& window, const TextPopup& popup);
             void drawPopup(sf::RenderTarget& window, const ScorePopup& popup);
-
+            void drawUi(sf::RenderTarget& window);
     };
 }

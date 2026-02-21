@@ -9,12 +9,12 @@ namespace Pacman
     pelletSprite_(textCache.get("pellet")),
     animationLibrary_(animationLibrary),
     powerPelletSprite_(textCache.get("power_pellet")),
+    pacmanLivesSprite_(textCache.get("atlas"), Pacman::Atlas::PacmanLives.IntRect()),
     tileFontLibrary_(tileFontLibrary),
     scorePopupRenderer_(scorePopupRenderer)
     {
         pelletSprite_.setOrigin({4.f, 4.f});
         powerPelletSprite_.setOrigin({4.f, 4.f});
-        mazeSprite_.setPosition(world_.maze().origin());
         assetsLoaded_ = true;
 
         renderables_.emplace_back(animationLibrary_->ghostResolvers_[GameCharactersIndex::BLINKY].get(), &world_.blinky());
@@ -30,19 +30,19 @@ namespace Pacman
         {
             throw std::runtime_error("GameView::reset() called before loadAssets()");
         }
-
-        // view takes in center of image, then size hence * 0.5 
-        // worldView_ = sf::View({400.f, 300.f}, {800.f, 600.f});
-        worldView_.setSize({224.f, 248.f});
-        worldView_.setCenter({224.f/2, 248.f/2});
-
-        // worldView_.zoom(0.8f);  
-        // worldView_.move({-260.f, -160.f});
+        
         mazeSprite_.setPosition(world_.maze().origin());
     }
 
     void GameView::render(sf::RenderTarget& window) 
     {
+        worldView_.setSize(ScreenConfig::VirtualScreen);
+        worldView_.setCenter(ScreenConfig::VirtualScreen / 2.f);
+        worldView_.setViewport(
+            ScreenConfig::letterboxViewport(window.getSize(), 
+            ScreenConfig::VirtualScreen));
+        mazeSprite_.setPosition(ScreenConfig::MazeOrigin);
+
         window.setView(worldView_);
         window.draw(mazeSprite_);
 
@@ -68,7 +68,7 @@ namespace Pacman
             drawPopup(window, popup);
         }
 
-
+        drawUi(window);
     }
 
     void GameView::handleEvent(const sf::Event& event)
@@ -98,6 +98,7 @@ namespace Pacman
     void GameView::update(sf::Time dt)
     {
         world_.update(dt);
+        uiLayout_.update(dt);
 
         if (world_.state() == WorldState::Playing)
         {
@@ -148,6 +149,24 @@ namespace Pacman
     void GameView::drawPopup(sf::RenderTarget& window, const ScorePopup& popup)
     {
         scorePopupRenderer_->render(window, popup);
+    }
+
+    void GameView::drawUi(sf::RenderTarget& window)
+    {
+        const TileFont& textRenderer = tileFontLibrary_->get(TextColors::WHITE);
+        if (uiLayout_.oneUpVisible())
+        {
+            textRenderer.render(window, TextColors::WHITE, std::string(UiLayout::OneUpText), UiLayout::OneUpLabel);
+        }
+        textRenderer.render(window, TextColors::WHITE, UiLayout::intToStringScore(world_.score()), UiLayout::ScoreValue);
+
+        //lives
+        for (int i = 0; i < std::min(world_.lives(), UiLayout::MaxLivesDisplayed); i ++)
+        {
+            sf::Vector2f livesPos =  UiLayout::LivesPosition + sf::Vector2f{UiLayout::LivesSpacing * i, 0};
+            pacmanLivesSprite_.setPosition(livesPos);
+            window.draw(pacmanLivesSprite_);
+        }
     }
 }
 

@@ -5,7 +5,8 @@
 
 namespace Pacman
 {
-    Maze::Maze()
+    Maze::Maze(const sf::Vector2f& origin)
+    : origin_(origin)
     {
         // TODO maybe move this to an AssetManager class
         if (!loadFromFile("assets/level1.txt"))

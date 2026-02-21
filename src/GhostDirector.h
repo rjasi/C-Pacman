@@ -40,7 +40,7 @@ namespace Pacman
             void update(const std::array<Ghost*, 4>& ghosts, const Maze& maze, const TargetContext& ctx, sf::Time dt);
             void pelletEaten();
             void powerPelletEaten();
-            void ghostEaten();
+            int ghostEaten();
             int ghostEatenCount() const;
 
             void startLevel();

@@ -20,7 +20,7 @@ namespace Pacman
         public:
             // in text.png each color has 4 rows in the 8x8 grid
             static constexpr int COLOR_BLOCK_HEIGHT = 4;
-            static constexpr std::string_view ALL_CHARS = "ABCEDEFGHIJKLMNOPQRZTUVWXYZ0123456789";
+            static constexpr std::string_view ALL_CHARS = "ABCDEFGHIJLKMNOPQRSTUVWXYZ0123456789";
 
             TileFontLibrary(TextureCache& cache)
             : atlas_(&cache.get("text"))
@@ -59,7 +59,33 @@ namespace Pacman
 
                             unsigned char offset = c - 'A'; 
 
-                            rects[(unsigned char) c] =  Atlas::frameRect(region, offset, colorRowStart);
+                            rects[(unsigned char) c] =  Atlas::frameRect(region, offset, 0);
+                            has[(unsigned char) c] = true;
+
+                            auto p = rects[(unsigned char) c];
+                            // std::cerr << "FOUND\n" << p.position.x << " " << p.position.y << " " << (unsigned int)offset << "\n";
+
+                        }
+                        else if (c >= 'P' && c <= 'Z')
+                        {
+                            Atlas::AtlasRegion region{{colorRowStart, 0},{TEXT_TILE_H, TEXT_TILE_W}};
+
+                            unsigned char offset = c - 'P'; 
+
+                            rects[(unsigned char) c] =  Atlas::frameRect(region, offset, 1);
+                            has[(unsigned char) c] = true;
+
+                            auto p = rects[(unsigned char) c];
+                            // std::cerr << "FOUND\n" << p.position.x << " " << p.position.y << " " << (unsigned int)offset << "\n";
+
+                        }
+                        else if (c >= '0' && c <= '9')
+                        {
+                            Atlas::AtlasRegion region{{colorRowStart, 0},{TEXT_TILE_H, TEXT_TILE_W}};
+
+                            unsigned char offset = c - '0'; 
+
+                            rects[(unsigned char) c] =  Atlas::frameRect(region, offset, 2);
                             has[(unsigned char) c] = true;
 
                             auto p = rects[(unsigned char) c];
