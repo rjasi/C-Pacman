@@ -7,6 +7,24 @@
 
 namespace Pacman
 {
+    /*
+    Idea behind tile movement 
+    
+    start at current tile (centered).
+    
+    set target tile to 1 step in current direction from current tile
+    
+    move
+    
+    once movement crosses target tile'ss center on a tick, snap to the center of that tile
+    at this point do checks such as wall
+
+    on direction reversals swap current_tile and target tile
+
+    same idea with early cornerning, just move diagonally for a bit and snap current
+    direction's movement axis to junction center axis (i.e moving right, once movement will cross x center on junction tile snap) 
+    then cornering is done
+    */
 
     class MoveableEntity
     {
@@ -41,9 +59,13 @@ namespace Pacman
             sf::Vector2f pos_{};
             Dir current_ = Dir::Right;
             Dir requested_ = Dir::Right;
-            float speed_ = 20.f;
+            float speed_ = 60.f;
             bool visible_ = true;
             TileRC currentTile_;
+            TileRC targetTile_;
+
+            sf::Vector2f prevCenter_;
+            sf::Vector2f targetCenter_;
 
             // bit of math magic. given 2 positions, did it cross a point (boundary)
             // used to determine if entity has crossed tile center
@@ -72,12 +94,12 @@ namespace Pacman
 
             bool isTurning();
             bool notPastTurningPoint(const Maze& maze) const;
-            void tryStartEarlyCornering(sf::Time dt, const Maze& maze);
+            void tryStartEarlyCornering(sf::Time dt, const Maze& maze, const sf::Vector2f& prev);
             void reverseDirection();
             bool isPerpendicularTurn() const;
-            bool inTurningWindow(const Maze& maze) const;
+            bool inTurningWindow(const Maze& maze, const sf::Vector2f& prev) const;
             bool trySnapToTile(const Maze& maze, Dir d);
-            bool corneringFinished(const Maze& maze);
+            bool corneringFinished(const Maze& maze, const sf::Vector2f& prev);
             void snapToJunction(const Maze& maze);
 
     };

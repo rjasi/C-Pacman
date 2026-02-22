@@ -7,7 +7,7 @@ namespace Pacman
     : currentTile_(startingTile),
     pos_(startingPos)
     {
-
+        targetTile_ = PathUtils::step(current_, currentTile_);
     }
 
     void MoveableEntity::setPosition(const sf::Vector2f& p, const TileRC& tile)
@@ -93,27 +93,32 @@ namespace Pacman
         || (DirUtils::isVertical(current_) && DirUtils::isHorizontal(requested_));
     }
 
-    bool MoveableEntity::inTurningWindow(const Maze& maze) const
+    bool MoveableEntity::inTurningWindow(const Maze& maze, const sf::Vector2f& prev) const
     {
         // pacman can start turning 3 pixels before the center of a junction 
 
         // currently going left or right, and next direction is up or down
         // check if x is close enough
+        sf::Vector2f tileCenter = maze.tileCenter(targetTile_); // use current pos. 
         if (DirUtils::isHorizontal(current_) && DirUtils::isVertical(requested_))
         {
-            return maze.nearTileCenterX(pos_, CORNERING_EPS);
+            return crossed(prev.x, pos_.x, tileCenter.x - CORNERING_EPS)
+            || crossed(prev.x, pos_.x, tileCenter.x + CORNERING_EPS);
+            // return maze.nearTileCenterX(pos_, CORNERING_EPS);
         }
         // same going but if currently going up or down check if y is close enoughs
         else if (DirUtils::isVertical(current_) && DirUtils::isHorizontal(requested_))
         {
-            return maze.nearTileCenterY(pos_, CORNERING_EPS);
+            return crossed(prev.y, pos_.y, tileCenter.y - CORNERING_EPS)
+            || crossed(prev.y, pos_.y, tileCenter.y + CORNERING_EPS);
+            // return maze.nearTileCenterY(pos_, CORNERING_EPS);
         }
 
         return false;
     }
 
 
-    void MoveableEntity::tryStartEarlyCornering(sf::Time dt, const Maze& maze)
+    void MoveableEntity::tryStartEarlyCornering(sf::Time dt, const Maze& maze, const sf::Vector2f& prev)
     {
         // logic: once a perpendicular turn is requested 
         // if pacman is close enough to the center of a tile 
@@ -134,8 +139,8 @@ namespace Pacman
         const bool turnRequested = isTurning();
         const bool perpendicularTurn = isPerpendicularTurn();
         const bool isNotPastTurnPoint = notPastTurningPoint(maze);
-        const bool isInTurningWindow = inTurningWindow(maze);
-        const bool nextTileInReqestedDirectionEnterable = maze.canEnterNextTile(requested_, pos_);
+        const bool isInTurningWindow = inTurningWindow(maze, prev);
+        const bool nextTileInReqestedDirectionEnterable = maze.canEnterNextTile(requested_, targetTile_);
         const bool canStartCornering = turnRequested && perpendicularTurn && isNotPastTurnPoint 
         && isInTurningWindow && nextTileInReqestedDirectionEnterable;
         
@@ -146,14 +151,14 @@ namespace Pacman
 
         corneringContext_.corneringStarted = true;
         corneringContext_.cornerDir = requested_;
-        corneringContext_.junctionTile = maze.worldToTile(pos_);
+        corneringContext_.junctionTile = targetTile_;
     }
 
     bool MoveableEntity::crossedCenter(const Maze& maze, const sf::Vector2f& prev) const
     {
         // check if will cross next tile's center
-        TileRC nextTile = PathUtils::step(current_, currentTile_);
-        sf::Vector2f tileCenter = maze.tileToWorld(nextTile);
+        // TileRC nextTile = PathUtils::step(current_, currentTile_);
+        sf::Vector2f tileCenter = maze.tileCenter(targetTile_);
 
         // std::cerr << "crossed " << crossed(prev.x, pos_.x, tileCenter.x) << "\n";
         if (DirUtils::isHorizontal(current_) && crossed(prev.x, pos_.x, tileCenter.x))
@@ -165,27 +170,23 @@ namespace Pacman
         {
             return true;
         }
-        // only check in moving dir otherwise will always trigger. makes no sense to check if crossed if Dir = None and not moving
-        // else if (crossed(prev.x, pos_.x, tileCenter.x) || crossed(prev.y, pos_.y, tileCenter.y))
-        // {
-        //     return true;
-        // }
+
         return false;
     }
 
     // cornering is finished when current_ dir movement axis snaps to junction tile
     // i.e current_ =  left or right , snap to x center of junction tile when close enough
-    bool MoveableEntity::corneringFinished(const Maze& maze)
+    bool MoveableEntity::corneringFinished(const Maze& maze, const sf::Vector2f& prev)
     {
         sf::Vector2f junctionCenter = maze.tileCenter(corneringContext_.junctionTile);
 
         if (DirUtils::isHorizontal(current_))
         {
-            return std::abs(junctionCenter.x - pos_.x) <= centerEps();
+            return crossed(prev.x, pos_.x, junctionCenter.x);
         }
         else if (DirUtils::isVertical(current_))
         {
-            return std::abs(junctionCenter.y - pos_.y) <= centerEps();
+            return crossed(prev.y, pos_.y, junctionCenter.y);
         }
         return false;
     }
@@ -203,6 +204,8 @@ namespace Pacman
         {
             pos_.y = junctionCenter.y;
         }
+        currentTile_ = corneringContext_.junctionTile;
+        targetTile_ = PathUtils::step(corneringContext_.cornerDir, currentTile_);
     }
 
 
@@ -214,18 +217,27 @@ namespace Pacman
         move(dt);
 
         // diagonal movement, start early if at least 3 pixels aeay from center
-        tryStartEarlyCornering(dt, maze);
+        tryStartEarlyCornering(dt, maze, prev);
 
         // reverse direction immediately or set new direction immidiately if stopped
         if ((current_ == Dir::None || current_ == DirUtils::opposite(requested_)) 
             && !corneringContext_.corneringStarted)
         {
-            current_ = requested_;
-            requested_ = Dir::None;
+            if (maze.canEnterNextTile(requested_, currentTile_))
+            {
+                // on reversals swap current and target
+                if (current_ == DirUtils::opposite(requested_))
+                {
+                    std::swap(targetTile_, currentTile_);
+                }
+    
+                current_ = requested_;
+                requested_ = Dir::None;
+            }
         }
 
 
-        if (corneringContext_.corneringStarted && corneringFinished(maze))
+        if (corneringContext_.corneringStarted && corneringFinished(maze, prev))
         {
             snapToJunction(maze);
             current_ = corneringContext_.cornerDir;
@@ -234,11 +246,9 @@ namespace Pacman
         // only check next tile once center snapped to current tile
         else if (!corneringContext_.corneringStarted && crossedCenter(maze, prev))
         {
-            std::cerr << crossedCenter(maze, prev) << "crossed center\n";
-            currentTile_ = PathUtils::step(current_, currentTile_);
-            std::cerr <<  "current" << " " << currentTile_.c << " " << currentTile_.r << "\n";
+            currentTile_ = targetTile_;
 
-            sf::Vector2f tileCenter = maze.tileCenter(pos_);
+            sf::Vector2f tileCenter = maze.tileCenter(targetTile_);
             //center 
             if (DirUtils::isHorizontal(current_))
             {
@@ -262,14 +272,12 @@ namespace Pacman
 
             if (!maze.canEnterNextTile(current_, pos_))
             {
-                std::cerr <<  "no enter\n";
-
                 current_ = Dir::None;
             }
+
+            targetTile_ = PathUtils::step(current_, currentTile_);
         }
 
-
-        
         warp();
     }
 
