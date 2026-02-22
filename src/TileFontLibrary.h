@@ -51,6 +51,7 @@ namespace Pacman
                     std::array<bool, NUM_CHARACTERS> has{};
 
                     int colorRowStart = colorIndex * COLOR_BLOCK_HEIGHT;
+                    std::cerr << colorRowStart << "\n";
                     for (char c : ALL_CHARS)
                     {
                         if (c >= 'A' && c <= 'O')
@@ -93,6 +94,7 @@ namespace Pacman
 
                         }
                     }
+                    colorIndex++;
 
                     TileFont tile{rects, has, atlas_};
                     tileFonts_[color] = tile;

@@ -35,7 +35,8 @@ namespace Pacman
             // 2. then align on x axis with house center
             // 3. then move to INFRONT_HOUSE
             // 4. done
-            // todo: split the states, doing too much 
+
+            // todo mov
             bool moveToHouseVerticalCenter(sf::Time dt, const Maze& maze);
             bool moveToHouseHorizontalCenter(sf::Time dt, const Maze& maze);
             void moveToInfrontOfDoor(sf::Time dt, const Maze& maze);
@@ -51,7 +52,9 @@ namespace Pacman
                 const IGhostTargetStrategy& ghostTargetStrategy, 
                 const IPathingStrategy& pathingStrategy,
                 GameCharacters name,
-                const TileRC& houseTile);
+                const TileRC& houseTile,
+                const TileRC& startingTile,
+                const sf::Vector2f startingPos);
 
             void update(sf::Time dt, const Maze& maze) override;
             void setState(GhostState state);

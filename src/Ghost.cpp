@@ -9,8 +9,11 @@ namespace Pacman
 
     Ghost::Ghost(const IGhostTargetStrategy& ghostTargetStrategy, 
         const IPathingStrategy& pathingStrategy, GameCharacters name,
-        const TileRC& houseTile)
-    : ghostTargetStrategy_(&ghostTargetStrategy),
+        const TileRC& houseTile,
+        const TileRC& startingTile,
+        const sf::Vector2f startingPos)
+    : MoveableEntity(startingTile, startingPos), 
+    ghostTargetStrategy_(&ghostTargetStrategy),
     pathingStrategy_(&pathingStrategy),
     name_(name),
     houseTile_(houseTile)

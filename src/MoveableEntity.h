@@ -11,8 +11,9 @@ namespace Pacman
     class MoveableEntity
     {
         public:
+            MoveableEntity(const TileRC& startingTile, const sf::Vector2f& startingPos);
             static constexpr float CORNERING_EPS = 4.0f;
-            void setPosition(sf::Vector2f p);
+            void setPosition(const sf::Vector2f& p, const TileRC& tile);
 
             sf::Vector2f position() const;
 
@@ -31,6 +32,7 @@ namespace Pacman
             virtual ~MoveableEntity() = default;
             bool visible() const;
             void setVisible(bool visible);  
+
         protected: 
             void warp();
             bool isWarping(Dir d, sf::Vector2f pos, const Maze& maze) const;
@@ -39,9 +41,15 @@ namespace Pacman
             sf::Vector2f pos_{};
             Dir current_ = Dir::Right;
             Dir requested_ = Dir::Right;
-            float speed_ = 60.f;
+            float speed_ = 20.f;
             bool visible_ = true;
-            
+            TileRC currentTile_;
+
+            // bit of math magic. given 2 positions, did it cross a point (boundary)
+            // used to determine if entity has crossed tile center
+            bool crossed(float prev, float curr, float boundary) const;
+            bool crossedCenter(const Maze& maze, const sf::Vector2f& prev) const;
+
 
         private:
             // hold info about when cornering started

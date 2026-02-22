@@ -161,7 +161,7 @@ namespace Pacman
         textRenderer.render(window, TextColors::WHITE, UiLayout::intToStringScore(world_.score()), UiLayout::ScoreValue);
 
         //lives
-        for (int i = 0; i < std::min(world_.lives(), UiLayout::MaxLivesDisplayed); i ++)
+        for (int i = 0; i < std::min(world_.lives(), UiLayout::MaxLivesDisplayed); i++)
         {
             sf::Vector2f livesPos =  UiLayout::LivesPosition + sf::Vector2f{UiLayout::LivesSpacing * i, 0};
             pacmanLivesSprite_.setPosition(livesPos);
