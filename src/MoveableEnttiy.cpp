@@ -5,9 +5,10 @@ namespace Pacman
 
     MoveableEntity::MoveableEntity(const TileRC& startingTile, const sf::Vector2f& startingPos)
     : currentTile_(startingTile),
-    pos_(startingPos)
+    pos_(startingPos),
+    targetTile_(PathUtils::step(current_, currentTile_))
     {
-        targetTile_ = PathUtils::step(current_, currentTile_);
+
     }
 
     void MoveableEntity::setPosition(const sf::Vector2f& p, const TileRC& tile)
@@ -59,6 +60,7 @@ namespace Pacman
     void MoveableEntity::setDirection(Dir d) 
     { 
         current_ = d; 
+        targetTile_ = PathUtils::step(current_, currentTile_);
     }
 
     bool MoveableEntity::isTurning()

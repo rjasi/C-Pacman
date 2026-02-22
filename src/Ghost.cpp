@@ -18,7 +18,7 @@ namespace Pacman
     name_(name),
     houseTile_(houseTile)
     {
-        speed_ = 50.0f;
+        speed_ = 20.0f;
     }
 
     GameCharacters Ghost::name() const
@@ -135,21 +135,17 @@ namespace Pacman
         {
             case GhostState::Chase:
                 active(dt, maze);
-                move(dt);
                 warp();
                 break;
             case GhostState::Scatter:
                 active(dt, maze);
-                move(dt);
                 warp();
                 break;
             case GhostState::EatenReturning:
                 eatenReturning(dt, maze);
-                move(dt);
                 break;
             case GhostState::Frightened:
                 frightened(dt, maze);
-                move(dt);
                 warp();
                 break;
 
@@ -274,6 +270,8 @@ namespace Pacman
             pos_.y = target.y;
             current_ = Dir::Left; //todo randomly choose left or right
             // state_ = GhostState::Chase; let ghost director handle this
+            currentTile_ = maze.worldToTile(pos_);
+            targetTile_ = PathUtils::step(current_, currentTile_);
             houseState_ = HouseState::Outside;
         } 
         else if (pos_.y < target.y)
@@ -300,10 +298,15 @@ namespace Pacman
             return;
         }
 
-        speed_ = 60.f;
-        if (maze.nearTileCenter(pos_, centerEps())) 
+        speed_ = 150.f;
+        sf::Vector2f prev = pos_;
+        move(dt);
+
+
+        if (crossedCenter(maze, prev)) 
         {
             pos_ = maze.tileCenter(pos_);
+            currentTile_ = targetTile_;
         }
         else
         {
@@ -315,8 +318,7 @@ namespace Pacman
             return;
         }
 
-        TileRC currentTile = maze.worldToTile(pos_);
-        if (currentTile == Maze::INFRONT_DOOR_LEFT || currentTile == Maze::INFRONT_DOOR_RIGHT)
+        if (currentTile_ == Maze::INFRONT_DOOR_LEFT || currentTile_ == Maze::INFRONT_DOOR_RIGHT)
         {
             houseState_ = HouseState::EnteringGettingToHouseCenter;
             return;
@@ -331,7 +333,8 @@ namespace Pacman
         };
 
         current_ = pathingStrategy_->chooseNext(maze, query);
-        
+        targetTile_ = PathUtils::step(current_, currentTile_);
+
         targetContext_ =  nullptr; // reset
     }
 
@@ -339,20 +342,24 @@ namespace Pacman
     // randomly choose directions at tile center except reverse if possible
     void Ghost::frightened(sf::Time dt, const Maze& maze)
     {
-        speed_ = 40.f;
+        speed_ = 20.f;
+        sf::Vector2f prev = pos_;
+        move(dt);
 
         if (reverseRequested_) 
         {
             reverseRequested_ = false;
             current_ = DirUtils::opposite(current_);
+            std::swap(currentTile_, targetTile_);
             targetContext_ =  nullptr; 
             return;
         }
 
         // only choose direction at tile center
-        if (maze.nearTileCenter(pos_, centerEps())) 
+        if (crossedCenter(maze, prev)) 
         {
             pos_ = maze.tileCenter(pos_);
+            currentTile_ = targetTile_;
         }
         else
         {
@@ -389,13 +396,16 @@ namespace Pacman
         }
     
         current_ = validDirs[randomInt(0, validDirs.size() - 1)]; 
+        targetTile_ = PathUtils::step(current_, current_tile);
     }
 
 
     // determine where to go
     void Ghost::active(sf::Time dt, const Maze& maze)
     {
-        speed_ = 50.f;
+        speed_ = 60.f;
+        sf::Vector2f prev = pos_;
+        move(dt);
 
         // go in reverse direction at least one tick
         // todo check if ghost possibly clips maze a bit
@@ -405,14 +415,16 @@ namespace Pacman
         {
             reverseRequested_ = false;
             current_ = DirUtils::opposite(current_);
+            std::swap(currentTile_, targetTile_);
             targetContext_ =  nullptr; 
             return;
         }
 
         // only choose direction at tile center
-        if (maze.nearTileCenter(pos_, centerEps())) 
+        if (crossedCenter(maze, prev)) 
         {
-            pos_ = maze.tileCenter(pos_);
+            pos_ = maze.tileCenter(targetTile_);
+            currentTile_ = targetTile_;
         }
         else
         {
@@ -441,7 +453,7 @@ namespace Pacman
         };
 
         current_ = pathingStrategy_->chooseNext(maze, query);
-        
+        targetTile_ = PathUtils::step(current_, currentTile_);
         targetContext_ =  nullptr; // reset
     }
 
