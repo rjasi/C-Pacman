@@ -183,7 +183,7 @@ namespace Pacman
 
     bool Ghost::moveToHouseVerticalCenter(sf::Time dt, const Maze& maze)
     {
-        speed_ = 20.f;
+        speed_ = 60.f;
         sf::Vector2f target = maze.tileToWorldOnBoundary(Maze::HOUSE_CENTER);
 
         // first center y and clamp if close enougb
@@ -212,7 +212,7 @@ namespace Pacman
 
     bool Ghost::moveToHouseHorizontalCenter(sf::Time dt, const Maze& maze)
     {
-        speed_ = 20.f;
+        speed_ = 60.f;
         sf::Vector2f target = maze.tileToWorldOnBoundary(Maze::HOUSE_CENTER);
 
         if (std::abs(pos_.x - target.x) <= Maze::CENTER_EPS)
@@ -236,7 +236,7 @@ namespace Pacman
 
     bool Ghost::moveToTileHorizontalCenter(sf::Time dt, const Maze& maze, const TileRC& targetTile)
     {
-        speed_ = 20.f;
+        speed_ = 60.f;
         sf::Vector2f target = maze.tileToWorldOnBoundary(targetTile);
 
         if (std::abs(pos_.x - target.x) <= Maze::CENTER_EPS)
@@ -262,7 +262,7 @@ namespace Pacman
     void Ghost::moveToInfrontOfDoor(sf::Time dt, const Maze& maze)
     {
         sf::Vector2f target = maze.tileToWorldOnBoundary(Maze::INFRONT_DOOR_LEFT);
-        speed_ = 40.f;
+        speed_ = 60.f;
         // guranteed to be alinged on x from moveToExit so no need to check y 
         // first center y and clamp if close enougb
         if (std::abs(pos_.y - target.y) <= Maze::CENTER_EPS)
@@ -270,7 +270,8 @@ namespace Pacman
             pos_.y = target.y;
             current_ = Dir::Left; //todo randomly choose left or right
             // state_ = GhostState::Chase; let ghost director handle this
-            currentTile_ = maze.worldToTile(pos_);
+            // if going left then current tile is always INFRONT_OF_DOOR_RIGHT
+            currentTile_ = Maze::INFRONT_DOOR_RIGHT;
             targetTile_ = PathUtils::step(current_, currentTile_);
             houseState_ = HouseState::Outside;
         } 
