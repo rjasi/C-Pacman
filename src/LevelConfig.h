@@ -13,7 +13,7 @@ namespace Pacman
     {
         public:
             GhostState mode;   // Scatter or Chase
-            sf::Time  duration;
+            sf::Time duration;
     };
 
     class LevelConfig

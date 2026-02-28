@@ -37,6 +37,10 @@ namespace Pacman
         // clyde_.setPosition(maze_.tileToWorldOnBoundary(Maze::HOUSE_RIGHT));
         clyde_.setDirection(Dir::Up);
         clyde_.setHouseState(HouseState::InHouse);
+        // wakaSynth_.init();
+
+        synthStream_.start();
+        // synth.setAmbient(Siren());
     }
 
     void World::setPlayerRequestedDir(Dir d)
@@ -116,6 +120,8 @@ namespace Pacman
         {
             score_ += 10;
             ghostDirector_.pelletEaten();
+            synthStream_.playSfx(SynthLibrary::Waka1());
+            // wakaSynth_.pelletEaten();
         }
 
         if (maze_.tryEatPowerPellet(pacmanEntity_.position()))
