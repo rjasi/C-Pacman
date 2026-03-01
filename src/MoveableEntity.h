@@ -59,7 +59,7 @@ namespace Pacman
             sf::Vector2f pos_{};
             Dir current_ = Dir::Right;
             Dir requested_ = Dir::Right;
-            float speed_ = 60.f;
+            float speed_ = 50.f;
             bool visible_ = true;
             TileRC currentTile_;
             TileRC targetTile_;

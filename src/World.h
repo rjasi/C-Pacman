@@ -10,6 +10,8 @@
 #include "TextColors.h"
 #include "Popup.h"
 #include "ScreenConfig.h"
+#include "GameAudio.h"
+#include "SfxId.h"
 
 #include <cstdint>
 #include <string>
@@ -51,6 +53,9 @@ namespace Pacman
             ClydeTargetStrategy clydeTargetStrategy_;
             LevelConfig cfg_;
             GhostDirector ghostDirector_;
+            GameAudio gameAudio_;
+
+            bool flipWaka = false;
             
             std::vector<TextPopup> textPopups_;
             std::vector<ScorePopup> scorePopups_;

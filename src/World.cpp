@@ -116,6 +116,8 @@ namespace Pacman
         {
             score_ += 10;
             ghostDirector_.pelletEaten();
+            flipWaka ? gameAudio_.playSfx(SfxId::Waka1): gameAudio_.playSfx(SfxId::Waka2);
+            flipWaka = !flipWaka;
         }
 
         if (maze_.tryEatPowerPellet(pacmanEntity_.position()))

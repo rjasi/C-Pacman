@@ -124,8 +124,6 @@ namespace Pacman
         textureCache_.load("pellet", "assets/pellet.png", false);
         textureCache_.load("power_pellet", "assets/power_pellet.png", false);
         textureCache_.load("text", "assets/text.png", false);
-
-        // animationLibrary_.loadAll();
     }
 
 
