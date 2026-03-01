@@ -35,6 +35,30 @@ namespace Pacman::Atlas
         {16, 16}    // frame size
     };
 
+    inline constexpr AtlasRegion PacmanLeft
+    {
+        {456, 16},
+        {16, 16}
+    };
+    
+    inline constexpr AtlasRegion PacmanUp
+    {
+        {456, 32},
+        {16, 16}    
+    };
+    
+    inline constexpr AtlasRegion PacmanDown 
+    {
+        {456, 48},
+        {16, 16}    
+    };
+
+    inline constexpr AtlasRegion PacmanLastFrame 
+    {
+        {488, 0},
+        {16, 16}    
+    };
+
     inline constexpr AtlasRegion PacmanLives
     {
         {584, 16},   // origin
@@ -219,7 +243,7 @@ namespace Pacman::Atlas
             case GameCharacters::Pinky:  return { Atlas::PinkyRight,  Atlas::PinkyLeft,  Atlas::PinkyUp,  Atlas::PinkyDown  };
             case GameCharacters::Inky:   return { Atlas::InkyRight,   Atlas::InkyLeft,   Atlas::InkyUp,   Atlas::InkyDown   };
             case GameCharacters::Clyde:  return { Atlas::ClydeRight,  Atlas::ClydeLeft,  Atlas::ClydeUp,  Atlas::ClydeDown  };
-            // case CharacterId::Pacman: return { Atlas::PacmanRight, Atlas::PacmanLeft, Atlas::PacmanUp, Atlas::PacmanDown };
+            case GameCharacters::Pacman: return { Atlas::PacmanRight, Atlas::PacmanLeft, Atlas::PacmanUp, Atlas::PacmanDown };
 
             default:
                 // unreachable, but keep compiler happy:

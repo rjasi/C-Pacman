@@ -41,6 +41,7 @@ namespace Pacman
             int current_ = 0;
             sf::Time elapsed_ = sf::Time::Zero;
             sf::Time frameTime_ = sf::milliseconds(100);
+            std::vector<sf::IntRect> frameRects_;
 
 
     };

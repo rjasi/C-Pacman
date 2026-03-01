@@ -16,6 +16,12 @@ namespace Pacman
     frameTime_(frameTime),
     row_(row)
     {
+        
+        for (int i = 0; i < frameCount; i++)
+        {
+            frameRects_.push_back(Atlas::frameRect(region_, i, row_));
+        }
+
         sprite_.setOrigin(origin);
         // std::cerr << sprite().getPosition().length() << "ANIMATION construct \n";
         apply();
@@ -29,6 +35,7 @@ namespace Pacman
     , current_(0)                     // reset playback
     , elapsed_(sf::Time::Zero)        // reset playback
     , frameTime_(other.frameTime_)
+    , frameRects_(other.frameRects_)
     {
         // std::cerr << "ANIMATION copy\n";
         apply(); // reset animation state
@@ -36,7 +43,7 @@ namespace Pacman
 
     void Animation::apply()
     {
-        sprite_.setTextureRect(Atlas::frameRect(region_, current_, row_));
+        sprite_.setTextureRect(frameRects_[current_]);
     }
 
     void Animation::reset() 
@@ -69,7 +76,9 @@ namespace Pacman
         
     void Animation::setFrameCount(int n) 
     { 
-        frameCount_ = n; current_ = 0; apply(); 
+        frameCount_ = n; 
+        current_ = 0; 
+        apply(); 
     }
 
     sf::Sprite& Animation::sprite()

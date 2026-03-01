@@ -11,7 +11,7 @@ namespace Pacman
         private:
             bool single_ = false;
 
-                   // own animations
+            // own animations
             Animation up_;
             Animation down_;
             Animation left_;
@@ -50,7 +50,7 @@ namespace Pacman
             right_(other.right_),
             single_(other.single_)
             {
-                std::cerr << "DIR COPY\n";
+                // std::cerr << "DIR COPY\n";
             }
 
 
