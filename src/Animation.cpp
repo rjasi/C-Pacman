@@ -6,21 +6,24 @@ namespace Pacman
 {
     Animation::Animation(sf::Texture& texture,
                         const Atlas::AtlasRegion& region,
-                        int frameCount,
+                        int frameCountRow,
                         sf::Time frameTime,
                         sf::Vector2f origin,
-                        int row)
+                        int row,
+                        const std::vector<sf::IntRect>& additionalFrames)
     : sprite_(texture), 
     region_(region), 
-    frameCount_(frameCount),
+    frameCount_(frameCountRow  + additionalFrames.size()),
     frameTime_(frameTime),
     row_(row)
     {
-        
-        for (int i = 0; i < frameCount; i++)
+        frameRects_.reserve(frameCount_);
+        for (int i = 0; i < frameCountRow; i++)
         {
             frameRects_.push_back(Atlas::frameRect(region_, i, row_));
         }
+
+        frameRects_.insert(frameRects_.end(), additionalFrames.begin(), additionalFrames.end());
 
         sprite_.setOrigin(origin);
         // std::cerr << sprite().getPosition().length() << "ANIMATION construct \n";

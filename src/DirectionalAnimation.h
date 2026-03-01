@@ -80,6 +80,17 @@ namespace Pacman
                 single_ = false;
             }
 
+            DirectionalAnimation(
+                const DirArray<Animation>& animations
+            ) 
+            : up_(animations[Dir::Up]), 
+            down_(animations[Dir::Down]), 
+            left_(animations[Dir::Left]), 
+            right_(animations[Dir::Right])
+            {
+                single_ = false;
+            }
+
             // for animations that are the same in any direction i.e frightened
             DirectionalAnimation(
                 Animation* single

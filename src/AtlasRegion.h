@@ -232,6 +232,7 @@ namespace Pacman::Atlas
             const Atlas::AtlasRegion& left;
             const Atlas::AtlasRegion& up;
             const Atlas::AtlasRegion& down;
+            
     };
 
 

@@ -21,6 +21,7 @@ namespace Pacman
         {
             return;
         }
+
         Animation& anim = animationResolver_->resolve(entity_);
         anim.sprite().setPosition(entity_.position());
         window.draw(anim.sprite());

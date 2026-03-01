@@ -18,10 +18,11 @@ namespace Pacman
             Animation() = delete; // due to sf::Sprite not having a default constructor, this can't either
             Animation(sf::Texture& texture,
                 const Atlas::AtlasRegion& region,
-                int frameCount,
+                int frameCountRow, // how many frames on same row as region
                 sf::Time frameTime,
                 sf::Vector2f origin = {8.0f, 8.0f}, // all character sprites are 16x16 so center them at 8,8
-                int row = 0);
+                int row = 0,
+                const std::vector<sf::IntRect>& additionalFrames = {}); // specifically for pacman as for left, down, up sprites are not inline with final closed frame on 488,0
 
             Animation(const Animation& other);
             void setRow(int row);

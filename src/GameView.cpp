@@ -21,7 +21,7 @@ namespace Pacman
         renderables_.emplace_back(animationLibrary_->ghostResolvers_[GameCharactersIndex::PINKY].get(), &world_.pinky());
         renderables_.emplace_back(animationLibrary_->ghostResolvers_[GameCharactersIndex::INKY].get(), &world_.inky());
         renderables_.emplace_back(animationLibrary_->ghostResolvers_[GameCharactersIndex::CLYDE].get(), &world_.clyde());
-        // renderables_.emplace_back(animationLibrary_->pacmanResolver_.get(), &world_.pacman()); re add later
+        renderables_.emplace_back(animationLibrary_->pacmanResolver_.get(), &world_.pacman());
     }
 
     void GameView::reset() 
@@ -75,12 +75,12 @@ namespace Pacman
 
         drawUi(window);
 
-        animationLibrary_->pacmanAnimation().sprite().setPosition(world_.pacman().position());
-        if (world_.pacman().visible())
-        {
-            window.draw(animationLibrary_->pacmanAnimation().sprite());
+        // animationLibrary_->pacmanAnimation().sprite().setPosition(world_.pacman().position());
+        // if (world_.pacman().visible())
+        // {
+        //     window.draw(animationLibrary_->pacmanAnimation().sprite());
 
-        }
+        // }
         //TODO FIX THIS! Too lazy to write out sprites for each pacman direction
         
     }
@@ -118,14 +118,14 @@ namespace Pacman
         {
             animationLibrary_->update(dt);
             // original pacman game seems to have mouth open when stopped
-            if(world_.pacman().direction() != Dir::None)
-            {
-                animationLibrary_->pacmanAnimation().update(dt);
-            }
-            else
-            {
-                animationLibrary_->pacmanAnimation().reset();
-            }
+            // if(world_.pacman().direction() != Dir::None)
+            // {
+            //     animationLibrary_->pacmanAnimation().update(dt);
+            // }
+            // else
+            // {
+            //     animationLibrary_->pacmanAnimation().reset();
+            // }
 
         }
         

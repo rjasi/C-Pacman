@@ -40,7 +40,7 @@ namespace Pacman
     inkyEyes_(MakeEyes(cache.get("atlas"))),
     clydeEyes_(MakeEyes(cache.get("atlas"))),
     
-    pacman_normal(&pacmanRight_, &pacmanRight_, &pacmanRight_, &pacmanRight_),
+    pacman_normal(MakeNormalCharacter(cache.get("atlas"), GameCharacters::Pacman, 2, pacmanFrameTime)),
     blinky_normal(&blinkyUp_, &blinkyDown_, &blinkyLeft_, &blinkyRight_),
     pinky_normal(&pinkyUp_, &pinkyDown_, &pinkyLeft_, &pinkyRight_),
     inky_normal(&inkyUp_, &inkyDown_, &inkyLeft_, &inkyRight_),
@@ -60,7 +60,7 @@ namespace Pacman
     inkyEyesDirectionalAnim_(inkyEyes_),
     clydeEyesDirectionalAnim_(clydeEyes_),
 
-    pacman(&pacman_normal),
+    pacman(MakeNormalCharacter(cache.get("atlas"), GameCharacters::Pacman, 2, pacmanFrameTime)),
     blinky(GameCharacters::Blinky, &blinky_normal, &blinky_fightened_ghost_directional_anim, &blinky_fightened_ghost_flash_directional_anim, &blinkyEyesDirectionalAnim_),
     pinky(GameCharacters::Pinky, &pinky_normal, &pinky_fightened_ghost_directional_anim, &pinky_fightened_ghost_flash_directional_anim, &pinkyEyesDirectionalAnim_),
     inky(GameCharacters::Inky, &inky_normal, &inky_fightened_ghost_directional_anim, &inky_fightened_ghost_flash_directional_anim, &inkyEyesDirectionalAnim_),
@@ -81,6 +81,7 @@ namespace Pacman
         inky.update(dt);
         blinky.update(dt);
         clyde.update(dt);
+        pacman.update(dt);
     }
 
 
@@ -95,16 +96,30 @@ namespace Pacman
         };
     }
 
-    DirArray<Animation> AnimationLibrary::MakeNormalCharacter(sf::Texture& atlas, GameCharacters id, int frameCount, sf::Time frameTime, sf::Vector2f origin)
+    DirArray<Animation> AnimationLibrary::MakeNormalCharacter(sf::Texture& atlas, GameCharacters id, int frameCountRow, sf::Time frameTime, sf::Vector2f origin)
     {
         Atlas::DirRegions regions = Atlas::NormalRegionsFor(id);
-        return
+        switch (id)
         {
-            Animation(atlas, regions.right, frameCount, frameTime, origin),
-            Animation(atlas, regions.left,  frameCount, frameTime, origin),
-            Animation(atlas, regions.up,    frameCount, frameTime, origin),
-            Animation(atlas, regions.down,  frameCount, frameTime, origin),
-        };
+            case GameCharacters::Pacman:
+                return
+                {
+                    Animation(atlas, regions.right, frameCountRow, frameTime, origin, 0, {Atlas::PacmanLastFrame.IntRect()}),
+                    Animation(atlas, regions.left,  frameCountRow, frameTime, origin, 0, {Atlas::PacmanLastFrame.IntRect()}),
+                    Animation(atlas, regions.up,    frameCountRow, frameTime, origin, 0, {Atlas::PacmanLastFrame.IntRect()}),
+                    Animation(atlas, regions.down,  frameCountRow, frameTime, origin, 0, {Atlas::PacmanLastFrame.IntRect()}),
+                };
+            default:
+                return
+                {
+                    Animation(atlas, regions.right, frameCountRow, frameTime, origin),
+                    Animation(atlas, regions.left,  frameCountRow, frameTime, origin),
+                    Animation(atlas, regions.up,    frameCountRow, frameTime, origin),
+                    Animation(atlas, regions.down,  frameCountRow, frameTime, origin),
+                };
+
+        }
+        
     }
 
     Animation AnimationLibrary::MakeFrightenedGhost(sf::Texture& atlas, int frameCount, sf::Time frameTime, sf::Vector2f origin)

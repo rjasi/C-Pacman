@@ -60,7 +60,7 @@ namespace Pacman
             static DirArray<Animation> MakeEyes(sf::Texture& atlas);
             static DirArray<Animation> MakeNormalCharacter(sf::Texture& atlas, 
                                                             GameCharacters id,
-                                                            int frameCount,
+                                                            int frameCountRow,
                                                             sf::Time frameTime,
                                                             sf::Vector2f origin = {8.f, 8.f});
 
@@ -111,6 +111,7 @@ namespace Pacman
             void update(sf::Time dt);
 
             static constexpr sf::Time ghostFrameTime = sf::milliseconds(80);
+            static constexpr sf::Time pacmanFrameTime = sf::milliseconds(60);
             static constexpr sf::Time ghostFrightenedFrameTime = sf::seconds(0.25f);
 
             std::array<std::unique_ptr<IAnimationResolver>, 4> ghostResolvers_;

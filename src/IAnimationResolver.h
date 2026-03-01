@@ -50,10 +50,27 @@ namespace Pacman
 
             Animation& resolve(const MoveableEntity& e) override 
             {
-                return animPack_->animationFor().up();
+                // const Ghost& g = static_cast<const Ghost&>(e); TODO pacman states
+
+                // todo maybe move this logic out of Animation resolver 
+                // keep lastDirection_ in PacmanEnttiy?
+                if (e.direction() != Dir::None)
+                {
+                    lastDirection_ = e.direction();
+                }
+
+                Animation& clip = animPack_->animationFor().clipFor(lastDirection_);
+                
+                if (e.direction() == Dir::None)
+                {
+                    clip.reset();
+                }
+
+                return clip;
             }
 
         private:
+            Dir lastDirection_ = Dir::None;
             PacmanAnimationPack* animPack_;
     };
     
