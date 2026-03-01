@@ -41,6 +41,18 @@ namespace Pacman
 
 
 
+            DirectionalAnimation(
+                const DirectionalAnimation& other
+            ) 
+            : up_(other.up_), 
+            down_(other.down_), 
+            left_(other.left_), 
+            right_(other.right_),
+            single_(other.single_)
+            {
+                std::cerr << "DIR COPY\n";
+            }
+
 
 
             DirectionalAnimation(
