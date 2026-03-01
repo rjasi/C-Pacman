@@ -50,7 +50,7 @@ namespace Pacman
 
             Animation& resolve(const MoveableEntity& e) override 
             {
-                return *animPack_->animationFor().up_;
+                return animPack_->animationFor().up();
             }
 
         private:

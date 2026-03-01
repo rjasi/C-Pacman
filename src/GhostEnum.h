@@ -10,6 +10,7 @@ namespace Pacman
         Inky,
         Clyde,
         Pacman
+        // BinklyTorn
     };
 
     namespace GameCharactersIndex

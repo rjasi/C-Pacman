@@ -2,6 +2,8 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "GhostEnum.h"
+
 namespace Pacman::Atlas
 {
     class AtlasRegion
@@ -198,5 +200,32 @@ namespace Pacman::Atlas
         {632, 80},
         {16, 16}
     };
+
+    class DirRegions
+    {
+        public: 
+            const Atlas::AtlasRegion& right;
+            const Atlas::AtlasRegion& left;
+            const Atlas::AtlasRegion& up;
+            const Atlas::AtlasRegion& down;
+    };
+
+
+    inline constexpr DirRegions NormalRegionsFor(GameCharacters id)
+    {
+        switch (id)
+        {
+            case GameCharacters::Blinky: return { Atlas::BlinkyRight, Atlas::BlinkyLeft, Atlas::BlinkyUp, Atlas::BlinkyDown };
+            case GameCharacters::Pinky:  return { Atlas::PinkyRight,  Atlas::PinkyLeft,  Atlas::PinkyUp,  Atlas::PinkyDown  };
+            case GameCharacters::Inky:   return { Atlas::InkyRight,   Atlas::InkyLeft,   Atlas::InkyUp,   Atlas::InkyDown   };
+            case GameCharacters::Clyde:  return { Atlas::ClydeRight,  Atlas::ClydeLeft,  Atlas::ClydeUp,  Atlas::ClydeDown  };
+            // case CharacterId::Pacman: return { Atlas::PacmanRight, Atlas::PacmanLeft, Atlas::PacmanUp, Atlas::PacmanDown };
+
+            default:
+                // unreachable, but keep compiler happy:
+                return { Atlas::BlinkyRight, Atlas::BlinkyLeft, Atlas::BlinkyUp, Atlas::BlinkyDown };
+        }
+        
+    }
 
 }

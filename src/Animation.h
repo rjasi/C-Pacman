@@ -8,6 +8,9 @@
 
 namespace Pacman
 {
+    // this SHOULD NOT be shared between different entites because sf::Sprite and timing data is specific to a single 
+    // instance
+    // each entity that needs animations needs its own instance of Animation() i.e game actor and Cutsceneactor
     // given a list of frames determine which to draw
     class Animation
     {
@@ -20,6 +23,7 @@ namespace Pacman
                 sf::Vector2f origin = {8.0f, 8.0f}, // all character sprites are 16x16 so center them at 8,8
                 int row = 0);
 
+            Animation(const Animation& other);
             void setRow(int row);
             void setFrameCount(int n);
             void update(sf::Time dt);

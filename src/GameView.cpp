@@ -21,7 +21,7 @@ namespace Pacman
         renderables_.emplace_back(animationLibrary_->ghostResolvers_[GameCharactersIndex::PINKY].get(), &world_.pinky());
         renderables_.emplace_back(animationLibrary_->ghostResolvers_[GameCharactersIndex::INKY].get(), &world_.inky());
         renderables_.emplace_back(animationLibrary_->ghostResolvers_[GameCharactersIndex::CLYDE].get(), &world_.clyde());
-        renderables_.emplace_back(animationLibrary_->pacmanResolver_.get(), &world_.pacman());
+        // renderables_.emplace_back(animationLibrary_->pacmanResolver_.get(), &world_.pacman()); re add later
     }
 
     void GameView::reset() 
@@ -46,11 +46,16 @@ namespace Pacman
         window.setView(worldView_);
         window.draw(mazeSprite_);
 
+        // auto x = animationLibrary_->clyde_normal.down_;
+        // x.sprite().setPosition({12.f, 12.f});
+        // Animation copy(x);
+
+
         drawPellets(window);
         // don't animate pacman if not moving 
         if (world_.pacman().direction() != Dir::None)
         {
-            animationLibrary_->pacmanRight_.sprite().setRotation(world_.pacman().rotation());
+            animationLibrary_->pacmanAnimation().sprite().setRotation(world_.pacman().rotation());
         }
     
         for (auto& renderable : renderables_)
@@ -69,6 +74,15 @@ namespace Pacman
         }
 
         drawUi(window);
+
+        animationLibrary_->pacmanAnimation().sprite().setPosition(world_.pacman().position());
+        if (world_.pacman().visible())
+        {
+            window.draw(animationLibrary_->pacmanAnimation().sprite());
+
+        }
+        //TODO FIX THIS! Too lazy to write out sprites for each pacman direction
+        
     }
 
     void GameView::handleEvent(const sf::Event& event)
@@ -106,11 +120,11 @@ namespace Pacman
             // original pacman game seems to have mouth open when stopped
             if(world_.pacman().direction() != Dir::None)
             {
-                animationLibrary_->pacmanRight_.update(dt);
+                animationLibrary_->pacmanAnimation().update(dt);
             }
             else
             {
-                animationLibrary_->pacmanRight_.reset();
+                animationLibrary_->pacmanAnimation().reset();
             }
 
         }

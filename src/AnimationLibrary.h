@@ -13,9 +13,72 @@ namespace Pacman
 {
     class AnimationLibrary
     {
-        public: 
-            AnimationLibrary(TextureCache& cache);
+
+        private:
+            // Animation pacmanUp_;
+            // Animation pacmanLeft_;
+            // Animation pacmanDown_;
+
             Animation pacmanRight_; // for now just use pacmanRight and rotate 
+
+            Animation blinkyLeft_;
+            Animation blinkyUp_;
+            Animation blinkyDown_;
+            Animation blinkyRight_;
+
+            Animation pinkyRight_;
+            Animation pinkyLeft_;
+            Animation pinkyUp_;
+            Animation pinkyDown_;
+
+            Animation inkyRight_;
+            Animation inkyLeft_;
+            Animation inkyUp_;
+            Animation inkyDown_;
+
+            Animation clydeRight_;
+            Animation clydeLeft_;
+            Animation clydeUp_;
+            Animation clydeDown_;
+
+            Animation blinky_frightened_ghost_;
+            Animation blinky_frightened_ghostFlash_;
+            Animation pinky_frightened_ghost_;
+            Animation pinky_frightened_ghostFlash_;
+            Animation inky_frightened_ghost_;
+            Animation inky_frightened_ghostFlash_;
+            Animation clyde_frightened_ghost_;
+            Animation clyde_frightened_ghostFlash_;
+
+            DirArray<Animation> blinkyEyes_;
+            DirArray<Animation> pinkyEyes_;
+            DirArray<Animation> inkyEyes_;
+            DirArray<Animation> clydeEyes_;
+
+        public: 
+            // todo maybe move these to a factory class
+            static DirArray<Animation> MakeEyes(sf::Texture& atlas);
+            static DirArray<Animation> MakeNormalCharacter(sf::Texture& atlas, 
+                                                            GameCharacters id,
+                                                            int frameCount,
+                                                            sf::Time frameTime,
+                                                            sf::Vector2f origin = {8.f, 8.f});
+
+            static Animation MakeFrightenedGhost(sf::Texture& atlas, 
+                                                    int frameCount,
+                                                    sf::Time frameTime = ghostFrightenedFrameTime,
+                                                    sf::Vector2f origin = {8.f, 8.f});
+            
+            static Animation MakeFrightenedGhostFlash(sf::Texture& atlas, 
+                                                    int frameCount,
+                                                    sf::Time frameTime = ghostFrightenedFrameTime,
+                                                    sf::Vector2f origin = {8.f, 8.f});
+
+            static GhostAnimationPack MakeGhostAnimationPack(sf::Texture& atlas, GameCharacters id);
+
+
+
+            AnimationLibrary(TextureCache& cache);
 
             DirectionalAnimation pacman_normal;
 
@@ -53,46 +116,7 @@ namespace Pacman
             std::array<std::unique_ptr<IAnimationResolver>, 4> ghostResolvers_;
             std::unique_ptr<IAnimationResolver> pacmanResolver_;
 
-        private:
-            static DirArray<Animation> makeEyes(TextureCache& cache);
-            // Animation pacmanUp_;
-            // Animation pacmanLeft_;
-            // Animation pacmanDown_;
-
-
-            Animation blinkyLeft_;
-            Animation blinkyUp_;
-            Animation blinkyDown_;
-            Animation blinkyRight_;
-
-            Animation pinkyRight_;
-            Animation pinkyLeft_;
-            Animation pinkyUp_;
-            Animation pinkyDown_;
-
-            Animation inkyRight_;
-            Animation inkyLeft_;
-            Animation inkyUp_;
-            Animation inkyDown_;
-
-            Animation clydeRight_;
-            Animation clydeLeft_;
-            Animation clydeUp_;
-            Animation clydeDown_;
-
-            Animation blinky_frightened_ghost_;
-            Animation blinky_frightened_ghostFlash_;
-            Animation pinky_frightened_ghost_;
-            Animation pinky_frightened_ghostFlash_;
-            Animation inky_frightened_ghost_;
-            Animation inky_frightened_ghostFlash_;
-            Animation clyde_frightened_ghost_;
-            Animation clyde_frightened_ghostFlash_;
-
-            DirArray<Animation> blinkyEyes_;
-            DirArray<Animation> pinkyEyes_;
-            DirArray<Animation> inkyEyes_;
-            DirArray<Animation> clydeEyes_;
+            Animation& pacmanAnimation(); // for now just use pacmanRight and rotate 
 
     };
 }

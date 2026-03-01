@@ -5,22 +5,54 @@
 
 namespace Pacman
 {
+    // stores animations each of the 4 directions sprites travel in pacman
     class DirectionalAnimation
     {
         private:
             bool single_ = false;
 
+                   // own animations
+            Animation up_;
+            Animation down_;
+            Animation left_;
+            Animation right_;
         public:
+      
+
+            Animation& up()
+            {
+                return up_;
+            }
+
+            Animation& down()
+            {
+                return down_;
+            }
+
+            Animation& left()
+            {
+                return left_;
+            }
+
+            Animation& right()
+            {
+                return right_;
+            }
+
+
+
+
+
             DirectionalAnimation(
                 Animation* up,
                 Animation* down,
                 Animation* left,
                 Animation* right
             ) 
-            : up_(up), 
-            down_(down), 
-            left_(left), 
-            right_(right)
+            : up_(*up), 
+            down_(*down), 
+            left_(*left), 
+            right_(*right)
             {
                 single_ = false;
             }
@@ -28,10 +60,10 @@ namespace Pacman
             DirectionalAnimation(
                 DirArray<Animation>& animations
             ) 
-            : up_(&animations[Dir::Up]), 
-            down_(&animations[Dir::Down]), 
-            left_(&animations[Dir::Left]), 
-            right_(&animations[Dir::Right])
+            : up_(animations[Dir::Up]), 
+            down_(animations[Dir::Down]), 
+            left_(animations[Dir::Left]), 
+            right_(animations[Dir::Right])
             {
                 single_ = false;
             }
@@ -40,32 +72,28 @@ namespace Pacman
             DirectionalAnimation(
                 Animation* single
             ) 
-            : up_(single), 
-            down_(single), 
-            left_(single), 
-            right_(single)
+            : up_(*single), 
+            down_(*single), 
+            left_(*single), 
+            right_(*single)
             {
                 single_ = true;
             }
             
-
-            Animation* up_ = nullptr;
-            Animation* down_ = nullptr;
-            Animation* left_ = nullptr;
-            Animation* right_ = nullptr;
+            
 
             void update(sf::Time dt)
             {
                 if (!single_)
                 {
-                    up_->update(dt);
-                    down_->update(dt);
-                    left_->update(dt);
-                    right_->update(dt);
+                    up_.update(dt);
+                    down_.update(dt);
+                    left_.update(dt);
+                    right_.update(dt);
                 }
                 else
                 {
-                    up_->update(dt);
+                    up_.update(dt);
                 }
                 
             }
@@ -74,12 +102,12 @@ namespace Pacman
             {
                 switch (d) 
                 {
-                    case Dir::Up:    return *up_;
-                    case Dir::Down:  return *down_;
-                    case Dir::Left:  return *left_;
-                    case Dir::Right: return *right_;
+                    case Dir::Up:    return up_;
+                    case Dir::Down:  return down_;
+                    case Dir::Left:  return left_;
+                    case Dir::Right: return right_;
                     default:
-                        return *up_;
+                        return up_;
                 }
             }
     };

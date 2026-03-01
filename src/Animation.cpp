@@ -1,5 +1,7 @@
 #include "Animation.h"
 
+#include <iostream>
+
 namespace Pacman
 {
     Animation::Animation(sf::Texture& texture,
@@ -15,7 +17,21 @@ namespace Pacman
     row_(row)
     {
         sprite_.setOrigin(origin);
+        // std::cerr << sprite().getPosition().length() << "ANIMATION construct \n";
         apply();
+    }
+
+    Animation::Animation(const Animation& other)
+    : sprite_(other.sprite_)          // copies texture pointer + transform
+    , region_(other.region_)
+    , frameCount_(other.frameCount_)
+    , row_(other.row_)
+    , current_(0)                     // reset playback
+    , elapsed_(sf::Time::Zero)        // reset playback
+    , frameTime_(other.frameTime_)
+    {
+        // std::cerr << "ANIMATION copy\n";
+        apply(); // reset animation state
     }
 
     void Animation::apply()
