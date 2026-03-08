@@ -9,6 +9,9 @@
 #include "ScorePopupRenderer.h"
 #include "ScreenConfig.h"
 #include "UiLayout.h"
+#include "CutsceneLibrary.h"
+#include "CutscenePlayer.h"
+#include "CutsceneEnum.h"
 
 #include <SFML/Graphics.hpp>
 #include <stdexcept>
@@ -24,13 +27,16 @@ namespace Pacman
             explicit GameView(TextureCache& cache, 
                 AnimationLibrary* animationLibrary,
                 TileFontLibrary* tileFontLibrary,
-                ScorePopupRenderer* scorePopupRenderer);
+                ScorePopupRenderer* scorePopupRenderer,
+                GameAudio& gameAudio);
             void reset();
             void update(sf::Time dt);
             void render(sf::RenderTarget& window);
             void handleEvent(const sf::Event& event);
 
         private:
+            TextureCache& textCache_;
+
             sf::View worldView_;
             sf::Sprite mazeSprite_;
             sf::Sprite pelletSprite_;
@@ -38,12 +44,13 @@ namespace Pacman
             sf::Sprite pacmanLivesSprite_;
 
             std::vector<Renderable> renderables_;
-
+            GameAudio& gameAudio_;
             World world_;
             UiLayout uiLayout_;
             AnimationLibrary* animationLibrary_;
             TileFontLibrary* tileFontLibrary_;
             ScorePopupRenderer* scorePopupRenderer_;
+            CutscenePlayer cutscenePlayer_;
             bool assetsLoaded_ = false;
 
             void loadAssets();
@@ -51,5 +58,6 @@ namespace Pacman
             void drawPopup(sf::RenderTarget& window, const TextPopup& popup);
             void drawPopup(sf::RenderTarget& window, const ScorePopup& popup);
             void drawUi(sf::RenderTarget& window);
+            void drawCutscene(sf::RenderTarget& window);
     };
 }

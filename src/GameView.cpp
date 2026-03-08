@@ -4,14 +4,18 @@
 namespace Pacman
 {
     GameView::GameView(TextureCache& textCache, AnimationLibrary* animationLibrary, TileFontLibrary* tileFontLibrary, 
-        ScorePopupRenderer* scorePopupRenderer)
-    : mazeSprite_(textCache.get("maze")),
-    pelletSprite_(textCache.get("pellet")),
+        ScorePopupRenderer* scorePopupRenderer, GameAudio& gameAudio)
+    : 
+    gameAudio_(gameAudio),
+    textCache_(textCache),
+    mazeSprite_(textCache_.get("maze")),
+    pelletSprite_(textCache_.get("pellet")),
     animationLibrary_(animationLibrary),
-    powerPelletSprite_(textCache.get("power_pellet")),
-    pacmanLivesSprite_(textCache.get("atlas"), Pacman::Atlas::PacmanLives.IntRect()),
+    powerPelletSprite_(textCache_.get("power_pellet")),
+    pacmanLivesSprite_(textCache_.get("atlas"), Pacman::Atlas::PacmanLives.IntRect()),
     tileFontLibrary_(tileFontLibrary),
-    scorePopupRenderer_(scorePopupRenderer)
+    scorePopupRenderer_(scorePopupRenderer),
+    world_(gameAudio_)
     {
         pelletSprite_.setOrigin({4.f, 4.f});
         powerPelletSprite_.setOrigin({4.f, 4.f});
@@ -42,21 +46,21 @@ namespace Pacman
             ScreenConfig::letterboxViewport(window.getSize(), 
             ScreenConfig::VirtualScreen));
         mazeSprite_.setPosition(ScreenConfig::MazeOrigin);
-
         window.setView(worldView_);
+
+
+        if (world_.activeCutscene() != Cutscenes::None)
+        {
+            drawCutscene(window);
+            return;
+        }
+
+        // else draw normal game world
+
+
         window.draw(mazeSprite_);
 
-        // auto x = animationLibrary_->clyde_normal.down_;
-        // x.sprite().setPosition({12.f, 12.f});
-        // Animation copy(x);
-
-
         drawPellets(window);
-        // don't animate pacman if not moving 
-        if (world_.pacman().direction() != Dir::None)
-        {
-            animationLibrary_->pacmanAnimation().sprite().setRotation(world_.pacman().rotation());
-        }
     
         for (auto& renderable : renderables_)
         {
@@ -74,15 +78,6 @@ namespace Pacman
         }
 
         drawUi(window);
-
-        // animationLibrary_->pacmanAnimation().sprite().setPosition(world_.pacman().position());
-        // if (world_.pacman().visible())
-        // {
-        //     window.draw(animationLibrary_->pacmanAnimation().sprite());
-
-        // }
-        //TODO FIX THIS! Too lazy to write out sprites for each pacman direction
-        
     }
 
     void GameView::handleEvent(const sf::Event& event)
@@ -114,19 +109,33 @@ namespace Pacman
         world_.update(dt);
         uiLayout_.update(dt);
 
+        if (world_.requestedCutscene() != Cutscenes::None)
+        {
+            switch (world_.requestedCutscene())
+            {
+                case Cutscenes::Intermission1:
+                    CutsceneLibrary::Intermission1(cutscenePlayer_, textCache_.get("atlas"));
+                    cutscenePlayer_.start();
+                    world_.notifyCutsceneStarted();
+                    break;
+                default:
+                    break;
+            }
+        }
+        if (cutscenePlayer_.finished())
+        {
+            world_.notifyCutsceneFinished();
+        }
+
+        if (cutscenePlayer_.active())
+        {
+            cutscenePlayer_.update(dt);
+        }
+
+
         if (world_.state() == WorldState::Playing)
         {
             animationLibrary_->update(dt);
-            // original pacman game seems to have mouth open when stopped
-            // if(world_.pacman().direction() != Dir::None)
-            // {
-            //     animationLibrary_->pacmanAnimation().update(dt);
-            // }
-            // else
-            // {
-            //     animationLibrary_->pacmanAnimation().reset();
-            // }
-
         }
         
     }
@@ -181,6 +190,11 @@ namespace Pacman
             pacmanLivesSprite_.setPosition(livesPos);
             window.draw(pacmanLivesSprite_);
         }
+    }
+
+    void GameView::drawCutscene(sf::RenderTarget& window)
+    {
+        cutscenePlayer_.render(window);
     }
 }
 

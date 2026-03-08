@@ -132,18 +132,14 @@ namespace Pacman
         return Animation(atlas, Atlas::FrightenedGhostFlash, frameCount, frameTime, origin);
     }
 
-    // GhostAnimationPack AnimationLibrary::MakeGhostAnimationPack(sf::Texture& atlas, GameCharacters id)
-    // {
-    //    auto dirAnim = DirectionalAnimation(MakeNormalCharacter(atlas, id, 2, ghostFrameTime));
-    //     switch (id)
-    //     {
-    //         case GameCharacters::Blinky:
-    //             return GhostAnimationPack(id, ))
-    //         case GameCharacters::Pinky:
-    //         case GameCharacters::Inky:
-    //         case GameCharacters::Clyde: 
-    //     }
-    // }
+    GhostAnimationPack AnimationLibrary::MakeGhostAnimationPack(sf::Texture& atlas, GameCharacters id)
+    {
+        auto normalAnim = DirectionalAnimation(MakeNormalCharacter(atlas, id, 2, ghostFrameTime));
+        auto frightened = DirectionalAnimation(MakeFrightenedGhost(atlas, 2, ghostFrightenedFrameTime));
+        auto frightenedFlash_ = DirectionalAnimation(MakeFrightenedGhostFlash(atlas, 2, ghostFrightenedFrameTime));
+        auto eyes = DirectionalAnimation(MakeEyes(atlas));
+        return GhostAnimationPack(id, normalAnim, frightened, frightenedFlash_, eyes);
+    }
 
 
     Animation& AnimationLibrary::pacmanAnimation()

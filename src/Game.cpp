@@ -17,7 +17,7 @@ namespace Pacman
         scorePopupRenderer_ = std::make_unique<ScorePopupRenderer>(textureCache_);
 
         tileFontLibrary_->load();
-        gameView_ = std::make_unique<GameView>(textureCache_,  animationLibrary_.get(), tileFontLibrary_.get(), scorePopupRenderer_.get());
+        gameView_ = std::make_unique<GameView>(textureCache_,  animationLibrary_.get(), tileFontLibrary_.get(), scorePopupRenderer_.get(), gameAudio_);
         window_.setFramerateLimit(60);
     }
 
@@ -44,7 +44,6 @@ namespace Pacman
                 update(STEP);
                 accumulator -= STEP;
             }
-
 
             render();   
         }

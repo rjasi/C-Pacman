@@ -5,8 +5,9 @@
 
 namespace Pacman
 {
-    World::World() 
+    World::World(GameAudio& gameAudio) 
     :
+    gameAudio_(),
     maze_(ScreenConfig::MazeOrigin),
     blinkyTargetStrategy_(BLINKY_SCATTER_CORNER),
     pinkyTargetStrategy_({PINKY_SCATTER_CORNER}),
@@ -72,6 +73,8 @@ namespace Pacman
             case WorldState::GhostEaten:
                 ghostEaten(dt);
                 break;
+            case WorldState::Cutscene:
+                return; // do nothing, gameView will notify when cutscene has finished
             case WorldState::Died:
             case WorldState::LevelCleared:
                 return;
@@ -289,6 +292,31 @@ namespace Pacman
     int World::lives() const
     {
         return lives_;
+    }
+
+    void World::notifyCutsceneFinished()
+    {
+        activeCutscene_ = Cutscenes::None;
+        state_ = WorldState::Playing;
+    }
+
+    void World::notifyCutsceneStarted()
+    {
+        activeCutscene_ = requestedCutscene_;
+        requestedCutscene_ = Cutscenes::None;
+        state_ = WorldState::Cutscene;
+    }
+
+
+    Cutscenes World::requestedCutscene() const
+    {
+        return requestedCutscene_;
+    }
+
+
+    Cutscenes World::activeCutscene() const
+    {
+        return activeCutscene_;
     }
 
 

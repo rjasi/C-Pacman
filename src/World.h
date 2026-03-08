@@ -12,6 +12,7 @@
 #include "ScreenConfig.h"
 #include "GameAudio.h"
 #include "SfxId.h"
+#include "CutsceneEnum.h"
 
 #include <cstdint>
 #include <string>
@@ -27,7 +28,8 @@ namespace Pacman
         Playing = 0,
         GhostEaten,
         Died,
-        LevelCleared
+        LevelCleared,
+        Cutscene
     };
 
     // class GhostEatenContext
@@ -54,6 +56,8 @@ namespace Pacman
             LevelConfig cfg_;
             GhostDirector ghostDirector_;
             GameAudio gameAudio_;
+            Cutscenes requestedCutscene_ = Cutscenes::Intermission1;
+            Cutscenes activeCutscene_ = Cutscenes::None;
 
             bool flipWaka = false;
             
@@ -91,7 +95,8 @@ namespace Pacman
             Scores getGhostEatenScoreType(int ghostsEaten) const;
 
         public:
-            World();
+            World() = delete;
+            World(GameAudio& gameAudio);
 
             const Maze& maze() const;
             const MoveableEntity& pacman() const;
@@ -108,5 +113,11 @@ namespace Pacman
             const std::vector<ScorePopup>& scorePopups() const;
             int score() const;
             int lives() const;
+            void notifyCutsceneStarted();
+            void notifyCutsceneFinished();
+            Cutscenes requestedCutscene() const;
+            Cutscenes activeCutscene() const;
+
+
     };
 }

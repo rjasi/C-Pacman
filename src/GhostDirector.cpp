@@ -155,7 +155,6 @@ namespace Pacman
         return state == GhostState::Chase || state == GhostState::Scatter;
     }
 
-
     void GhostDirector::updatePhase(const std::array<Ghost*, 4>& ghosts, sf::Time dt)
     {
         elapsed_ += dt;

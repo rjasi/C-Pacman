@@ -102,6 +102,17 @@ namespace Pacman
             {
                 single_ = true;
             }
+
+            DirectionalAnimation(
+                Animation single
+            ) 
+            : up_(single), 
+            down_(single), 
+            left_(single), 
+            right_(single)
+            {
+                single_ = true;
+            }
             
             
 

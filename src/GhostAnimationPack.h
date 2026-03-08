@@ -67,6 +67,20 @@ namespace Pacman
                 }
             }
 
+            DirectionalAnimation& animationFor(GhostState state, bool flashFrightened = false)
+            {
+                switch (state)
+                {
+                    case GhostState::Chase:
+                    case GhostState::Scatter:
+                        return normal_;
+                    case GhostState::EatenReturning:
+                        return eyes_;
+                    case GhostState::Frightened:
+                        return flashFrightened ? frightenedFlash_ : frightened_;
+                }
+            }
+
 
     };
 }
