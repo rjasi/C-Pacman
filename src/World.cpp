@@ -179,8 +179,12 @@ namespace Pacman
 
             if (pacmanTile == ghostTile)
             {
-
-                if (ghost.state() == GhostState::Chase || ghost.state() == GhostState::Scatter)
+                // causes weird inbettwen state if eaten in the middle of exiting house
+                if (!ghost.isOutsideHouse())
+                {
+                    continue;
+                }
+                else if (ghost.state() == GhostState::Chase || ghost.state() == GhostState::Scatter)
                 {
                     // todo live lost 
                 }
