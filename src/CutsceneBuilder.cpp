@@ -34,5 +34,31 @@ namespace Pacman
         return *this;
     }
 
+    CutsceneBuilder& CutsceneBuilder::playMusic(GameAudio& audio, MusicTrackId trackId)
+    {
+        player_.steps().push_back(
+        {
+            .onEnter = [a = &audio, trackId] 
+            {
+                a->playMusic(trackId);
+            }
+        });
+        
+        return *this;
+    }
+
+    CutsceneBuilder& CutsceneBuilder::stopMusic(GameAudio& audio)
+    {
+        player_.steps().push_back(
+        {
+            .onEnter = [a = &audio] 
+            {
+                a->stopMusic();
+            }
+        });
+
+        return *this;
+    }
+
 
 }

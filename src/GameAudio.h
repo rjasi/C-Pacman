@@ -3,6 +3,8 @@
 #include "SfxMixer.h"
 #include "AudioBank.h"
 #include "SfxId.h"
+#include "MusicPlayer.h"
+#include "MusicTrackId.h"
 
 namespace Pacman
 {
@@ -11,10 +13,13 @@ namespace Pacman
         public:
             GameAudio();
             void playSfx(SfxId sfxId);
+            void playMusic(MusicTrackId trackId);
+            void stopMusic();
+
         private:
             AudioBank audioBank_;
             SfxMixer  sfxMixer_;
-            // MusicPlayer music_;
+            MusicPlayer musicPlayer_;
             float masterVolume_ = 1.f;
             float sfxVolume_    = 100.f;
     };

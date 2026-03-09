@@ -4,6 +4,7 @@
 #include "CutsceneActor.h"
 #include "CutscenePlayer.h"
 #include "AnimationLibrary.h"
+#include "GameAudio.h"
 
 namespace Pacman
 {
@@ -11,7 +12,7 @@ namespace Pacman
     {
         public: 
             static void Intermission1(CutscenePlayer& player,
-                                sf::Texture& atlas)
+                                sf::Texture& atlas, GameAudio& gameAudio)
             {
 
                 // auto pacman = std::make_unique<PacmanActor>(
@@ -29,7 +30,9 @@ namespace Pacman
 
                 script
                 .setPos(*blinkyPtr, {12.f, 12.f})
-                .wait(sf::seconds(7.0f));
+                .playMusic(gameAudio, MusicTrackId::Intermission1)
+                .wait(sf::seconds(7.0f))
+                .stopMusic(gameAudio);
 
 
                 // player.steps().push_back({

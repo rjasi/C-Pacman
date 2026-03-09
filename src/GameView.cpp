@@ -114,7 +114,7 @@ namespace Pacman
             switch (world_.requestedCutscene())
             {
                 case Cutscenes::Intermission1:
-                    CutsceneLibrary::Intermission1(cutscenePlayer_, textCache_.get("atlas"));
+                    CutsceneLibrary::Intermission1(cutscenePlayer_, textCache_.get("atlas"), gameAudio_);
                     cutscenePlayer_.start();
                     world_.notifyCutsceneStarted();
                     break;

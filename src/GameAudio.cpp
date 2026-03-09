@@ -14,4 +14,14 @@ namespace Pacman
         sfxMixer_.play(sfxId, sfxVolume_ * masterVolume_);
     }
 
+    void GameAudio::playMusic(MusicTrackId trackId)
+    {
+        musicPlayer_.play(trackId);
+    }
+
+    void GameAudio::stopMusic()
+    {
+        musicPlayer_.stop();
+    }
+
 }

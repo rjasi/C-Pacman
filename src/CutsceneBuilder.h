@@ -2,6 +2,8 @@
 
 #include "CutscenePlayer.h"
 #include "CutsceneStep.h"
+#include "GameAudio.h"
+#include "MusicTrackId.h"
 
 
 namespace Pacman
@@ -22,6 +24,8 @@ namespace Pacman
             CutsceneBuilder& wait(sf::Time duration);
             CutsceneBuilder& untilX(std::size_t actor, float x);
             CutsceneBuilder& untilXLess(std::size_t actor, float x);
+            CutsceneBuilder& playMusic(GameAudio& audio, MusicTrackId trackId);
+            CutsceneBuilder& stopMusic(GameAudio& audio);
 
         private:
             void updateAllActors(sf::Time dt);

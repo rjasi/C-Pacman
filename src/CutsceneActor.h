@@ -59,7 +59,7 @@ namespace Pacman
 
         protected:
             float speed_ = 60.f;
-            Dir currentDir_;
+            Dir currentDir_ = Dir::None;
             sf::Vector2f pos_;
 
             void move(sf::Time dt, Dir d)
