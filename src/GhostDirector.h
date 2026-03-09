@@ -42,6 +42,7 @@ namespace Pacman
             void powerPelletEaten();
             int ghostEaten();
             int ghostEatenCount() const;
+            bool frightened() const;
 
             void startLevel();
 

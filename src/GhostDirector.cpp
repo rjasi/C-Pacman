@@ -270,4 +270,9 @@ namespace Pacman
     {
         return ghostEaten_;
     }
+
+    bool GhostDirector::frightened() const
+    {
+        return frightened_;
+    }
 }

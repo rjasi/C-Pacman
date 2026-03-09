@@ -112,11 +112,12 @@ namespace Pacman
 
     void World::playing(sf::Time dt)
     {
-
         pacmanEntity_.update(dt, maze_);
-
+        setBGM();
         if (maze_.tryEatPellet(pacmanEntity_.position()))
         {
+            dotsEaten_++;
+            gameAudio_.pauseMusic();
             score_ += 10;
             ghostDirector_.pelletEaten();
             flipWaka ? gameAudio_.playSfx(SfxId::Waka1): gameAudio_.playSfx(SfxId::Waka2);
@@ -126,6 +127,7 @@ namespace Pacman
         if (maze_.tryEatPowerPellet(pacmanEntity_.position()))
         {
             score_ += 50;
+            dotsEaten_++;
             ghostDirector_.powerPelletEaten();
         }
 
@@ -196,6 +198,8 @@ namespace Pacman
                     pacmanEntity_.setVisible(false);
                     ghost.setVisible(false);
                     score_ += getGhostEatenScore(ghostDirector_.ghostEatenCount());
+                    gameAudio_.playSfx(SfxId::EatGhost);
+                    gameAudio_.pauseMusic();
                     return;
                 }  
             }
@@ -318,6 +322,61 @@ namespace Pacman
     {
         return activeCutscene_;
     }
+
+    void World::setBGM()
+    {
+        /*
+        background music priority:
+        1. ghostEaten and eyes returning
+        2. frightened
+        4. siren loop
+        
+        */
+        if (anyGhostReturningHome())
+        {
+            gameAudio_.playMusic(MusicTrackId::Eyes);
+        }
+        else if (ghostDirector_.frightened())
+        {
+            gameAudio_.playMusic(MusicTrackId::Frightened);
+        } 
+        else if (dotsEaten_ < 16)
+        {
+            gameAudio_.playMusic(MusicTrackId::Siren0);
+        }
+        else if (dotsEaten_ < 81)
+        {
+            gameAudio_.playMusic(MusicTrackId::Siren1);
+        }
+        else if (dotsEaten_ < 145)
+        {
+            gameAudio_.playMusic(MusicTrackId::Siren2);
+        }
+        else if (dotsEaten_ < 209)
+        {
+            gameAudio_.playMusic(MusicTrackId::Siren3);
+        }
+        else
+        {
+            gameAudio_.playMusic(MusicTrackId::Siren4);
+        }
+    }
+
+    bool World::anyGhostReturningHome() const
+    {
+        for (const Ghost& ghost : { std::ref(blinky_), std::ref(pinky_),
+                      std::ref(inky_), std::ref(clyde_) })
+        {
+            if (ghost.state() == GhostState::EatenReturning)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
 
 
 }

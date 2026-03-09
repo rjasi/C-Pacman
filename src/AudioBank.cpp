@@ -19,10 +19,17 @@ namespace Pacman
             std::cerr << "Could not load sound\n";
         }
 
+        succcess = buffers_[EnumHelper::toIndex(SfxId::EatGhost)].loadFromFile("assets/sound/eat_ghost.wav");
+        if (!succcess)
+        {
+            std::cerr << "Could not load sound\n";
+        }
+
+
         std::vector<std::int16_t> silence(44100, 0);
 
         std::vector<sf::SoundChannel> channels = {sf::SoundChannel::Mono};
-        silentBuffer_.loadFromSamples
+        succcess = silentBuffer_.loadFromSamples
         (
             silence.data(),
             silence.size(),
@@ -30,6 +37,11 @@ namespace Pacman
             44100,
             channels
         );
+
+        if (!succcess)
+        {
+            std::cerr << "Could not load sound\n";
+        }
     }
 
     const sf::SoundBuffer& AudioBank::get(SfxId sfxid) const

@@ -15,6 +15,7 @@ namespace Pacman
             void playSfx(SfxId sfxId);
             void playMusic(MusicTrackId trackId);
             void stopMusic();
+            void pauseMusic();
 
         private:
             AudioBank audioBank_;

@@ -24,4 +24,9 @@ namespace Pacman
         musicPlayer_.stop();
     }
 
+    void GameAudio::pauseMusic()
+    {
+        musicPlayer_.pause();
+    }
+
 }

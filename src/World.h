@@ -56,7 +56,7 @@ namespace Pacman
             LevelConfig cfg_;
             GhostDirector ghostDirector_;
             GameAudio gameAudio_;
-            Cutscenes requestedCutscene_ = Cutscenes::Intermission1;
+            Cutscenes requestedCutscene_ = Cutscenes::None;
             Cutscenes activeCutscene_ = Cutscenes::None;
 
             bool flipWaka = false;
@@ -85,6 +85,7 @@ namespace Pacman
             bool powerPelletVisible_ = true;
             int score_ = 0;
             int lives_ = 3;
+            int dotsEaten_ = 0;
 
             void resolveCollision();
             void playing(sf::Time dt);
@@ -93,6 +94,8 @@ namespace Pacman
             void updatePopups(sf::Time dt);
             int getGhostEatenScore(int ghostsEaten) const;
             Scores getGhostEatenScoreType(int ghostsEaten) const;
+            bool anyGhostReturningHome() const;
+            void setBGM();
 
         public:
             World() = delete;
