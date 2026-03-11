@@ -124,6 +124,7 @@ namespace Pacman
         }
         if (cutscenePlayer_.finished())
         {
+            cutscenePlayer_.reset();
             world_.notifyCutsceneFinished();
         }
 

@@ -13,29 +13,23 @@ namespace Pacman
     pinkyTargetStrategy_({PINKY_SCATTER_CORNER}),
     inkyTargetStrategy_({INKY_SCATTER_CORNER}),
     clydeTargetStrategy_({CLYDE_SCATTER_CORNER}),
-    pacmanEntity_({1,1}, maze_.tileToWorld({1,1})),
+    pacmanEntity_({Maze::PACMAN_SPAWN_POINT}, maze_.tileToWorld(Maze::PACMAN_SPAWN_POINT)),
     blinky_(blinkyTargetStrategy_, greedyManhattanPathingStrategy_, GameCharacters::Blinky, Maze::HOUSE_CENTER, Maze::INFRONT_DOOR_LEFT, maze_.tileToWorldOnBoundary(Maze::INFRONT_DOOR_LEFT)),
     pinky_(pinkyTargetStrategy_, greedyManhattanPathingStrategy_, GameCharacters::Pinky, Maze::HOUSE_CENTER, Maze::HOUSE_CENTER, maze_.tileToWorldOnBoundary(Maze::HOUSE_CENTER)),
     inky_(inkyTargetStrategy_, greedyManhattanPathingStrategy_, GameCharacters::Inky, Maze::HOUSE_LEFT, Maze::HOUSE_CENTER, maze_.tileToWorldOnBoundary(Maze::HOUSE_LEFT)),
     clyde_(clydeTargetStrategy_, greedyManhattanPathingStrategy_, GameCharacters::Clyde, Maze::HOUSE_RIGHT, Maze::HOUSE_CENTER, maze_.tileToWorldOnBoundary(Maze::HOUSE_RIGHT)),
     ghostDirector_(cfg_)
     {
-        // pacmanEntity_.setPosition(maze_.tileToWorldOnBoundary(Maze::PACMAN_SPAWN_POINT));
-
-        // blinky_.setPosition(maze_.tileToWorldOnBoundary(Maze::INFRONT_DOOR_LEFT));
         blinky_.setState(GhostState::Chase);
         blinky_.setHouseState(HouseState::Outside);
         blinky_.setDirection(Dir::Left);
 
-        // pinky_.setPosition(maze_.tileToWorldOnBoundary(Maze::HOUSE_CENTER));
         pinky_.setDirection(Dir::Down);
         pinky_.setHouseState(HouseState::InHouse);
         
-        // inky_.setPosition(maze_.tileToWorldOnBoundary(Maze::HOUSE_LEFT));
         inky_.setDirection(Dir::Up);
         inky_.setHouseState(HouseState::InHouse);
 
-        // clyde_.setPosition(maze_.tileToWorldOnBoundary(Maze::HOUSE_RIGHT));
         clyde_.setDirection(Dir::Up);
         clyde_.setHouseState(HouseState::InHouse);
     }

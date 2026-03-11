@@ -30,6 +30,7 @@ namespace Pacman
     {
         public:
             MoveableEntity(const TileRC& startingTile, const sf::Vector2f& startingPos);
+            MoveableEntity() = delete;
             static constexpr float CORNERING_EPS = 4.0f;
             void setPosition(const sf::Vector2f& p, const TileRC& tile);
 
