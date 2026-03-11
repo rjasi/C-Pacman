@@ -147,6 +147,4 @@ namespace Pacman
         return pacmanRight_;
     }
 
-
-
 }
