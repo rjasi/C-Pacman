@@ -59,7 +59,7 @@ namespace Pacman
                     lastDirection_ = e.direction();
                 }
 
-                Animation& clip = animPack_->animationFor().clipFor(lastDirection_);
+                Animation& clip = animPack_->animationFor(e.state()).clipFor(lastDirection_);
                 
                 if (e.direction() == Dir::None)
                 {

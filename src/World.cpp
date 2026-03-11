@@ -403,6 +403,7 @@ namespace Pacman
         {
             gameAudio_.stopMusic();
             state_ = WorldState::Playing;
+            pacmanEntity_.setState(PacmanState::Normal);
         }
      }
 
@@ -410,6 +411,7 @@ namespace Pacman
     {
         state_ = WorldState::NewGame;
         auto loc = maze_.tileToWorld(Maze::READY_POPUP_TILE);
+        pacmanEntity_.setState(PacmanState::Circle);
         textPopups_.push_back({loc, NEW_GAME_INTRO_SPAWN_CHARACTER_TIME, TextColors::YELLOW, "Ready! "});
     }
 

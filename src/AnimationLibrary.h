@@ -15,12 +15,6 @@ namespace Pacman
     {
 
         private:
-            // Animation pacmanUp_;
-            // Animation pacmanLeft_;
-            // Animation pacmanDown_;
-
-            Animation pacmanRight_; // for now just use pacmanRight and rotate 
-
             Animation blinkyLeft_;
             Animation blinkyUp_;
             Animation blinkyDown_;
@@ -116,8 +110,5 @@ namespace Pacman
 
             std::array<std::unique_ptr<IAnimationResolver>, 4> ghostResolvers_;
             std::unique_ptr<IAnimationResolver> pacmanResolver_;
-
-            Animation& pacmanAnimation(); // for now just use pacmanRight and rotate 
-
     };
 }

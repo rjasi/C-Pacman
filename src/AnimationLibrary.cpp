@@ -5,8 +5,6 @@ namespace Pacman
 {
     AnimationLibrary::AnimationLibrary(TextureCache& cache)
     : 
-    pacmanRight_(cache.get("atlas"), Atlas::PacmanRight, 3, sf::milliseconds(60)),
-
     blinkyRight_(cache.get("atlas"), Atlas::BlinkyRight, 2, ghostFrameTime),
     blinkyLeft_(cache.get("atlas"), Atlas::BlinkyLeft, 2, ghostFrameTime),
     blinkyUp_(cache.get("atlas"), Atlas::BlinkyUp, 2, ghostFrameTime),
@@ -60,7 +58,7 @@ namespace Pacman
     inkyEyesDirectionalAnim_(inkyEyes_),
     clydeEyesDirectionalAnim_(clydeEyes_),
 
-    pacman(MakeNormalCharacter(cache.get("atlas"), GameCharacters::Pacman, 2, pacmanFrameTime)),
+    pacman(MakeNormalCharacter(cache.get("atlas"), GameCharacters::Pacman, 2, pacmanFrameTime), DirectionalAnimation{Animation{cache.get("atlas"), Atlas::PacmanLastFrame, 1, sf::Time::Zero}}),
     blinky(GameCharacters::Blinky, &blinky_normal, &blinky_fightened_ghost_directional_anim, &blinky_fightened_ghost_flash_directional_anim, &blinkyEyesDirectionalAnim_),
     pinky(GameCharacters::Pinky, &pinky_normal, &pinky_fightened_ghost_directional_anim, &pinky_fightened_ghost_flash_directional_anim, &pinkyEyesDirectionalAnim_),
     inky(GameCharacters::Inky, &inky_normal, &inky_fightened_ghost_directional_anim, &inky_fightened_ghost_flash_directional_anim, &inkyEyesDirectionalAnim_),
@@ -119,7 +117,6 @@ namespace Pacman
                 };
 
         }
-        
     }
 
     Animation AnimationLibrary::MakeFrightenedGhost(sf::Texture& atlas, int frameCount, sf::Time frameTime, sf::Vector2f origin)
@@ -139,12 +136,6 @@ namespace Pacman
         auto frightenedFlash_ = DirectionalAnimation(MakeFrightenedGhostFlash(atlas, 2, ghostFrightenedFrameTime));
         auto eyes = DirectionalAnimation(MakeEyes(atlas));
         return GhostAnimationPack(id, normalAnim, frightened, frightenedFlash_, eyes);
-    }
-
-
-    Animation& AnimationLibrary::pacmanAnimation()
-    {
-        return pacmanRight_;
     }
 
 }

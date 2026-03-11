@@ -1,6 +1,7 @@
 #pragma once
 
 #include "DirectionalAnimation.h"
+#include "PacmanState.h"
 
 namespace Pacman
 {
@@ -15,17 +16,25 @@ namespace Pacman
 
             // }
 
-            PacmanAnimationPack(const DirectionalAnimation& normal)
-                                : normal_(normal)
+            PacmanAnimationPack(const DirectionalAnimation& normal, const DirectionalAnimation& circle)
+                                : normal_(normal), circle_(circle)
             {
 
             }
             
             
 
-            DirectionalAnimation& animationFor()
+            DirectionalAnimation& animationFor(PacmanState state)
             {
-                return normal_;
+                switch (state)
+                {
+                    case PacmanState::Normal:
+                        return normal_;
+                    case PacmanState::Circle:
+                        return circle_;
+                    default:
+                        return normal_;
+                }
             }
 
              void update(sf::Time dt)
@@ -34,6 +43,8 @@ namespace Pacman
             }
         private:
             DirectionalAnimation normal_;
+            DirectionalAnimation circle_;
+
             // DirectionalAnimation dying_;
     };
 
