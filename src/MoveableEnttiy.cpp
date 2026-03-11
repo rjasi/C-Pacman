@@ -266,21 +266,35 @@ namespace Pacman
             }
 
 
+            /*
+            Warping logic:
+            maze.canEnterNextTile does not allow turns out of bounds
+                - keeps entity glued to warp tunnel
+            allow going out of bounds when isInWarpTunnel = true
+            teleport to otherside when past some predefined bounds
+            let maze class handle warping location specifics
+            */
+            if (maze.shouldWarp(pos_))
+            {
+                maze.applyWarp(pos_, currentTile_);
+                targetTile_ = PathUtils::step(current_, currentTile_);
+                return;
+            }
+
             if (maze.canEnterNextTile(requested_, pos_))
             {
                 current_ = requested_;
                 requested_ = Dir::None;
             }
 
-            if (!maze.canEnterNextTile(current_, pos_))
+            // allow going out of bounds when in WarpTunnel
+            if (!maze.canEnterNextTile(current_, pos_) && !maze.isInWarpTunnel(currentTile_))
             {
                 current_ = Dir::None;
             }
 
             targetTile_ = PathUtils::step(current_, currentTile_);
         }
-
-        warp();
     }
 
     float MoveableEntity::centerEps() const

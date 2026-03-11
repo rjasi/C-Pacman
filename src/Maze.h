@@ -22,6 +22,9 @@ namespace Pacman
             static constexpr int TILE_SIZE = 8; // pixel size in world
             static constexpr float CENTER_EPS = 0.40f; // remove
             static constexpr int WARP_TILE_ROW = 14;
+            static constexpr int WARP_TUNNEL_LEFT_COL = 4;
+            static constexpr int WARP_TUNNEL_RIGHT_COL = 24;
+
             static constexpr char WALL = '#';
             static constexpr char PELLET = '.';
             static constexpr char POWER_PELLET = 'o';
@@ -34,6 +37,8 @@ namespace Pacman
             static constexpr TileRC HOUSE_CENTER = {14, 13};
             static constexpr TileRC HOUSE_LEFT = {14, 11};
             static constexpr TileRC HOUSE_RIGHT = {14, 15};
+            static constexpr TileRC WARP_TILE_LEFT = {WARP_TILE_ROW, -2};
+            static constexpr TileRC WARP_TILE_RIGHT = {WARP_TILE_ROW, 29};
 
 
             Maze(const sf::Vector2f& origin);
@@ -41,7 +46,10 @@ namespace Pacman
 
             bool isInBounds(const TileRC& tile) const;
             bool shouldWarp(TileRC& tile) const;
-            void applyWarp(sf::Vector2f& pos) const;
+            void applyWarp(sf::Vector2f& pos, TileRC& currentTile) const;
+            bool isWarpTile(const sf::Vector2f& pos) const;
+            bool isWarpTile(const TileRC& pos) const;
+            bool shouldWarp(sf::Vector2f& pos_) const;
 
             bool isInWarpTunnel(TileRC& tile) const;
 

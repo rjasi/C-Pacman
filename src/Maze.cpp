@@ -264,7 +264,24 @@ namespace Pacman
 
     bool Maze::shouldWarp(TileRC& tile) const
     {
-        if(tile.r == WARP_TILE_ROW && (tile.c < 0 || tile.c >= colCount_))
+
+        if (tile.r == WARP_TILE_ROW && (tile.c < 0 || tile.c >= colCount_ ))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    bool Maze::shouldWarp(sf::Vector2f& pos_) const
+    {
+
+        // warp from left to right
+        if (pos_.x < tileCenter(WARP_TILE_LEFT).x)
+        {
+            return true;
+        }
+        // right to left
+        else if (pos_.x > tileCenter(WARP_TILE_RIGHT).x)
         {
             return true;
         }
@@ -273,12 +290,33 @@ namespace Pacman
 
     bool Maze::isInWarpTunnel(TileRC& tile) const
     {
-        return false;
+        return tile.r == WARP_TILE_ROW && (tile.c <= WARP_TUNNEL_LEFT_COL || tile.c >= WARP_TUNNEL_RIGHT_COL);
     }
 
-    void Maze::applyWarp(sf::Vector2f& pos) const
+    bool Maze::isWarpTile(const sf::Vector2f& pos) const
+    {
+        return isWarpTile(worldToTile(pos));
+    }
+
+    bool Maze::isWarpTile(const TileRC& tile) const
+    {
+        return tile == WARP_TILE_LEFT || tile == WARP_TILE_RIGHT;
+    }
+
+    void Maze::applyWarp(sf::Vector2f& pos, TileRC& currentTile) const
     {
         TileRC tile = worldToTile(pos);
+        if (tile.c <= WARP_TILE_LEFT.c && tile.r == WARP_TILE_LEFT.r)
+        {
+            pos = tileToWorld(WARP_TILE_RIGHT);
+            currentTile = WARP_TILE_RIGHT;
+        }
+        else if (tile.c >= WARP_TILE_RIGHT.c && tile.r == WARP_TILE_RIGHT.r)
+        {
+            pos = tileToWorld(WARP_TILE_LEFT);
+            currentTile = WARP_TILE_LEFT;
+        }
+        
     }
 
     bool Maze::canEnterNextTile(Dir d, const sf::Vector2f& pos) const
