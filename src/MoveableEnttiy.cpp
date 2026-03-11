@@ -210,7 +210,8 @@ namespace Pacman
         if ((current_ == Dir::None || current_ == DirUtils::opposite(requested_)) 
             && !corneringContext_.corneringStarted)
         {
-            if (maze.canEnterNextTile(requested_, currentTile_))
+            if (maze.canEnterNextTile(requested_, currentTile_) 
+            || maze.isInWarpTunnel(currentTile_) && DirUtils::isHorizontal(requested_) ) // allow switching from left to right in warp tunnel
             {
                 // on reversals swap current and target
                 if (current_ == DirUtils::opposite(requested_))
@@ -250,15 +251,6 @@ namespace Pacman
                 pos_ = tileCenter;
             }
 
-
-            /*
-            Warping logic:
-            maze.canEnterNextTile does not allow turns out of bounds
-                - keeps entity glued to warp tunnel
-            allow going out of bounds when isInWarpTunnel = true
-            teleport to otherside when past some predefined bounds
-            let maze class handle warping location specifics
-            */
             if (tryWarp(maze))
             {
                 return;
@@ -336,6 +328,15 @@ namespace Pacman
 
     bool MoveableEntity::tryWarp(const Maze& maze)
     {
+        /*
+            Warping logic:
+            maze.canEnterNextTile does not allow turns out of bounds
+                - keeps entity glued to warp tunnel
+            allow going out of bounds when isInWarpTunnel = true
+            teleport to otherside when past some predefined bounds
+            let maze class handle warping location specifics
+        */
+
         if (maze.applyWarp(pos_, currentTile_))
         {
             targetTile_ = PathUtils::step(current_, currentTile_);
