@@ -26,7 +26,7 @@ namespace Pacman
             }
 
             TileRC nextStep = PathUtils::step(d, query.current_tile);
-            if (maze.isWall(nextStep))
+            if (maze.isWall(nextStep) && !maze.isInWarpTunnel(nextStep))
             {
                 continue;
             }

@@ -22,21 +22,6 @@ namespace Pacman
         return pos_; 
     }
 
-    void MoveableEntity::warp() 
-    { 
-
-        // warp from left to right
-        if (pos_.x < -8.0f)
-        {
-            pos_.x = 224.0f + 8.0f; 
-        }
-        // right to left
-        else if (pos_.x > 224.0f + 8.0f)
-        {
-            pos_.x = -8.0f;
-        }
-    }
-
     void MoveableEntity::setSpeed(float pxPerSec) 
     { 
         speed_ = pxPerSec; 
@@ -274,10 +259,8 @@ namespace Pacman
             teleport to otherside when past some predefined bounds
             let maze class handle warping location specifics
             */
-            if (maze.shouldWarp(pos_))
+            if (tryWarp(maze))
             {
-                maze.applyWarp(pos_, currentTile_);
-                targetTile_ = PathUtils::step(current_, currentTile_);
                 return;
             }
 
@@ -310,19 +293,6 @@ namespace Pacman
     { 
         return 8.f; 
     }
-    
-    bool MoveableEntity::isWarping(Dir d, sf::Vector2f pos, const Maze& maze) const
-    {
-        //todo move this logic to maze does not belong here
-        // sf::Vector2i t = maze.worldToTile(pos);
-        // sf::Vector2i step{ (int)dirVec(d).x, (int)dirVec(d).y };
-        // sf::Vector2i next = t + step;
-
-        return false;
-        // return maze.isInWarpTile(next.y, next.x); // remember x = horizonal = column, y = vertical = row
-    }
-
-    
 
     sf::Angle MoveableEntity::rotation() const
     {
@@ -364,5 +334,14 @@ namespace Pacman
         return (prev - boundary) * (curr - boundary) <= 0.f;
     }
 
+    bool MoveableEntity::tryWarp(const Maze& maze)
+    {
+        if (maze.applyWarp(pos_, currentTile_))
+        {
+            targetTile_ = PathUtils::step(current_, currentTile_);
+            return true;
+        }
+        return false;
+    }
 
 }

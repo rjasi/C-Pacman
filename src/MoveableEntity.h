@@ -52,8 +52,7 @@ namespace Pacman
             void setVisible(bool visible);  
 
         protected: 
-            void warp();
-            bool isWarping(Dir d, sf::Vector2f pos, const Maze& maze) const;
+            bool tryWarp(const Maze& maze);
             void move(sf::Time dt);
             void move(sf::Time dt, Dir d);
             sf::Vector2f pos_{};

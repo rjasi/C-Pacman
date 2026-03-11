@@ -135,18 +135,15 @@ namespace Pacman
         {
             case GhostState::Chase:
                 active(dt, maze);
-                warp();
                 break;
             case GhostState::Scatter:
                 active(dt, maze);
-                warp();
                 break;
             case GhostState::EatenReturning:
                 eatenReturning(dt, maze);
                 break;
             case GhostState::Frightened:
                 frightened(dt, maze);
-                warp();
                 break;
 
         }
@@ -314,6 +311,11 @@ namespace Pacman
             return;
         }
 
+         if (tryWarp(maze))
+        {
+            return;
+        }
+
         if (ghostTargetStrategy_ == nullptr || pathingStrategy_ == nullptr || targetContext_ == nullptr)
         {
             return;
@@ -367,7 +369,7 @@ namespace Pacman
             return;
         }
 
-        if (isWarping(current_, pos_, maze))
+        if (tryWarp(maze))
         {
             return;
         }
@@ -384,7 +386,9 @@ namespace Pacman
                 continue;
             }
 
-            if (!maze.isWall(PathUtils::step(d, current_tile)))
+            TileRC next = PathUtils::step(d, current_tile);
+
+            if (!maze.isWall(next) || maze.isInWarpTunnel(next))
             {
                 validDirs.push_back(d);
             }
@@ -432,8 +436,11 @@ namespace Pacman
             return;
         }
 
-        if (isWarping(current_, pos_, maze))
+        if (maze.shouldWarp(pos_))
         {
+            // std::cerr << "warped\n";
+            maze.applyWarp(pos_, currentTile_);
+            targetTile_ = PathUtils::step(current_, currentTile_);
             return;
         }
 

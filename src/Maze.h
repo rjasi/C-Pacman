@@ -46,7 +46,7 @@ namespace Pacman
 
             bool isInBounds(const TileRC& tile) const;
             bool shouldWarp(TileRC& tile) const;
-            void applyWarp(sf::Vector2f& pos, TileRC& currentTile) const;
+            bool applyWarp(sf::Vector2f& pos, TileRC& currentTile) const;
             bool isWarpTile(const sf::Vector2f& pos) const;
             bool isWarpTile(const TileRC& pos) const;
             bool shouldWarp(sf::Vector2f& pos_) const;

@@ -303,20 +303,22 @@ namespace Pacman
         return tile == WARP_TILE_LEFT || tile == WARP_TILE_RIGHT;
     }
 
-    void Maze::applyWarp(sf::Vector2f& pos, TileRC& currentTile) const
+    bool Maze::applyWarp(sf::Vector2f& pos, TileRC& currentTile) const
     {
         TileRC tile = worldToTile(pos);
         if (tile.c <= WARP_TILE_LEFT.c && tile.r == WARP_TILE_LEFT.r)
         {
             pos = tileToWorld(WARP_TILE_RIGHT);
             currentTile = WARP_TILE_RIGHT;
+            return true;
         }
         else if (tile.c >= WARP_TILE_RIGHT.c && tile.r == WARP_TILE_RIGHT.r)
         {
             pos = tileToWorld(WARP_TILE_LEFT);
             currentTile = WARP_TILE_LEFT;
+            return true;
         }
-        
+        return false;
     }
 
     bool Maze::canEnterNextTile(Dir d, const sf::Vector2f& pos) const
