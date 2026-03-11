@@ -78,6 +78,8 @@ namespace Pacman
         }
 
         drawUi(window);
+
+        drawPopup(window, {{0.f, 80.f}, sf::seconds(100), TextColors::YELLOW, "\"Blinkly\"! "});
     }
 
     void GameView::handleEvent(const sf::Event& event)

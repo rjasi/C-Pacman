@@ -4,7 +4,10 @@
 #include "Popup.h"
 
 #include <array>
+#include <algorithm>
 #include <iostream>
+#include <string>
+#include <cctype>
 
 #include <SFML/Graphics.hpp>
 
@@ -53,12 +56,21 @@ namespace Pacman
                 return sprite;
             }
 
+            std::string toUpper(std::string s) const
+            {
+                std::transform(s.begin(), s.end(), s.begin(),
+                            [](unsigned char c) { return std::toupper(c); });
+                return s;
+            }
+
             void render(sf::RenderTarget& window, const TextPopup& popup, bool center = true) const
             {
                 sf::Vector2f currentPos = popup.pos;
                 int index = 0;
 
-                for (char c: popup.text)
+                std::string upper = toUpper(popup.text);
+
+                for (char c: upper)
                 {
                     if (c == ' ')
                     {
