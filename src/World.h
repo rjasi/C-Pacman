@@ -29,7 +29,8 @@ namespace Pacman
         GhostEaten,
         Died,
         LevelCleared,
-        Cutscene
+        Cutscene,
+        NewGame
     };
 
     // class GhostEatenContext
@@ -42,7 +43,7 @@ namespace Pacman
     {
         private:
             Ghost* eatenGhost = nullptr;
-            WorldState state_ = WorldState::Playing;
+            WorldState state_ = WorldState::NewGame;
             Maze maze_;
             MoveableEntity pacmanEntity_;
             Ghost blinky_;
@@ -64,9 +65,19 @@ namespace Pacman
             std::vector<TextPopup> textPopups_;
             std::vector<ScorePopup> scorePopups_;
 
-            // pause for 1 sec 
+
+            // ingame cutscene related details
+            // ________________________________
+            
+            // ghost eaten pause for 1 sec 
             static constexpr sf::Time EATEN_PAUSE = sf::seconds(2.0f);
             sf::Time eatenTimer_{};
+
+            // new game
+            static constexpr sf::Time NEW_GAME_INTRO = sf::seconds(4.2f);
+            static constexpr sf::Time NEW_GAME_INTRO_SPAWN_CHARACTER_TIME= sf::seconds(3.0f);
+            sf::Time startNewGameTimer_{};
+            // ________________________________
 
 
             GreedyManhattanPathingStrategy greedyManhattanPathingStrategy_;
@@ -89,6 +100,7 @@ namespace Pacman
 
             void resolveCollision();
             void playing(sf::Time dt);
+            void newGame(sf::Time dt);
             void ghostEaten(sf::Time dt);
             void advanceBlinkTimer(sf::Time dt);
             void updatePopups(sf::Time dt);
@@ -120,6 +132,8 @@ namespace Pacman
             void notifyCutsceneFinished();
             Cutscenes requestedCutscene() const;
             Cutscenes activeCutscene() const;
+
+            void setStartNewGame();
 
 
     };

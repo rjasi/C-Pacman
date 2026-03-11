@@ -2,6 +2,7 @@
 
 #include "Maze.h"
 #include "Dir.h"
+#include "PacmanState.h"
 
 #include <SFML/Graphics.hpp>
 
@@ -52,6 +53,11 @@ namespace Pacman
             bool visible() const;
             void setVisible(bool visible);  
 
+            // todo move these into own pacman entity class
+            PacmanState state() const;
+            void setState(PacmanState state);
+
+
         protected: 
             bool tryWarp(const Maze& maze);
             void move(sf::Time dt);
@@ -101,6 +107,9 @@ namespace Pacman
             bool trySnapToTile(const Maze& maze, Dir d);
             bool corneringFinished(const Maze& maze, const sf::Vector2f& prev);
             void snapToJunction(const Maze& maze);
+
+            PacmanState state_ = PacmanState::Normal;
+
 
     };
 };

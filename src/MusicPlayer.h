@@ -15,7 +15,7 @@
 namespace Pacman
 {
 
-    struct MusicDef
+    class MusicDef
     {
         public:
             const char* path;
@@ -63,7 +63,9 @@ namespace Pacman
             void resume()
             {
                 if (music_.getStatus() == sf::SoundSource::Status::Paused)
+                {
                     music_.play();
+                }
             }
 
             [[nodiscard]] std::optional<MusicTrackId> current() const
@@ -85,8 +87,7 @@ namespace Pacman
                 MusicDef{"assets/sound/siren2.wav", true},
                 MusicDef{"assets/sound/siren3.wav", true},
                 MusicDef{"assets/sound/siren4.wav", true},
-                // MusicDef{"assets/sound/intro.ogg", false},
-                // MusicDef{"assets/sound/siren_loop.ogg", true}
+                MusicDef{"assets/sound/start.wav", false},
             };
 
                     

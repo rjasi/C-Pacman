@@ -345,4 +345,14 @@ namespace Pacman
         return false;
     }
 
+
+    PacmanState MoveableEntity::state() const
+    {
+        return state_;
+    }
+    void MoveableEntity::setState(PacmanState state)
+    {
+        state_ = state;
+    }
+
 }

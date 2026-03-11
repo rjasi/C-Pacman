@@ -23,15 +23,21 @@ namespace Pacman
         blinky_.setState(GhostState::Chase);
         blinky_.setHouseState(HouseState::Outside);
         blinky_.setDirection(Dir::Left);
+        blinky_.setVisible(false);
 
         pinky_.setDirection(Dir::Down);
         pinky_.setHouseState(HouseState::InHouse);
+        pinky_.setVisible(false);
         
         inky_.setDirection(Dir::Up);
         inky_.setHouseState(HouseState::InHouse);
+        inky_.setVisible(false);
 
         clyde_.setDirection(Dir::Up);
         clyde_.setHouseState(HouseState::InHouse);
+        clyde_.setVisible(false);
+
+        pacmanEntity_.setVisible(false);
     }
 
     void World::setPlayerRequestedDir(Dir d)
@@ -56,19 +62,22 @@ namespace Pacman
 
     void World::update(sf::Time dt)
     {
-        advanceBlinkTimer(dt);
-        updatePopups(dt);
 
         switch (state_)
         {
             case WorldState::Playing:
+                advanceBlinkTimer(dt);
                 playing(dt);
                 break;
             case WorldState::GhostEaten:
+                advanceBlinkTimer(dt);
                 ghostEaten(dt);
                 break;
             case WorldState::Cutscene:
                 return; // do nothing, gameView will notify when cutscene has finished
+            case WorldState::NewGame:
+                newGame(dt);
+                break;
             case WorldState::Died:
             case WorldState::LevelCleared:
                 return;
@@ -80,6 +89,7 @@ namespace Pacman
     // briefly pause the game when ghost is eaten and show a popup of the score
     void World::ghostEaten(sf::Time dt)
     {
+        updatePopups(dt);
         eatenTimer_ += dt;
         if (eatenTimer_ >= EATEN_PAUSE)
         {
@@ -373,6 +383,36 @@ namespace Pacman
 
         return false;
     }
+
+     void World::newGame(sf::Time dt)
+     {
+        startNewGameTimer_ += dt;
+        gameAudio_.playMusic(MusicTrackId::StartGame);
+        updatePopups(dt);
+
+        if (startNewGameTimer_ >= NEW_GAME_INTRO_SPAWN_CHARACTER_TIME)
+        {
+            blinky_.setVisible(true);
+            pinky_.setVisible(true);
+            inky_.setVisible(true);
+            clyde_.setVisible(true);
+            pacmanEntity_.setVisible(true);
+        }
+
+        if (startNewGameTimer_ >= NEW_GAME_INTRO)
+        {
+            gameAudio_.stopMusic();
+            state_ = WorldState::Playing;
+        }
+     }
+
+    void World::setStartNewGame()
+    {
+        state_ = WorldState::NewGame;
+        auto loc = maze_.tileToWorld(Maze::READY_POPUP_TILE);
+        textPopups_.push_back({loc, NEW_GAME_INTRO_SPAWN_CHARACTER_TIME, TextColors::YELLOW, "Ready! "});
+    }
+
 
 
 

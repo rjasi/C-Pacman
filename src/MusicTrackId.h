@@ -12,6 +12,7 @@ namespace Pacman
         Siren2,
         Siren3,
         Siren4,
+        StartGame,
         Count
     };
 }

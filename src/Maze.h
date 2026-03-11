@@ -39,6 +39,7 @@ namespace Pacman
             static constexpr TileRC HOUSE_RIGHT = {14, 15};
             static constexpr TileRC WARP_TILE_LEFT = {WARP_TILE_ROW, -2};
             static constexpr TileRC WARP_TILE_RIGHT = {WARP_TILE_ROW, 29};
+            static constexpr TileRC READY_POPUP_TILE = {17, 11};
 
 
             Maze(const sf::Vector2f& origin);
