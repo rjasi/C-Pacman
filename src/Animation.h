@@ -22,7 +22,8 @@ namespace Pacman
                 sf::Time frameTime,
                 sf::Vector2f origin = {8.0f, 8.0f}, // all character sprites are 16x16 so center them at 8,8
                 int row = 0,
-                const std::vector<sf::IntRect>& additionalFrames = {}); // specifically for pacman as for left, down, up sprites are not inline with final closed frame on 488,0
+                const std::vector<sf::IntRect>& additionalFrames = {},// specifically for pacman as for left, down, up sprites are not inline with final closed frame on 488,0
+                bool loop = true); 
 
             Animation(const Animation& other);
             void setRow(int row);
@@ -30,6 +31,7 @@ namespace Pacman
             void update(sf::Time dt);
             void reset();
             sf::Sprite& sprite();
+            void setLoop(bool loop);
             
         private:
             void apply();
@@ -40,6 +42,7 @@ namespace Pacman
             int row_ = 0;
 
             int current_ = 0;
+            bool loop_ = true;
             sf::Time elapsed_ = sf::Time::Zero;
             sf::Time frameTime_ = sf::milliseconds(100);
             std::vector<sf::IntRect> frameRects_;

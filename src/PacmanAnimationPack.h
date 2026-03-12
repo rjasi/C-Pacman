@@ -16,13 +16,15 @@ namespace Pacman
 
             // }
 
-            PacmanAnimationPack(const DirectionalAnimation& normal, const DirectionalAnimation& circle)
-                                : normal_(normal), circle_(circle)
+            PacmanAnimationPack(const DirectionalAnimation& normal, 
+                                const DirectionalAnimation& circle,
+                                const DirectionalAnimation& dying)
+            : normal_(normal), 
+            circle_(circle),
+            dying_(dying)
             {
 
             }
-            
-            
 
             DirectionalAnimation& animationFor(PacmanState state)
             {
@@ -32,6 +34,8 @@ namespace Pacman
                         return normal_;
                     case PacmanState::Circle:
                         return circle_;
+                    case PacmanState::Dying:
+                        return dying_;
                     default:
                         return normal_;
                 }
@@ -40,12 +44,12 @@ namespace Pacman
              void update(sf::Time dt)
             {
                 normal_.update(dt);
+                dying_.update(dt);
             }
         private:
             DirectionalAnimation normal_;
             DirectionalAnimation circle_;
-
-            // DirectionalAnimation dying_;
+            DirectionalAnimation dying_;
     };
 
 }

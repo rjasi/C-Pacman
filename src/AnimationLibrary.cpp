@@ -58,7 +58,7 @@ namespace Pacman
     inkyEyesDirectionalAnim_(inkyEyes_),
     clydeEyesDirectionalAnim_(clydeEyes_),
 
-    pacman(MakeNormalCharacter(cache.get("atlas"), GameCharacters::Pacman, 2, pacmanFrameTime), DirectionalAnimation{Animation{cache.get("atlas"), Atlas::PacmanLastFrame, 1, sf::Time::Zero}}),
+    pacman(MakePacmanAnimationPack(cache.get("atlas"))),
     blinky(GameCharacters::Blinky, &blinky_normal, &blinky_fightened_ghost_directional_anim, &blinky_fightened_ghost_flash_directional_anim, &blinkyEyesDirectionalAnim_),
     pinky(GameCharacters::Pinky, &pinky_normal, &pinky_fightened_ghost_directional_anim, &pinky_fightened_ghost_flash_directional_anim, &pinkyEyesDirectionalAnim_),
     inky(GameCharacters::Inky, &inky_normal, &inky_fightened_ghost_directional_anim, &inky_fightened_ghost_flash_directional_anim, &inkyEyesDirectionalAnim_),
@@ -137,5 +137,28 @@ namespace Pacman
         auto eyes = DirectionalAnimation(MakeEyes(atlas));
         return GhostAnimationPack(id, normalAnim, frightened, frightenedFlash_, eyes);
     }
+
+    PacmanAnimationPack AnimationLibrary::MakePacmanAnimationPack(sf::Texture& atlas)
+    {
+        auto normalAnim = DirectionalAnimation(MakeNormalCharacter(atlas, GameCharacters::Pacman, 2, pacmanFrameTime));
+        auto circleAnim = DirectionalAnimation(PacmanCircle(atlas));
+        auto dyingAnim = DirectionalAnimation(PacmanDying(atlas, pacmanFrameTime));
+        return PacmanAnimationPack(normalAnim, circleAnim, dyingAnim);
+
+    }
+
+    Animation AnimationLibrary::PacmanDying(sf::Texture& atlas, sf::Time frameTime, sf::Vector2f origin)
+    {
+        auto anim = Animation(atlas, Atlas::PacmanDying, 12, frameTime, origin, 0, {Atlas::Blank.IntRect()});
+        anim.setLoop(false);
+        return anim;
+    }
+
+    Animation AnimationLibrary::PacmanCircle(sf::Texture& atlas, sf::Vector2f origin)
+    {
+        return Animation(atlas, Atlas::PacmanLastFrame, 1, sf::Time::Zero, origin);
+    }
+
+
 
 }

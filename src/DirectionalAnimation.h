@@ -118,18 +118,10 @@ namespace Pacman
 
             void update(sf::Time dt)
             {
-                if (!single_)
-                {
-                    up_.update(dt);
-                    down_.update(dt);
-                    left_.update(dt);
-                    right_.update(dt);
-                }
-                else
-                {
-                    up_.update(dt);
-                }
-                
+                up_.update(dt);
+                down_.update(dt);
+                left_.update(dt);
+                right_.update(dt);
             }
 
             Animation& clipFor(Dir d) 

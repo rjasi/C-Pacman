@@ -29,6 +29,12 @@ namespace Pacman::Atlas
     } 
 
     //constants
+    inline constexpr AtlasRegion Blank 
+    {
+        {600, 16},   // origin
+        {16, 16}    // frame size
+    };
+
     inline constexpr AtlasRegion PacmanRight 
     {
         {456, 0},   // origin
@@ -56,6 +62,12 @@ namespace Pacman::Atlas
     inline constexpr AtlasRegion PacmanLastFrame 
     {
         {488, 0},
+        {16, 16}    
+    };
+
+    inline constexpr AtlasRegion PacmanDying
+    {
+        {504, 0},
         {16, 16}    
     };
 

@@ -403,7 +403,7 @@ namespace Pacman
         {
             gameAudio_.stopMusic();
             state_ = WorldState::Playing;
-            pacmanEntity_.setState(PacmanState::Normal);
+            pacmanEntity_.setState(PacmanState::Dying);
         }
      }
 

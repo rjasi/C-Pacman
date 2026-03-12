@@ -10,12 +10,14 @@ namespace Pacman
                         sf::Time frameTime,
                         sf::Vector2f origin,
                         int row,
-                        const std::vector<sf::IntRect>& additionalFrames)
+                        const std::vector<sf::IntRect>& additionalFrames,
+                        bool loop)
     : sprite_(texture), 
     region_(region), 
     frameCount_(frameCountRow  + additionalFrames.size()),
     frameTime_(frameTime),
-    row_(row)
+    row_(row),
+    loop_(loop)
     {
         frameRects_.reserve(frameCount_);
         for (int i = 0; i < frameCountRow; i++)
@@ -39,6 +41,7 @@ namespace Pacman
     , elapsed_(sf::Time::Zero)        // reset playback
     , frameTime_(other.frameTime_)
     , frameRects_(other.frameRects_)
+    , loop_(other.loop_)
     {
         // std::cerr << "ANIMATION copy\n";
         apply(); // reset animation state
@@ -58,14 +61,21 @@ namespace Pacman
 
     void Animation::update(sf::Time dt)
     {
-        if (frameCount_ <= 0) 
+        if (frameCount_ <= 0 || (!loop_ && current_ >= frameCount_)) 
+        {
             return;
+        }
 
         elapsed_ += dt;
         while (elapsed_ >= frameTime_) 
         {
             elapsed_ -= frameTime_;
-            current_ = (current_ + 1) % frameCount_;
+            current_++;
+
+            if (loop_)
+            {
+                current_ %= frameCount_;
+            }
             apply();
         }
     }
@@ -87,6 +97,11 @@ namespace Pacman
     sf::Sprite& Animation::sprite()
     {
         return sprite_;
+    }
+
+    void Animation::setLoop(bool loop)
+    {
+        loop_ = loop;
     }
 
 }

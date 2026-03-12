@@ -60,12 +60,22 @@ namespace Pacman
                 }
 
                 Animation& clip = animPack_->animationFor(e.state()).clipFor(lastDirection_);
-                
-                if (e.direction() == Dir::None)
+                switch (e.state())
                 {
-                    clip.reset();
-                }
+                    case PacmanState::Normal:
+                        if (e.direction() == Dir::None)
+                        {
+                            clip.reset();
+                        }
+                        break;
+                    case PacmanState::Circle:
+                        break;
+                    case PacmanState::Dying:
+                        break;
 
+                }
+                
+               
                 return clip;
             }
 

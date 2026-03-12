@@ -50,25 +50,29 @@ namespace Pacman
             DirArray<Animation> clydeEyes_;
 
         public: 
+            static constexpr sf::Vector2f SPRITE_ORIGIN = {8.f, 8.f};
             // todo maybe move these to a factory class
             static DirArray<Animation> MakeEyes(sf::Texture& atlas);
             static DirArray<Animation> MakeNormalCharacter(sf::Texture& atlas, 
                                                             GameCharacters id,
                                                             int frameCountRow,
                                                             sf::Time frameTime,
-                                                            sf::Vector2f origin = {8.f, 8.f});
+                                                            sf::Vector2f origin = SPRITE_ORIGIN);
 
             static Animation MakeFrightenedGhost(sf::Texture& atlas, 
                                                     int frameCount,
                                                     sf::Time frameTime = ghostFrightenedFrameTime,
-                                                    sf::Vector2f origin = {8.f, 8.f});
+                                                    sf::Vector2f origin = SPRITE_ORIGIN);
             
             static Animation MakeFrightenedGhostFlash(sf::Texture& atlas, 
                                                     int frameCount,
                                                     sf::Time frameTime = ghostFrightenedFrameTime,
-                                                    sf::Vector2f origin = {8.f, 8.f});
+                                                    sf::Vector2f origin = SPRITE_ORIGIN);
 
             static GhostAnimationPack MakeGhostAnimationPack(sf::Texture& atlas, GameCharacters id);
+            static Animation PacmanDying(sf::Texture& atlas, sf::Time frameTime, sf::Vector2f origin = SPRITE_ORIGIN);
+            static PacmanAnimationPack MakePacmanAnimationPack(sf::Texture& atlas);
+            static Animation PacmanCircle(sf::Texture& atlas, sf::Vector2f origin = SPRITE_ORIGIN);
 
 
 
@@ -106,6 +110,7 @@ namespace Pacman
 
             static constexpr sf::Time ghostFrameTime = sf::milliseconds(80);
             static constexpr sf::Time pacmanFrameTime = sf::milliseconds(60);
+            static constexpr sf::Time pacmanDyingFrameTime = sf::milliseconds(120);
             static constexpr sf::Time ghostFrightenedFrameTime = sf::seconds(0.25f);
 
             std::array<std::unique_ptr<IAnimationResolver>, 4> ghostResolvers_;

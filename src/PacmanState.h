@@ -5,6 +5,7 @@ namespace Pacman
     enum class PacmanState
     {
         Normal,
-        Circle
+        Circle,
+        Dying
     };
 }
