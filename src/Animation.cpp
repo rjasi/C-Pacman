@@ -104,4 +104,11 @@ namespace Pacman
         loop_ = loop;
     }
 
+    bool Animation::finished() const
+    {
+        std::cerr << current_ << " " << frameCount_ << "\n";
+        return !loop_ && current_ >= frameCount_;
+    }
+
+
 }

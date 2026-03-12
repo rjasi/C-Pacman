@@ -30,7 +30,7 @@ namespace Pacman
         Died,
         LevelCleared,
         Cutscene,
-        NewGame
+        NewGame,
     };
 
     // class GhostEatenContext
@@ -77,6 +77,11 @@ namespace Pacman
             static constexpr sf::Time NEW_GAME_INTRO = sf::seconds(4.2f);
             static constexpr sf::Time NEW_GAME_INTRO_SPAWN_CHARACTER_TIME= sf::seconds(3.0f);
             sf::Time startNewGameTimer_{};
+
+            // died
+            static constexpr sf::Time DIED_ANIM_START_TIME = sf::seconds(2.f);
+            static constexpr sf::Time DIED_STATE_TIME= sf::seconds(5.0f);
+            sf::Time diedTimer_{};
             // ________________________________
 
 
@@ -101,6 +106,7 @@ namespace Pacman
             void resolveCollision();
             void playing(sf::Time dt);
             void newGame(sf::Time dt);
+            void died(sf::Time dt);
             void ghostEaten(sf::Time dt);
             void advanceBlinkTimer(sf::Time dt);
             void updatePopups(sf::Time dt);

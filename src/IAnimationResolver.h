@@ -29,13 +29,24 @@ namespace Pacman
 
             Animation& resolve(const MoveableEntity& e) override 
             {
+
                 const Ghost& g = static_cast<const Ghost&>(e);
+                // when player dies all ghosts stop moving and dir set to none. 
+                // but draw anim in previous dir
+                if (e.direction() != Dir::None)
+                {
+                    lastDirection_ = e.direction();
+                }
+
                 return animPack_->animationFor(g)
-                                .clipFor(g.direction());
+                                .clipFor(lastDirection_);
             }
 
 
         private:
+            Dir lastDirection_ = Dir::None;
+            
+
             GhostAnimationPack* animPack_;
     };
 
@@ -59,24 +70,30 @@ namespace Pacman
                     lastDirection_ = e.direction();
                 }
 
-                Animation& clip = animPack_->animationFor(e.state()).clipFor(lastDirection_);
+                Animation* clip = nullptr;
                 switch (e.state())
                 {
                     case PacmanState::Normal:
+                        clip = &animPack_->animationFor(e.state()).clipFor(lastDirection_);
                         if (e.direction() == Dir::None)
                         {
-                            clip.reset();
+                            clip->reset();
                         }
                         break;
                     case PacmanState::Circle:
+                        clip = &animPack_->animationFor(e.state()).clipFor(Dir::Up);
                         break;
                     case PacmanState::Dying:
+                        clip = &animPack_->animationFor(e.state()).clipFor(Dir::Up);
+                        if (clip->finished())
+                        {
+                            clip->reset();
+                        }
                         break;
 
                 }
-                
                
-                return clip;
+                return *clip;
             }
 
         private:

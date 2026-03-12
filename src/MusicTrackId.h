@@ -13,6 +13,7 @@ namespace Pacman
         Siren3,
         Siren4,
         StartGame,
+        Died,
         Count
     };
 }

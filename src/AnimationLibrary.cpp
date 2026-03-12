@@ -142,7 +142,7 @@ namespace Pacman
     {
         auto normalAnim = DirectionalAnimation(MakeNormalCharacter(atlas, GameCharacters::Pacman, 2, pacmanFrameTime));
         auto circleAnim = DirectionalAnimation(PacmanCircle(atlas));
-        auto dyingAnim = DirectionalAnimation(PacmanDying(atlas, pacmanFrameTime));
+        auto dyingAnim = DirectionalAnimation(PacmanDying(atlas, pacmanDyingFrameTime));
         return PacmanAnimationPack(normalAnim, circleAnim, dyingAnim);
 
     }

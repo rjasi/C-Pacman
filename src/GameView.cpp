@@ -134,8 +134,7 @@ namespace Pacman
             cutscenePlayer_.update(dt);
         }
 
-
-        if (world_.state() == WorldState::Playing)
+        if (world_.state() == WorldState::Playing || world_.state() == WorldState::Died)
         {
             animationLibrary_->update(dt);
         }

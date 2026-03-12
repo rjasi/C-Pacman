@@ -79,6 +79,8 @@ namespace Pacman
                 newGame(dt);
                 break;
             case WorldState::Died:
+                died(dt);
+                break;
             case WorldState::LevelCleared:
                 return;
             default:
@@ -190,7 +192,9 @@ namespace Pacman
                 }
                 else if (ghost.state() == GhostState::Chase || ghost.state() == GhostState::Scatter)
                 {
-                    // todo live lost 
+                    lives_--;
+                    state_ = WorldState::Died;
+                    return;
                 }
                 else if (ghost.state() == GhostState::Frightened)
                 {
@@ -403,7 +407,7 @@ namespace Pacman
         {
             gameAudio_.stopMusic();
             state_ = WorldState::Playing;
-            pacmanEntity_.setState(PacmanState::Dying);
+            pacmanEntity_.setState(PacmanState::Normal);
         }
      }
 
@@ -413,6 +417,33 @@ namespace Pacman
         auto loc = maze_.tileToWorld(Maze::READY_POPUP_TILE);
         pacmanEntity_.setState(PacmanState::Circle);
         textPopups_.push_back({loc, NEW_GAME_INTRO_SPAWN_CHARACTER_TIME, TextColors::YELLOW, "Ready! "});
+    }
+
+    void World::died(sf::Time dt)
+    {
+
+        blinky_.setDirection(Dir::None);
+        pinky_.setDirection(Dir::None);
+        inky_.setDirection(Dir::None);
+        clyde_.setDirection(Dir::None);
+        pacmanEntity_.setDirection(Dir::None);
+
+        diedTimer_ += dt;
+
+        if (diedTimer_ > DIED_ANIM_START_TIME)
+        {
+            blinky_.setVisible(false);
+            pinky_.setVisible(false);
+            inky_.setVisible(false);
+            clyde_.setVisible(false);
+            pacmanEntity_.setState(PacmanState::Dying);
+            gameAudio_.playMusic(MusicTrackId::Died);
+        }
+        else
+        {
+            gameAudio_.stopMusic();
+        }
+
     }
 
 

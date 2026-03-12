@@ -88,6 +88,7 @@ namespace Pacman
                 MusicDef{"assets/sound/siren3.wav", true},
                 MusicDef{"assets/sound/siren4.wav", true},
                 MusicDef{"assets/sound/start.wav", false},
+                MusicDef{"assets/sound/died.flac", false},
             };
 
                     

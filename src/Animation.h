@@ -32,6 +32,7 @@ namespace Pacman
             void reset();
             sf::Sprite& sprite();
             void setLoop(bool loop);
+            bool finished() const;
             
         private:
             void apply();
