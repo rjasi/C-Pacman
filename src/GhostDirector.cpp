@@ -11,7 +11,7 @@ namespace Pacman
 
     void GhostDirector::update(const std::array<Ghost*, 4>& ghosts, const Maze& maze, const TargetContext& ctx, sf::Time dt)
     {
-        tryReleaseGhost(ghosts);
+        tryReleaseGhost(ghosts, dt);
 
         if (powerPelletEaten_)
         {
@@ -35,7 +35,7 @@ namespace Pacman
 
     }
 
-    void GhostDirector::tryReleaseGhost(const std::array<Ghost*, 4>& ghosts)
+    void GhostDirector::tryReleaseGhost(const std::array<Ghost*, 4>& ghosts, sf::Time dt)
     {
         if (ghostsPendingRelease_.empty())
         {
@@ -69,13 +69,13 @@ namespace Pacman
         switch (ghostId)
         {
             case GameCharacters::Pinky:
-                canRelease = pelletsEaten_ >= cfg_.pelletsToReleasePinky;
+                canRelease = (pelletsEaten_ >= cfg_.pelletsToReleasePinky) && !pinkyPelletCountRelease_;
                 break;
             case GameCharacters::Inky:
-                canRelease = pelletsEaten_ >= cfg_.pelletsToReleaseInky;
+                canRelease = (pelletsEaten_ >= cfg_.pelletsToReleaseInky) && !inkyPelletCountRelease_;
                 break;
             case GameCharacters::Clyde:
-                canRelease = pelletsEaten_ >= cfg_.pelletsToReleaseClyde;
+                canRelease = (pelletsEaten_ >= cfg_.pelletsToReleaseClyde) && !clydePelletCountRelease_;
                 break;
             default:
                 return;
@@ -85,10 +85,32 @@ namespace Pacman
         {
             ghostToRelease->setHouseState(HouseState::LeavingGettingToHouseCenter);
             ghostsPendingRelease_.erase(ghostsPendingRelease_.begin());
+
+            switch (ghostId)
+            {
+                case GameCharacters::Pinky:
+                    pinkyPelletCountRelease_ = true;
+                    break;
+                case GameCharacters::Inky:
+                    inkyPelletCountRelease_ = true;
+                    break;
+                case GameCharacters::Clyde:
+                    clydePelletCountRelease_ = true;
+                    break;
+                default:
+                    break;
+            }
             return;
         }
 
-        // todo time based release later
+        releaseTimer_ += dt;
+        if (releaseTimer_ >= TIME_TO_RELEASE_GHOST)
+        {
+            ghostToRelease->setHouseState(HouseState::LeavingGettingToHouseCenter);
+            ghostsPendingRelease_.erase(ghostsPendingRelease_.begin());
+
+            releaseTimer_ -= TIME_TO_RELEASE_GHOST;
+        }
 
     }
 
@@ -217,8 +239,10 @@ namespace Pacman
         }
     }
 
-    void GhostDirector::startLevel()
+    void GhostDirector::restartLevel()
     {
+        frightened_ = false;
+        ghostsPendingRelease_ = {GameCharacters::Pinky, GameCharacters::Inky, GameCharacters::Clyde};
         // currentPhase_ = cfg_.phases.front();
     }
 

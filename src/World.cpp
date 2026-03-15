@@ -13,13 +13,15 @@ namespace Pacman
     pinkyTargetStrategy_({PINKY_SCATTER_CORNER}),
     inkyTargetStrategy_({INKY_SCATTER_CORNER}),
     clydeTargetStrategy_({CLYDE_SCATTER_CORNER}),
-    pacmanEntity_({Maze::PACMAN_SPAWN_POINT}, maze_.tileToWorld(Maze::PACMAN_SPAWN_POINT)),
+    pacmanEntity_({Maze::PACMAN_SPAWN_POINT}, maze_.tileToWorldOnBoundary(Maze::PACMAN_SPAWN_POINT)),
     blinky_(blinkyTargetStrategy_, greedyManhattanPathingStrategy_, GameCharacters::Blinky, Maze::HOUSE_CENTER, Maze::INFRONT_DOOR_LEFT, maze_.tileToWorldOnBoundary(Maze::INFRONT_DOOR_LEFT)),
     pinky_(pinkyTargetStrategy_, greedyManhattanPathingStrategy_, GameCharacters::Pinky, Maze::HOUSE_CENTER, Maze::HOUSE_CENTER, maze_.tileToWorldOnBoundary(Maze::HOUSE_CENTER)),
     inky_(inkyTargetStrategy_, greedyManhattanPathingStrategy_, GameCharacters::Inky, Maze::HOUSE_LEFT, Maze::HOUSE_CENTER, maze_.tileToWorldOnBoundary(Maze::HOUSE_LEFT)),
     clyde_(clydeTargetStrategy_, greedyManhattanPathingStrategy_, GameCharacters::Clyde, Maze::HOUSE_RIGHT, Maze::HOUSE_CENTER, maze_.tileToWorldOnBoundary(Maze::HOUSE_RIGHT)),
     ghostDirector_(cfg_)
     {
+        // pacmanEntity_.setPosition(maze_.tileToWorldOnBoundary(Maze::PACMAN_SPAWN_POINT), Maze::PACMAN_SPAWN_POINT);
+
         blinky_.setState(GhostState::Chase);
         blinky_.setHouseState(HouseState::Outside);
         blinky_.setDirection(Dir::Left);
@@ -79,8 +81,11 @@ namespace Pacman
                 newGame(dt);
                 break;
             case WorldState::Died:
+                advanceBlinkTimer(dt);  
                 died(dt);
                 break;
+            case WorldState::RestartLevel:
+                restartLevel(dt);
             case WorldState::LevelCleared:
                 return;
             default:
@@ -118,6 +123,7 @@ namespace Pacman
 
     void World::playing(sf::Time dt)
     {
+        updatePopups(dt);
         pacmanEntity_.update(dt, maze_);
         setBGM();
         if (maze_.tryEatPellet(pacmanEntity_.position()))
@@ -405,6 +411,7 @@ namespace Pacman
 
         if (startNewGameTimer_ >= NEW_GAME_INTRO)
         {
+            startNewGameTimer_ = sf::Time::Zero;
             gameAudio_.stopMusic();
             state_ = WorldState::Playing;
             pacmanEntity_.setState(PacmanState::Normal);
@@ -421,12 +428,17 @@ namespace Pacman
 
     void World::died(sf::Time dt)
     {
+        updatePopups(dt);
 
-        blinky_.setDirection(Dir::None);
-        pinky_.setDirection(Dir::None);
-        inky_.setDirection(Dir::None);
-        clyde_.setDirection(Dir::None);
-        pacmanEntity_.setDirection(Dir::None);
+        if (diedTimer_ <= sf::Time::Zero)
+        {
+            pacmanEntity_.requestResetDiedAnimation();
+            blinky_.setDirection(Dir::None);
+            pinky_.setDirection(Dir::None);
+            inky_.setDirection(Dir::None);
+            clyde_.setDirection(Dir::None);
+            pacmanEntity_.setDirection(Dir::None);
+        }
 
         diedTimer_ += dt;
 
@@ -442,6 +454,64 @@ namespace Pacman
         else
         {
             gameAudio_.stopMusic();
+        }
+
+        if (diedTimer_ > DIED_STATE_TIME)
+        {
+            diedTimer_ = sf::Time::Zero;
+            //todo gameover if lives run out
+            state_ = WorldState::RestartLevel;
+        }
+
+    }
+
+    void World::restartLevel(sf::Time dt)
+    {
+        updatePopups(dt);
+        // reset positions only first time entering this state
+        if (restartLevelTimer_ <= sf::Time::Zero)
+        { 
+            ghostDirector_.restartLevel();
+
+            blinky_.setState(GhostState::Chase);
+            blinky_.setHouseState(HouseState::Outside);
+            blinky_.setPosition(maze_.tileToWorldOnBoundary(Maze::INFRONT_DOOR_LEFT), Maze::INFRONT_DOOR_LEFT);
+            blinky_.setDirection(Dir::Left);
+            blinky_.setVisible(true);
+
+            pinky_.setState(GhostState::Chase);
+            pinky_.setPosition(maze_.tileToWorldOnBoundary(Maze::HOUSE_CENTER), Maze::HOUSE_CENTER);
+            pinky_.setDirection(Dir::Down);
+            pinky_.setHouseState(HouseState::InHouse);
+            pinky_.setVisible(true);
+            
+            inky_.setState(GhostState::Chase);
+            inky_.setPosition(maze_.tileToWorldOnBoundary(Maze::HOUSE_LEFT), Maze::HOUSE_LEFT);
+            inky_.setDirection(Dir::Up);
+            inky_.setHouseState(HouseState::InHouse);
+            inky_.setVisible(true);
+
+            clyde_.setState(GhostState::Chase);
+            clyde_.setPosition(maze_.tileToWorldOnBoundary(Maze::HOUSE_RIGHT), Maze::HOUSE_RIGHT);
+            clyde_.setDirection(Dir::Up);
+            clyde_.setHouseState(HouseState::InHouse);
+            clyde_.setVisible(true);
+
+            pacmanEntity_.reset();
+            pacmanEntity_.setState(PacmanState::Circle);
+            pacmanEntity_.setPosition(maze_.tileToWorldOnBoundary(Maze::PACMAN_SPAWN_POINT), Maze::PACMAN_SPAWN_POINT);
+            pacmanEntity_.setDirection(Dir::Right);
+
+            auto loc = maze_.tileToWorld(Maze::READY_POPUP_TILE);
+            textPopups_.push_back({loc, RESTART_LEVEL_PAUSE_TIME, TextColors::YELLOW, "Ready!"});
+        }
+
+        restartLevelTimer_ += dt;
+        if (restartLevelTimer_ >= RESTART_LEVEL_PAUSE_TIME)
+        { 
+            restartLevelTimer_ = sf::Time::Zero;
+            pacmanEntity_.setState(PacmanState::Normal);
+            state_ = WorldState::Playing;
         }
 
     }

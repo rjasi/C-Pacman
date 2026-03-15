@@ -15,6 +15,7 @@ namespace Pacman
     {
         currentTile_ = tile;
         pos_ = p;
+        targetTile_ = PathUtils::step(current_, currentTile_);
     }
 
     sf::Vector2f MoveableEntity::position() const 
@@ -353,6 +354,12 @@ namespace Pacman
     void MoveableEntity::setState(PacmanState state)
     {
         state_ = state;
+    }
+
+    void MoveableEntity::reset()
+    {
+        corneringContext_.clear();
+        requested_ = Dir::None;
     }
 
 }

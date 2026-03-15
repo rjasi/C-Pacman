@@ -20,6 +20,14 @@ namespace Pacman
             sf::Time frightenedElapsed_ = sf::Time{};
             sf::Time frightenedFlashElapsed_ = sf::Time{};
 
+            bool pinkyPelletCountRelease_ = false;
+            bool inkyPelletCountRelease_ = false;
+            bool clydePelletCountRelease_ = false;
+            sf::Time releaseTimer_ = sf::Time{};
+            sf::Time TIME_TO_RELEASE_GHOST = sf::seconds(2);
+
+
+
             bool frightened_ = false;
             bool powerPelletEaten_ = false;
 
@@ -27,8 +35,8 @@ namespace Pacman
             LevelConfig cfg_;
             Phase currentPhase_;
             
-            void tryReleaseGhost(const std::array<Ghost*, 4>& ghosts);
-            void updatePhase(const std::array<Ghost*, 4>& ghosts,  sf::Time dt);
+            void tryReleaseGhost(const std::array<Ghost*, 4>& ghost, sf::Time dt);
+            void updatePhase(const std::array<Ghost*, 4>& ghosts, sf::Time dt);
             void frightenMode(const std::array<Ghost*, 4>& ghosts, sf::Time dt);
             bool isActive(GhostState state) const;
             void startFrightenedMode(const std::array<Ghost*, 4>& ghosts);
@@ -44,7 +52,7 @@ namespace Pacman
             int ghostEatenCount() const;
             bool frightened() const;
 
-            void startLevel();
+            void restartLevel();
 
     };
 }

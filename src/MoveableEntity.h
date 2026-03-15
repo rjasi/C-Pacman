@@ -6,6 +6,10 @@
 
 #include <SFML/Graphics.hpp>
 
+// TODO: This class needs all pacman specific logic moved out and into a new class Pacman (or pacman entity)
+// that inherits from this class. 
+// ghost entity class already do this
+
 namespace Pacman
 {
     /*
@@ -56,6 +60,7 @@ namespace Pacman
             // todo move these into own pacman entity class
             PacmanState state() const;
             void setState(PacmanState state);
+            virtual void reset();
 
 
         protected: 
@@ -65,7 +70,7 @@ namespace Pacman
             sf::Vector2f pos_{};
             Dir current_ = Dir::Right;
             Dir requested_ = Dir::Right;
-            float speed_ = 50.f;
+            float speed_ = 60.f;
             bool visible_ = true;
             TileRC currentTile_;
             TileRC targetTile_;
@@ -108,8 +113,33 @@ namespace Pacman
             bool corneringFinished(const Maze& maze, const sf::Vector2f& prev);
             void snapToJunction(const Maze& maze);
 
+            
+
             PacmanState state_ = PacmanState::Normal;
 
+
+            // below functions are a quick but badly coupled way to reset the pacman died animation 
+            // once per death. TODO it should be moved to some kind of messasing system where world 
+            // class requests animations to be reset
+
+            mutable bool resetDiedAnimation_ = false;
+
+        public:
+            void requestResetDiedAnimation()
+            {
+                resetDiedAnimation_ = true;
+            }
+
+            bool consumeDiedAnimRequest() const
+            {
+                if (resetDiedAnimation_)
+                {
+                    resetDiedAnimation_ = false;
+                    return true;
+                }
+
+                return false;
+            }
 
     };
 };

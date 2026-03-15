@@ -31,6 +31,7 @@ namespace Pacman
         LevelCleared,
         Cutscene,
         NewGame,
+        RestartLevel,
     };
 
     // class GhostEatenContext
@@ -82,7 +83,14 @@ namespace Pacman
             static constexpr sf::Time DIED_ANIM_START_TIME = sf::seconds(2.f);
             static constexpr sf::Time DIED_STATE_TIME= sf::seconds(5.0f);
             sf::Time diedTimer_{};
+
+            // restart level timer
+            static constexpr sf::Time RESTART_LEVEL_PAUSE_TIME = sf::seconds(3.f);
+            sf::Time restartLevelTimer_{};
+
+
             // ________________________________
+
 
 
             GreedyManhattanPathingStrategy greedyManhattanPathingStrategy_;
@@ -108,6 +116,8 @@ namespace Pacman
             void newGame(sf::Time dt);
             void died(sf::Time dt);
             void ghostEaten(sf::Time dt);
+            void restartLevel(sf::Time dt);
+
             void advanceBlinkTimer(sf::Time dt);
             void updatePopups(sf::Time dt);
             int getGhostEatenScore(int ghostsEaten) const;

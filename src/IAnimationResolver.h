@@ -85,7 +85,7 @@ namespace Pacman
                         break;
                     case PacmanState::Dying:
                         clip = &animPack_->animationFor(e.state()).clipFor(Dir::Up);
-                        if (clip->finished())
+                        if (e.consumeDiedAnimRequest())
                         {
                             clip->reset();
                         }
