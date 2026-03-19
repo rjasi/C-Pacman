@@ -9,6 +9,8 @@ namespace Pacman
     gameAudio_(gameAudio),
     textCache_(textCache),
     mazeSprite_(textCache_.get("maze")),
+    mazeNoDoorBlueSprite_(textCache_.get("mazeNoDoorBlue")),
+    mazeNoDoorWhiteSprite_(textCache_.get("mazeNoDoorWhite")),
     pelletSprite_(textCache_.get("pellet")),
     animationLibrary_(animationLibrary),
     powerPelletSprite_(textCache_.get("power_pellet")),
@@ -20,6 +22,10 @@ namespace Pacman
         pelletSprite_.setOrigin({4.f, 4.f});
         powerPelletSprite_.setOrigin({4.f, 4.f});
         assetsLoaded_ = true;
+
+        mazeSprite_.setPosition(ScreenConfig::MazeOrigin);
+        mazeNoDoorBlueSprite_.setPosition(ScreenConfig::MazeOrigin);
+        mazeNoDoorWhiteSprite_.setPosition(ScreenConfig::MazeOrigin);
 
         renderables_.emplace_back(animationLibrary_->ghostResolvers_[GameCharactersIndex::BLINKY].get(), &world_.blinky());
         renderables_.emplace_back(animationLibrary_->ghostResolvers_[GameCharactersIndex::PINKY].get(), &world_.pinky());
@@ -46,7 +52,6 @@ namespace Pacman
         worldView_.setViewport(
             ScreenConfig::letterboxViewport(window.getSize(), 
             ScreenConfig::VirtualScreen));
-        mazeSprite_.setPosition(ScreenConfig::MazeOrigin);
         window.setView(worldView_);
 
 
@@ -58,9 +63,22 @@ namespace Pacman
 
         // else draw normal game world
 
+        switch (world_.mazeDisplayMode())
+        {
+            case MazeDisplayMode::Normal:
+                window.draw(mazeSprite_);
+                break;
+            case MazeDisplayMode::NoDoorBlue:
+                window.draw(mazeNoDoorBlueSprite_);
+                break;
+            case MazeDisplayMode::NoDoorWhite:
+                window.draw(mazeNoDoorWhiteSprite_);
+                break;
+            default:
+                window.draw(mazeSprite_);
+        }
 
-        window.draw(mazeSprite_);
-
+        
         drawPellets(window);
     
         for (auto& renderable : renderables_)

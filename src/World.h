@@ -34,6 +34,13 @@ namespace Pacman
         RestartLevel,
     };
 
+    enum class MazeDisplayMode
+    {
+        Normal = 0,
+        NoDoorBlue,
+        NoDoorWhite
+    };
+
     // class GhostEatenContext
     // {
     //     public:
@@ -60,6 +67,7 @@ namespace Pacman
             GameAudio gameAudio_;
             Cutscenes requestedCutscene_ = Cutscenes::None;
             Cutscenes activeCutscene_ = Cutscenes::None;
+            MazeDisplayMode mazeDisplayMode_ = MazeDisplayMode::Normal;
 
             bool flipWaka = false;
             
@@ -88,7 +96,20 @@ namespace Pacman
             static constexpr sf::Time RESTART_LEVEL_PAUSE_TIME = sf::seconds(3.f);
             sf::Time restartLevelTimer_{};
 
+            // level cleared
 
+            // phase 1 pacman is circle and everything is frozen
+            static constexpr sf::Time LEVEL_CLEARED_PHASE_1 = sf::seconds(2.f);
+            // phase 2 flash maze
+            static constexpr sf::Time MAZE_FLASH_TIME = sf::seconds(0.20f);
+            static constexpr sf::Time LEVEL_CLEARED_PHASE_2 = sf::seconds(1.6f); // 8 * MAZE_FLASH_TIME, display 4 of white and  blue maze
+
+
+            sf::Time levelClearedPhase1Timer_{};
+            sf::Time levelClearedPhase2Timer_{};
+
+            sf::Time flashMazeTimer_{};
+            sf::Time blackScreenTime{};
             // ________________________________
 
 
@@ -117,6 +138,7 @@ namespace Pacman
             void died(sf::Time dt);
             void ghostEaten(sf::Time dt);
             void restartLevel(sf::Time dt);
+            void levelCleared(sf::Time dt);
 
             void advanceBlinkTimer(sf::Time dt);
             void updatePopups(sf::Time dt);
@@ -124,6 +146,8 @@ namespace Pacman
             Scores getGhostEatenScoreType(int ghostsEaten) const;
             bool anyGhostReturningHome() const;
             void setBGM();
+            void advanceNextLevel();
+            void resetEntities();
 
         public:
             World() = delete;
@@ -150,7 +174,6 @@ namespace Pacman
             Cutscenes activeCutscene() const;
 
             void setStartNewGame();
-
-
+            MazeDisplayMode mazeDisplayMode() const;
     };
 }

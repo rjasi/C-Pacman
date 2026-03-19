@@ -39,6 +39,9 @@ namespace Pacman
 
             sf::View worldView_;
             sf::Sprite mazeSprite_;
+            sf::Sprite mazeNoDoorBlueSprite_;
+            sf::Sprite mazeNoDoorWhiteSprite_;
+
             sf::Sprite pelletSprite_;
             sf::Sprite powerPelletSprite_;
             sf::Sprite pacmanLivesSprite_;

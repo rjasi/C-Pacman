@@ -15,10 +15,12 @@ namespace Pacman
             int rowCount_;
             int colCount_;
             sf::Vector2f origin_{ 0, 0 }; // pixel location on screen
+            std::vector<std::string> tilesReference_; // original unmodified maze tiles
 
         public:
             std::vector<std::string> tiles_;
 
+            static constexpr int TOTAL_DOTS = 244;
             static constexpr int TILE_SIZE = 8; // pixel size in world
             static constexpr float CENTER_EPS = 0.40f; // remove
             static constexpr int WARP_TILE_ROW = 14;
@@ -91,6 +93,8 @@ namespace Pacman
             bool nearTileCenterX(sf::Vector2f p, const float eps) const;
             bool nearTileCenterY(sf::Vector2f p, const float eps) const;
             bool isAtJunction(const sf::Vector2f& p) const;
+
+            void reset();
 
     };
 }

@@ -123,6 +123,8 @@ namespace Pacman
         textureCache_.load("pellet", "assets/pellet.png", false);
         textureCache_.load("power_pellet", "assets/power_pellet.png", false);
         textureCache_.load("text", "assets/text.png", false);
+        textureCache_.load("mazeNoDoorBlue", "assets/maze_no_door.png", false);
+        textureCache_.load("mazeNoDoorWhite", "assets/maze_white_no_door.png", false);
     }
 
 

@@ -86,8 +86,10 @@ namespace Pacman
                 break;
             case WorldState::RestartLevel:
                 restartLevel(dt);
+                break;
             case WorldState::LevelCleared:
-                return;
+                levelCleared(dt);
+                break;
             default:
                 return;
         }
@@ -129,6 +131,13 @@ namespace Pacman
         if (maze_.tryEatPellet(pacmanEntity_.position()))
         {
             dotsEaten_++;
+
+            if (dotsEaten_ >= Maze::TOTAL_DOTS)
+            {
+                state_ = WorldState::LevelCleared;
+                return;
+            }
+
             gameAudio_.pauseMusic();
             score_ += 10;
             ghostDirector_.pelletEaten();
@@ -198,8 +207,8 @@ namespace Pacman
                 }
                 else if (ghost.state() == GhostState::Chase || ghost.state() == GhostState::Scatter)
                 {
-                    lives_--;
-                    state_ = WorldState::Died;
+                    // lives_--;
+                    // state_ = WorldState::Died;
                     return;
                 }
                 else if (ghost.state() == GhostState::Frightened)
@@ -465,12 +474,8 @@ namespace Pacman
 
     }
 
-    void World::restartLevel(sf::Time dt)
+    void World::resetEntities()
     {
-        updatePopups(dt);
-        // reset positions only first time entering this state
-        if (restartLevelTimer_ <= sf::Time::Zero)
-        { 
             ghostDirector_.restartLevel();
 
             blinky_.setState(GhostState::Chase);
@@ -501,6 +506,16 @@ namespace Pacman
             pacmanEntity_.setState(PacmanState::Circle);
             pacmanEntity_.setPosition(maze_.tileToWorldOnBoundary(Maze::PACMAN_SPAWN_POINT), Maze::PACMAN_SPAWN_POINT);
             pacmanEntity_.setDirection(Dir::Right);
+    }
+
+
+    void World::restartLevel(sf::Time dt)
+    {
+        updatePopups(dt);
+        // reset positions only first time entering this state
+        if (restartLevelTimer_ <= sf::Time::Zero)
+        { 
+            resetEntities();
 
             auto loc = maze_.tileToWorld(Maze::READY_POPUP_TILE);
             textPopups_.push_back({loc, RESTART_LEVEL_PAUSE_TIME, TextColors::YELLOW, "Ready!"});
@@ -516,8 +531,70 @@ namespace Pacman
 
     }
 
+    MazeDisplayMode World::mazeDisplayMode() const
+    {
+        return mazeDisplayMode_;
+    }
 
+    void World::levelCleared(sf::Time dt)
+    {
+        updatePopups(dt);
 
+        if (levelClearedPhase1Timer_ == sf::Time::Zero)
+        {
+            pacmanEntity_.setState(PacmanState::Circle);
+            gameAudio_.stopMusic();
+        }
 
+        levelClearedPhase1Timer_ += dt;
 
+        if (levelClearedPhase1Timer_ > LEVEL_CLEARED_PHASE_1)
+        {            
+            if (levelClearedPhase2Timer_ == sf::Time::Zero)
+            {
+                mazeDisplayMode_ = MazeDisplayMode::NoDoorBlue;
+                blinky_.setVisible(false);
+                pinky_.setVisible(false);
+                inky_.setVisible(false);
+                clyde_.setVisible(false);
+            }
+
+            levelClearedPhase2Timer_ += dt;
+            flashMazeTimer_ += dt;
+            if (flashMazeTimer_ >= MAZE_FLASH_TIME)
+            {
+                flashMazeTimer_ -= MAZE_FLASH_TIME;
+                if (mazeDisplayMode_ == MazeDisplayMode::NoDoorBlue)
+                {
+                    mazeDisplayMode_ = MazeDisplayMode::NoDoorWhite;
+                }
+                else
+                {
+                    mazeDisplayMode_ = MazeDisplayMode::NoDoorBlue;
+                }
+            }
+
+        }
+
+        if (levelClearedPhase2Timer_ > LEVEL_CLEARED_PHASE_2)
+        {
+            levelClearedPhase1Timer_ = sf::Time::Zero;
+            levelClearedPhase2Timer_ = sf::Time::Zero;
+            flashMazeTimer_ = sf::Time::Zero;
+            pacmanEntity_.setState(PacmanState::Normal);
+            advanceNextLevel();
+            mazeDisplayMode_ = MazeDisplayMode::Normal;
+
+            state_ = WorldState::RestartLevel;
+        }
+
+    }
+
+    void World::advanceNextLevel()
+    {
+        dotsEaten_ = 0;
+        blinkElapsed_ = sf::Time::Zero;
+        maze_.reset();
+        // resetEntities();
+    }
 }

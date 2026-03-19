@@ -57,6 +57,8 @@ namespace Pacman
         tiles_ = std::move(tempGrid);
         colCount_ = colCount;
         rowCount_ = rowCount;
+
+        tilesReference_ = tiles_;
         return true;
     }
 
@@ -352,6 +354,11 @@ namespace Pacman
             }
         }
         return false;
+    }
+
+    void Maze::reset()
+    {
+        tiles_ = tilesReference_;
     }
 
 
