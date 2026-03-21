@@ -54,14 +54,14 @@ namespace Pacman
         BlueScore400,
         BlueScore800,
         BlueScore1600,
-        // PinkScore100,
-        // PinkScore300,
-        // PinkScore500,
-        // PinkScore700,
-        // PinkScore1000,
-        // PinkScore2000,
-        // PinkScore3000,
-        // PinkScore5000,
+        PinkScore100,
+        PinkScore300,
+        PinkScore500,
+        PinkScore700,
+        PinkScore1000,
+        PinkScore2000,
+        PinkScore3000,
+        PinkScore5000,
     };
 
     class ScorePopup : public Popup

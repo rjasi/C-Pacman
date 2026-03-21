@@ -33,6 +33,14 @@ namespace Pacman
             case Scores::BlueScore400:  return Atlas::BlueScore400;
             case Scores::BlueScore800:  return Atlas::BlueScore800;
             case Scores::BlueScore1600: return Atlas::BlueScore1600;
+            case Scores::PinkScore100: return Atlas::PinkScore100;
+            case Scores::PinkScore300: return Atlas::PinkScore300;
+            case Scores::PinkScore500: return Atlas::PinkScore500;
+            case Scores::PinkScore700: return Atlas::PinkScore700;
+            case Scores::PinkScore1000: return Atlas::PinkScore1000;
+            case Scores::PinkScore2000: return Atlas::PinkScore2000;
+            case Scores::PinkScore3000: return Atlas::PinkScore3000;
+            case Scores::PinkScore5000: return Atlas::PinkScore5000;
             default:                    return std::nullopt;
         }
     }

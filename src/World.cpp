@@ -328,7 +328,7 @@ namespace Pacman
     void World::notifyCutsceneFinished()
     {
         activeCutscene_ = Cutscenes::None;
-        state_ = WorldState::Playing;
+        state_ = nextState_;
     }
 
     void World::notifyCutsceneStarted()
@@ -585,7 +585,18 @@ namespace Pacman
             advanceNextLevel();
             mazeDisplayMode_ = MazeDisplayMode::Normal;
 
-            state_ = WorldState::RestartLevel;
+            // just one cut scene for now
+            if (level_ == 2)
+            {
+                nextState_ = WorldState::RestartLevel;
+                requestedCutscene_ = Cutscenes::Intermission1;
+                state_ = WorldState::Cutscene;
+            }
+            else
+            {
+                state_ = WorldState::RestartLevel;
+            }
+
         }
 
     }
@@ -595,6 +606,7 @@ namespace Pacman
         dotsEaten_ = 0;
         blinkElapsed_ = sf::Time::Zero;
         maze_.reset();
+        // todo read in next levels
         // resetEntities();
     }
 }

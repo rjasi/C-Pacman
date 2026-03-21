@@ -50,8 +50,12 @@ namespace Pacman
     class World
     {
         private:
+            int level_ = 1;
+
             Ghost* eatenGhost = nullptr;
             WorldState state_ = WorldState::NewGame;
+            WorldState nextState_ = WorldState::Playing;
+
             Maze maze_;
             MoveableEntity pacmanEntity_;
             Ghost blinky_;
@@ -67,7 +71,8 @@ namespace Pacman
             GameAudio gameAudio_;
             Cutscenes requestedCutscene_ = Cutscenes::None;
             Cutscenes activeCutscene_ = Cutscenes::None;
-            MazeDisplayMode mazeDisplayMode_ = MazeDisplayMode::Normal;
+            MazeDisplayMode mazeDisplayMode_ = MazeDisplayMode::Normal;            
+            sf::Time fruitTimer_{};
 
             bool flipWaka = false;
             
@@ -148,6 +153,8 @@ namespace Pacman
             void setBGM();
             void advanceNextLevel();
             void resetEntities();
+            void trySpawnFruit();
+
 
         public:
             World() = delete;

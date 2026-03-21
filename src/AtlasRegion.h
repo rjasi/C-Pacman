@@ -213,6 +213,57 @@ namespace Pacman::Atlas
         {16, 16}
     };
 
+    inline constexpr AtlasRegion PinkScore100
+    {
+        {456, 144},
+        {16, 16}
+    };
+
+    inline constexpr AtlasRegion PinkScore300
+    {
+        {472, 144},
+        {16, 16}
+    };
+
+    inline constexpr AtlasRegion PinkScore500
+    {
+        {488, 144},
+        {16, 16}
+    };
+
+    inline constexpr AtlasRegion PinkScore700
+    {
+        {504, 144},
+        {16, 16}
+    };
+
+    inline constexpr AtlasRegion PinkScore1000
+    {
+        {520, 144},
+        {24, 16}
+    };
+
+    inline constexpr AtlasRegion PinkScore2000
+    {
+        {512, 160},
+        {32, 16}
+    };
+
+    inline constexpr AtlasRegion PinkScore3000
+    {
+        {512, 176},
+        {32, 16}
+    };
+
+    inline constexpr AtlasRegion PinkScore5000
+    {
+        {512, 192},
+        {32, 16}
+    };
+
+
+
+
     inline constexpr AtlasRegion GhostEyesRight
     {
         {584, 80},
@@ -236,6 +287,58 @@ namespace Pacman::Atlas
         {632, 80},
         {16, 16}
     };
+
+    // fruits
+
+    inline constexpr AtlasRegion Cherry
+    {
+        {488, 48},
+        {16, 16}
+    };
+
+    inline constexpr AtlasRegion Strawberry
+    {
+        {504, 48},
+        {16, 16}
+    };
+
+    inline constexpr AtlasRegion Peach
+    {
+        {520, 48},
+        {16, 16}
+    };
+
+    inline constexpr AtlasRegion Apple
+    {
+        {536, 48},
+        {16, 16}
+    };
+
+    inline constexpr AtlasRegion Grapes
+    {
+        {552, 48},
+        {16, 16}
+    };
+
+    inline constexpr AtlasRegion Galaxian
+    {
+        {568, 48},
+        {16, 16}
+    };
+
+    inline constexpr AtlasRegion Bell
+    {
+        {584, 48},
+        {16, 16}
+    };
+
+    inline constexpr AtlasRegion Key
+    {
+        {600, 48},
+        {16, 16}
+    };
+
+
 
     class DirRegions
     {
