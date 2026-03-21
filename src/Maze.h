@@ -42,6 +42,7 @@ namespace Pacman
             static constexpr TileRC WARP_TILE_LEFT = {WARP_TILE_ROW, -2};
             static constexpr TileRC WARP_TILE_RIGHT = {WARP_TILE_ROW, 29};
             static constexpr TileRC READY_POPUP_TILE = {17, 11};
+            static constexpr TileRC FRUIT_TILE = {17, 13};
 
 
             Maze(const sf::Vector2f& origin);
@@ -61,7 +62,7 @@ namespace Pacman
             bool isPowerPellet(TileRC& tile) const;
             bool tryEatPellet(const sf::Vector2f& worldPos);
             bool tryEatPowerPellet(const sf::Vector2f& worldPos);
-
+            bool tryEatFruit(const sf::Vector2f& worldPos);
             bool loadFromFile(const std::string& location);
 
             const std::vector<std::string>& getTiles() const;

@@ -13,6 +13,7 @@
 #include "GameAudio.h"
 #include "SfxId.h"
 #include "CutsceneEnum.h"
+#include "FruitEnum.h"
 
 #include <cstdint>
 #include <string>
@@ -72,7 +73,6 @@ namespace Pacman
             Cutscenes requestedCutscene_ = Cutscenes::None;
             Cutscenes activeCutscene_ = Cutscenes::None;
             MazeDisplayMode mazeDisplayMode_ = MazeDisplayMode::Normal;            
-            sf::Time fruitTimer_{};
 
             bool flipWaka = false;
             
@@ -125,9 +125,15 @@ namespace Pacman
             static constexpr TileRC PINKY_SCATTER_CORNER = {-3, 0};
             static constexpr TileRC INKY_SCATTER_CORNER = {31, 27};
             static constexpr TileRC CLYDE_SCATTER_CORNER = {31, 0};
-            // PinkyTargetStrategy inkyTargetStrategy_;
-            // InkyTargetStrategy pinkyTargetStrategy_;
-            // ClydeTargetStrategy clydeTargetStrategy_;
+            
+
+            // fruit
+            static constexpr sf::Time FRUIT_SPAWN_TIME = sf::seconds(10.f);
+            static constexpr int FIRST_FRUIT_SPAWN_DOT_COUNT = 70;
+            static constexpr int SECOND_FRUIT_SPAWN_DOT_COUNT = 170;
+            sf::Time fruitTimer_{};
+            Fruits spawnedFruit_ = Fruits::None;
+            sf::Vector2f fruitPos_;
 
             // power pellet blinking
             sf::Time blinkElapsed_ = sf::Time::Zero;
@@ -153,8 +159,10 @@ namespace Pacman
             void setBGM();
             void advanceNextLevel();
             void resetEntities();
-            void trySpawnFruit();
-
+            void handleFruit(sf::Time dt);
+            Fruits getFruitForLevel() const;
+            int getFruitScore() const;
+            Scores getFruitScorePopup() const;
 
         public:
             World() = delete;
@@ -182,5 +190,9 @@ namespace Pacman
 
             void setStartNewGame();
             MazeDisplayMode mazeDisplayMode() const;
+
+            Fruits spawnedFruit() const;
+            const sf::Vector2f& fruitPos() const;
+
     };
 }

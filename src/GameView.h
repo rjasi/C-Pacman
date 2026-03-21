@@ -46,6 +46,15 @@ namespace Pacman
             sf::Sprite powerPelletSprite_;
             sf::Sprite pacmanLivesSprite_;
 
+            sf::Sprite cherrySprite_;
+            sf::Sprite strawberrySprite_;
+            sf::Sprite peachSprite_;
+            sf::Sprite appleSprite_;
+            sf::Sprite grapesSprite_;
+            sf::Sprite galaxianSprite_;
+            sf::Sprite bellSprite_;
+            sf::Sprite keySprite_;
+
             std::vector<Renderable> renderables_;
             GameAudio& gameAudio_;
             World world_;
@@ -62,5 +71,6 @@ namespace Pacman
             void drawPopup(sf::RenderTarget& window, const ScorePopup& popup);
             void drawUi(sf::RenderTarget& window);
             void drawCutscene(sf::RenderTarget& window);
+            void drawFruit(sf::RenderTarget& window);
     };
 }

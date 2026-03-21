@@ -17,10 +17,18 @@ namespace Pacman
     pacmanLivesSprite_(textCache_.get("atlas"), Pacman::Atlas::PacmanLives.IntRect()),
     tileFontLibrary_(tileFontLibrary),
     scorePopupRenderer_(scorePopupRenderer),
-    world_(gameAudio_)
+    world_(gameAudio_),
+    cherrySprite_(textCache_.get("atlas"), Pacman::Atlas::Cherry.IntRect()),
+    strawberrySprite_(textCache_.get("atlas"), Pacman::Atlas::Strawberry.IntRect()),
+    peachSprite_(textCache_.get("atlas"), Pacman::Atlas::Peach.IntRect()),
+    appleSprite_(textCache_.get("atlas"), Pacman::Atlas::Apple.IntRect()),
+    grapesSprite_(textCache_.get("atlas"), Pacman::Atlas::Grapes.IntRect()),
+    galaxianSprite_(textCache_.get("atlas"), Pacman::Atlas::Galaxian.IntRect()),
+    bellSprite_(textCache_.get("atlas"), Pacman::Atlas::Bell.IntRect()),
+    keySprite_(textCache_.get("atlas"), Pacman::Atlas::Key.IntRect())
     {
-        pelletSprite_.setOrigin({4.f, 4.f});
-        powerPelletSprite_.setOrigin({4.f, 4.f});
+        pelletSprite_.setOrigin(Atlas::Sprite8x8Origin);
+        powerPelletSprite_.setOrigin(Atlas::Sprite8x8Origin);
         assetsLoaded_ = true;
 
         mazeSprite_.setPosition(ScreenConfig::MazeOrigin);
@@ -32,6 +40,23 @@ namespace Pacman
         renderables_.emplace_back(animationLibrary_->ghostResolvers_[GameCharactersIndex::INKY].get(), &world_.inky());
         renderables_.emplace_back(animationLibrary_->ghostResolvers_[GameCharactersIndex::CLYDE].get(), &world_.clyde());
         renderables_.emplace_back(animationLibrary_->pacmanResolver_.get(), &world_.pacman());
+
+        cherrySprite_.setPosition(world_.fruitPos());
+        cherrySprite_.setOrigin(Atlas::Sprite16x18Origin);
+        strawberrySprite_.setPosition(world_.fruitPos());
+        strawberrySprite_.setOrigin(Atlas::Sprite16x18Origin);
+        peachSprite_.setPosition(world_.fruitPos());
+        peachSprite_.setOrigin(Atlas::Sprite16x18Origin);
+        appleSprite_.setPosition(world_.fruitPos());
+        appleSprite_.setOrigin(Atlas::Sprite16x18Origin);
+        grapesSprite_.setPosition(world_.fruitPos());
+        grapesSprite_.setOrigin(Atlas::Sprite16x18Origin);
+        galaxianSprite_.setPosition(world_.fruitPos());
+        galaxianSprite_.setOrigin(Atlas::Sprite16x18Origin);
+        bellSprite_.setPosition(world_.fruitPos());
+        bellSprite_.setOrigin(Atlas::Sprite16x18Origin);
+        keySprite_.setPosition(world_.fruitPos());
+        keySprite_.setOrigin(Atlas::Sprite16x18Origin);
     }
 
     void GameView::reset() 
@@ -95,6 +120,8 @@ namespace Pacman
         {
             drawPopup(window, popup);
         }
+
+        drawFruit(window);
 
         drawUi(window);
     }
@@ -215,5 +242,40 @@ namespace Pacman
     {
         cutscenePlayer_.render(window);
     }
+
+
+    void GameView::drawFruit(sf::RenderTarget& window)
+    {
+        switch (world_.spawnedFruit())
+        {
+            case Fruits::Cherry:
+                window.draw(cherrySprite_);
+                return;
+            case Fruits::Strawberry:
+                window.draw(strawberrySprite_);
+                return;
+            case Fruits::Peach:
+                window.draw(peachSprite_);
+                return;
+            case Fruits::Apple:
+                window.draw(appleSprite_);
+                return;
+            case Fruits::Grapes:
+                window.draw(grapesSprite_);
+                return;
+            case Fruits::Galaxian:
+                window.draw(galaxianSprite_);
+                return;
+            case Fruits::Bell:
+                window.draw(bellSprite_);
+                return;
+            case Fruits::Key:
+                window.draw(keySprite_);
+                return;
+            default:
+                return;
+        }
+    }
+
 }
 

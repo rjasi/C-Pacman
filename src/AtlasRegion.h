@@ -338,7 +338,17 @@ namespace Pacman::Atlas
         {16, 16}
     };
 
+    inline constexpr sf::Vector2f Sprite8x8Origin
+    {
+        4.f,
+        4.f
+    };
 
+    inline constexpr sf::Vector2f Sprite16x18Origin
+    {
+        8.f,
+        8.f
+    };
 
     class DirRegions
     {

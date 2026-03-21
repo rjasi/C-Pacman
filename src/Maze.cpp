@@ -240,6 +240,12 @@ namespace Pacman
         return false;
     }
 
+    bool Maze::tryEatFruit(const sf::Vector2f& worldPos)
+    {
+        TileRC tile = worldToTile(worldPos);
+        return tile == FRUIT_TILE;
+    }
+
     bool Maze::tryEatPowerPellet(const sf::Vector2f& worldPos)
     {
         TileRC tile = worldToTile(worldPos);

@@ -7,6 +7,7 @@ namespace Pacman
         Waka1,
         Waka2,
         EatGhost,
+        EatFruit,
         Count
     };
 }

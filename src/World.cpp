@@ -20,8 +20,6 @@ namespace Pacman
     clyde_(clydeTargetStrategy_, greedyManhattanPathingStrategy_, GameCharacters::Clyde, Maze::HOUSE_RIGHT, Maze::HOUSE_CENTER, maze_.tileToWorldOnBoundary(Maze::HOUSE_RIGHT)),
     ghostDirector_(cfg_)
     {
-        // pacmanEntity_.setPosition(maze_.tileToWorldOnBoundary(Maze::PACMAN_SPAWN_POINT), Maze::PACMAN_SPAWN_POINT);
-
         blinky_.setState(GhostState::Chase);
         blinky_.setHouseState(HouseState::Outside);
         blinky_.setDirection(Dir::Left);
@@ -40,6 +38,8 @@ namespace Pacman
         clyde_.setVisible(false);
 
         pacmanEntity_.setVisible(false);
+
+        fruitPos_ = maze_.tileToWorldOnBoundary(Maze::FRUIT_TILE);
     }
 
     void World::setPlayerRequestedDir(Dir d)
@@ -128,6 +128,8 @@ namespace Pacman
         updatePopups(dt);
         pacmanEntity_.update(dt, maze_);
         setBGM();
+        handleFruit(dt);
+
         if (maze_.tryEatPellet(pacmanEntity_.position()))
         {
             dotsEaten_++;
@@ -150,6 +152,16 @@ namespace Pacman
             score_ += 50;
             dotsEaten_++;
             ghostDirector_.powerPelletEaten();
+        }
+
+        if (spawnedFruit_ != Fruits::None && maze_.tryEatFruit(pacmanEntity_.position()))
+        {
+            gameAudio_.pauseMusic();
+            score_ += getFruitScore();
+            scorePopups_.push_back(ScorePopup{maze_.tileToWorldOnBoundary(Maze::FRUIT_TILE), EATEN_PAUSE, 
+                        getFruitScorePopup()});
+            spawnedFruit_ = Fruits::None;
+            gameAudio_.playSfx(SfxId::EatFruit);
         }
 
         TargetContext ctx
@@ -608,5 +620,114 @@ namespace Pacman
         maze_.reset();
         // todo read in next levels
         // resetEntities();
+    }
+
+    Fruits World::spawnedFruit() const
+    {
+        return spawnedFruit_;
+    }
+
+    const sf::Vector2f& World::fruitPos() const
+    {
+        return fruitPos_;
+    }
+    
+    Fruits World::getFruitForLevel() const
+    {
+        switch (level_)
+        {
+            case 1:
+                return Fruits::Cherry;
+            case 2:
+                return Fruits::Strawberry;
+            case 3:
+            case 4:
+                return Fruits::Peach;
+            case 5:
+            case 6:
+                return Fruits::Apple;
+            case 7:
+            case 8:
+                return Fruits::Grapes;
+            case 9:
+            case 10:
+                return Fruits::Galaxian;
+            case 11:
+            case 12:
+                return Fruits::Bell;
+            default: // level 13+ always key
+                return Fruits::Key;
+        }
+    }
+
+    int World::getFruitScore() const
+    {
+        switch (spawnedFruit_)
+        {
+            case Fruits::Cherry:
+                return 100;
+            case Fruits::Strawberry:
+                return 300;
+            case Fruits::Peach:
+                return 500;
+            case Fruits::Apple:
+                return 700;
+            case Fruits::Grapes:
+                return 1000;
+            case Fruits::Galaxian:
+                return 2000;
+            case Fruits::Bell:
+                return 3000;
+            case Fruits::Key:
+                return 5000;
+            default:
+                return 0;
+        }
+    }
+
+    Scores World::getFruitScorePopup() const
+    {
+        switch (spawnedFruit_)
+        {
+            case Fruits::Cherry:
+                return Scores::PinkScore100;
+            case Fruits::Strawberry:
+                return Scores::PinkScore300;
+            case Fruits::Peach:
+                return Scores::PinkScore500;
+            case Fruits::Apple:
+                return Scores::PinkScore700;
+            case Fruits::Grapes:
+                return Scores::PinkScore1000;
+            case Fruits::Galaxian:
+                return Scores::PinkScore2000;
+            case Fruits::Bell:
+                return Scores::PinkScore3000;
+            case Fruits::Key:
+                return Scores::PinkScore5000;
+            default:
+                return Scores::PinkScore100; // todo maybe make into optional but will never be called without fruit spawaned
+        }
+    }
+
+    void World::handleFruit(sf::Time dt)
+    {
+        if (spawnedFruit_ == Fruits::None)
+        {
+            if (dotsEaten_ == FIRST_FRUIT_SPAWN_DOT_COUNT || dotsEaten_ == SECOND_FRUIT_SPAWN_DOT_COUNT)
+            {
+                spawnedFruit_ = getFruitForLevel();
+                fruitTimer_ = sf::Time::Zero;
+            }
+        }
+        else
+        {
+            fruitTimer_ += dt;
+            if (fruitTimer_ >= FRUIT_SPAWN_TIME)
+            {
+                spawnedFruit_ = Fruits::None;
+            }
+        }
+
     }
 }
