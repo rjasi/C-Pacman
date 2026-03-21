@@ -39,7 +39,10 @@ namespace Pacman
             int pelletsToReleaseInky  = 30;
             int pelletsToReleaseClyde = 60;
 
-
+            float pacmanSpeed = .8f;
+            float ghostSpeed = .75f;
+            float ghostTunnelSpeed = .4f;
+            float frightGhostSpeed = .5f;
     };
 
 

@@ -55,7 +55,7 @@ namespace Pacman
             bool isWarpTile(const TileRC& pos) const;
             bool shouldWarp(sf::Vector2f& pos_) const;
 
-            bool isInWarpTunnel(TileRC& tile) const;
+            bool isInWarpTunnel(const TileRC& tile) const;
 
             bool isWall(const TileRC& tile) const;
             bool isPellet(TileRC& tile) const;

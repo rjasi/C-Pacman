@@ -296,7 +296,7 @@ namespace Pacman
         return false;
     }
 
-    bool Maze::isInWarpTunnel(TileRC& tile) const
+    bool Maze::isInWarpTunnel(const TileRC& tile) const
     {
         return tile.r == WARP_TILE_ROW && (tile.c <= WARP_TUNNEL_LEFT_COL || tile.c >= WARP_TUNNEL_RIGHT_COL);
     }

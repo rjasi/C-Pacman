@@ -61,7 +61,7 @@ namespace Pacman
             PacmanState state() const;
             void setState(PacmanState state);
             virtual void reset();
-
+            static constexpr float BASE_SPEED = 75.75757625f;
 
         protected: 
             bool tryWarp(const Maze& maze);
@@ -70,7 +70,7 @@ namespace Pacman
             sf::Vector2f pos_{};
             Dir current_ = Dir::Right;
             Dir requested_ = Dir::Right;
-            float speed_ = 60.f;
+            float speed_ = 1.f; // % based on base speed
             bool visible_ = true;
             TileRC currentTile_;
             TileRC targetTile_;
@@ -113,18 +113,18 @@ namespace Pacman
             bool corneringFinished(const Maze& maze, const sf::Vector2f& prev);
             void snapToJunction(const Maze& maze);
 
-            
-
             PacmanState state_ = PacmanState::Normal;
 
 
             // below functions are a quick but badly coupled way to reset the pacman died animation 
-            // once per death. TODO it should be moved to some kind of messasing system where world 
+            // once per death. TODO it should be moved to some kind of messaging system where world 
             // class requests animations to be reset
 
             mutable bool resetDiedAnimation_ = false;
 
+        // below are pacman specific functions, todo move them out
         public:
+
             void requestResetDiedAnimation()
             {
                 resetDiedAnimation_ = true;

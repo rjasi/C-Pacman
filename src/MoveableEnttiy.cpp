@@ -301,13 +301,13 @@ namespace Pacman
 
     void MoveableEntity::move(sf::Time dt)
     {
-        sf::Vector2f step = DirUtils::dirVecWorld(current_) * (speed_ * dt.asSeconds());
+        sf::Vector2f step = DirUtils::dirVecWorld(current_) * (speed_ * BASE_SPEED * dt.asSeconds());
         pos_ += step;
     }
 
     void MoveableEntity::move(sf::Time dt, Dir d)
     {
-        sf::Vector2f step = DirUtils::dirVecWorld(d) * (speed_ * dt.asSeconds());
+        sf::Vector2f step = DirUtils::dirVecWorld(d) * (speed_ * BASE_SPEED * dt.asSeconds());
         pos_ += step;
     }
 

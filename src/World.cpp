@@ -64,7 +64,7 @@ namespace Pacman
 
     void World::update(sf::Time dt)
     {
-
+        setEntitySpeeds();
         switch (state_)
         {
             case WorldState::Playing:
@@ -726,6 +726,35 @@ namespace Pacman
             if (fruitTimer_ >= FRUIT_SPAWN_TIME)
             {
                 spawnedFruit_ = Fruits::None;
+            }
+        }
+    }
+
+    void World::setEntitySpeeds()
+    {
+        pacmanEntity_.setSpeed(cfg_.pacmanSpeed);
+        for (Ghost& ghost : { std::ref(blinky_), std::ref(pinky_),
+            std::ref(inky_), std::ref(clyde_) })
+        {
+            if (maze_.isInWarpTunnel(maze_.worldToTile(ghost.position())) && ghost.state() != GhostState::EatenReturning)
+            {
+                ghost.setSpeed(cfg_.ghostTunnelSpeed);
+            }
+            else if (!ghost.isOutsideHouse())
+            {
+                ghost.setSpeed(0.5f);
+            }
+            else if (ghost.state() == GhostState::Chase || ghost.state() == GhostState::Scatter)
+            {
+                ghost.setSpeed(cfg_.ghostSpeed);
+            }
+            else if (ghost.state() == GhostState::Frightened)
+            {
+                ghost.setSpeed(cfg_.frightGhostSpeed);
+            }
+            else if (ghost.state() == GhostState::EatenReturning)
+            {
+                ghost.setSpeed(1.5f);
             }
         }
 

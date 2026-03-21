@@ -164,6 +164,8 @@ namespace Pacman
             int getFruitScore() const;
             Scores getFruitScorePopup() const;
 
+            void setEntitySpeeds();
+
         public:
             World() = delete;
             World(GameAudio& gameAudio);

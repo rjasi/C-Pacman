@@ -18,7 +18,7 @@ namespace Pacman
     name_(name),
     houseTile_(houseTile)
     {
-        speed_ = 20.0f;
+        speed_ = 1.0f;
     }
 
     GameCharacters Ghost::name() const
@@ -153,7 +153,6 @@ namespace Pacman
 
     void Ghost::paceInHouse(sf::Time dt, const Maze& maze)
     {
-        speed_ = 20.f;
         // todo refactor when ghost changes state and send back into house
         if (current_ == Dir::Left || current_ == Dir::Right)
         {
@@ -180,7 +179,6 @@ namespace Pacman
 
     bool Ghost::moveToHouseVerticalCenter(sf::Time dt, const Maze& maze)
     {
-        speed_ = 60.f;
         sf::Vector2f target = maze.tileToWorldOnBoundary(Maze::HOUSE_CENTER);
 
         // first center y and clamp if close enougb
@@ -209,7 +207,6 @@ namespace Pacman
 
     bool Ghost::moveToHouseHorizontalCenter(sf::Time dt, const Maze& maze)
     {
-        speed_ = 60.f;
         sf::Vector2f target = maze.tileToWorldOnBoundary(Maze::HOUSE_CENTER);
 
         if (std::abs(pos_.x - target.x) <= Maze::CENTER_EPS)
@@ -233,7 +230,6 @@ namespace Pacman
 
     bool Ghost::moveToTileHorizontalCenter(sf::Time dt, const Maze& maze, const TileRC& targetTile)
     {
-        speed_ = 60.f;
         sf::Vector2f target = maze.tileToWorldOnBoundary(targetTile);
 
         if (std::abs(pos_.x - target.x) <= Maze::CENTER_EPS)
@@ -259,7 +255,6 @@ namespace Pacman
     void Ghost::moveToInfrontOfDoor(sf::Time dt, const Maze& maze)
     {
         sf::Vector2f target = maze.tileToWorldOnBoundary(Maze::INFRONT_DOOR_LEFT);
-        speed_ = 60.f;
         // guranteed to be alinged on x from moveToExit so no need to check y 
         // first center y and clamp if close enougb
         if (std::abs(pos_.y - target.y) <= Maze::CENTER_EPS)
@@ -296,7 +291,6 @@ namespace Pacman
             return;
         }
 
-        speed_ = 150.f;
         sf::Vector2f prev = pos_;
         move(dt);
 
@@ -345,7 +339,6 @@ namespace Pacman
     // randomly choose directions at tile center except reverse if possible
     void Ghost::frightened(sf::Time dt, const Maze& maze)
     {
-        speed_ = 20.f;
         sf::Vector2f prev = pos_;
         move(dt);
 
@@ -408,7 +401,6 @@ namespace Pacman
     // determine where to go
     void Ghost::active(sf::Time dt, const Maze& maze)
     {
-        speed_ = 60.f;
         sf::Vector2f prev = pos_;
         move(dt);
 
