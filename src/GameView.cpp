@@ -25,7 +25,11 @@ namespace Pacman
     grapesSprite_(textCache_.get("atlas"), Pacman::Atlas::Grapes.IntRect()),
     galaxianSprite_(textCache_.get("atlas"), Pacman::Atlas::Galaxian.IntRect()),
     bellSprite_(textCache_.get("atlas"), Pacman::Atlas::Bell.IntRect()),
-    keySprite_(textCache_.get("atlas"), Pacman::Atlas::Key.IntRect())
+    keySprite_(textCache_.get("atlas"), Pacman::Atlas::Key.IntRect()),
+    blinkyMenuSprite_(textCache_.get("atlas"), Pacman::Atlas::BlinkyRight.IntRect()),
+    pinkyMenuSprite_(textCache_.get("atlas"), Pacman::Atlas::PinkyRight.IntRect()),
+    inkyMenuSprite_(textCache_.get("atlas"), Pacman::Atlas::InkyRight.IntRect()),
+    clydeMenuSprite_(textCache_.get("atlas"), Pacman::Atlas::ClydeRight.IntRect())
     {
         pelletSprite_.setOrigin(Atlas::Sprite8x8Origin);
         powerPelletSprite_.setOrigin(Atlas::Sprite8x8Origin);
@@ -70,16 +74,8 @@ namespace Pacman
         world_.setStartNewGame();
     }
 
-    void GameView::render(sf::RenderTarget& window) 
+    void GameView::drawPlaying(sf::RenderTarget& window) 
     {
-        worldView_.setSize(ScreenConfig::VirtualScreen);
-        worldView_.setCenter(ScreenConfig::VirtualScreen / 2.f);
-        worldView_.setViewport(
-            ScreenConfig::letterboxViewport(window.getSize(), 
-            ScreenConfig::VirtualScreen));
-        window.setView(worldView_);
-
-
         if (world_.activeCutscene() != Cutscenes::None)
         {
             drawCutscene(window);
@@ -126,6 +122,127 @@ namespace Pacman
         drawUi(window);
     }
 
+    void GameView::drawIntro(sf::RenderTarget& window) 
+    {
+        drawUi(window);
+        const TileFont& whiteTextRenderer = tileFontLibrary_->get(TextColors::WHITE);
+        const Maze& maze = world_.maze();
+
+        whiteTextRenderer.render(window, "Character / Nickname", maze.tileToWorldNonCentered({3,7}));
+
+        if (menuTimer_ >= blinkyMenuSpriteTime_)
+        {
+            blinkyMenuSprite_.setPosition(maze.tileToWorldNonCentered({4,5}) + sf::Vector2f{0, 2.f});
+            window.draw(blinkyMenuSprite_);
+        }
+
+        if (menuTimer_ >= blinkyCharacterTextTime_)
+        {
+            const TileFont& textRenderer = tileFontLibrary_->get(TextColors::RED);
+            textRenderer.render(window, "-Shadow", maze.tileToWorldNonCentered({5,8}));
+        }
+
+        if (menuTimer_ >= blinkyNicknameTextTime_)
+        {
+            const TileFont& textRenderer = tileFontLibrary_->get(TextColors::RED);
+            textRenderer.render(window, "\"Blinky\"", maze.tileToWorldNonCentered({5,19}));
+        }
+          
+        if (menuTimer_ >= pinkyMenuSpriteTime_)
+        {
+            pinkyMenuSprite_.setPosition(maze.tileToWorldNonCentered({7,5}) + sf::Vector2f{0, 2.f});
+            window.draw(pinkyMenuSprite_);
+        }
+
+        if (menuTimer_ >= pinkyCharacterTextTime_)
+        {
+            const TileFont& textRenderer = tileFontLibrary_->get(TextColors::PINK);
+            textRenderer.render(window, "-Speedy", maze.tileToWorldNonCentered({8, 8}));
+        }
+
+        if (menuTimer_ >= pinkyNicknameTextTime_)
+        {
+            const TileFont& textRenderer = tileFontLibrary_->get(TextColors::PINK);
+            textRenderer.render(window, "\"Pinky\"", maze.tileToWorldNonCentered({8,19}));
+        }
+
+        if (menuTimer_ >= inkyMenuSpriteTime_)
+        {
+            inkyMenuSprite_.setPosition(maze.tileToWorldNonCentered({10,5}) + sf::Vector2f{0, 2.f});
+            window.draw(inkyMenuSprite_);
+        }
+
+        if (menuTimer_ >= inkyCharacterTextTime_)
+        {
+            const TileFont& textRenderer = tileFontLibrary_->get(TextColors::BLUE);
+            textRenderer.render(window, "-Bashful", maze.tileToWorldNonCentered({11, 8}));
+        }
+
+        if (menuTimer_ >= inkyNicknameTextTime_)
+        {
+            const TileFont& textRenderer = tileFontLibrary_->get(TextColors::BLUE);
+            textRenderer.render(window, "\"Inky\"", maze.tileToWorldNonCentered({11,19}));
+        }
+
+        if (menuTimer_ >= clydeMenuSpriteTime_)
+        {
+            clydeMenuSprite_.setPosition(maze.tileToWorldNonCentered({13,5}) + sf::Vector2f{0, 2.f});
+            window.draw(clydeMenuSprite_);
+        }
+
+        if (menuTimer_ >= clydeCharacterTextTime_)
+        {
+            const TileFont& textRenderer = tileFontLibrary_->get(TextColors::ORANGE);
+            textRenderer.render(window, "-Pokey", maze.tileToWorldNonCentered({14, 8}));
+        }
+
+        if (menuTimer_ >= clydeNicknameTextTime_)
+        {
+            const TileFont& textRenderer = tileFontLibrary_->get(TextColors::ORANGE);
+            textRenderer.render(window, "\"Clyde\"", maze.tileToWorldNonCentered({14,19}));
+        }
+
+        if (menuTimer_ >= ptsSpriteTime_)
+        {
+            pelletSprite_.setPosition(maze.tileToWorld({21,10}));
+            window.draw(pelletSprite_);
+            whiteTextRenderer.render(window, "10 )", maze.tileToWorldNonCentered({21,13}));
+
+            powerPelletSprite_.setPosition(maze.tileToWorld({23,10}));
+            whiteTextRenderer.render(window, "50 )", maze.tileToWorldNonCentered({23,13}));
+            window.draw(powerPelletSprite_);
+        }
+            
+            
+        //  ptsSpriteTime 
+    }
+
+
+    void GameView::render(sf::RenderTarget& window) 
+    {
+        worldView_.setSize(ScreenConfig::VirtualScreen);
+        worldView_.setCenter(ScreenConfig::VirtualScreen / 2.f);
+        worldView_.setViewport(
+            ScreenConfig::letterboxViewport(window.getSize(), 
+            ScreenConfig::VirtualScreen));
+        window.setView(worldView_);
+
+        switch(screenMode_)
+        {
+            case ScreenMode::Intro:
+                drawIntro(window);
+                break;
+            case ScreenMode::PushStart:
+                break;
+            case ScreenMode::Playing:
+                drawPlaying(window);
+                break;
+            default:
+                break;
+        }
+        
+    }
+
     void GameView::handleEvent(const sf::Event& event)
     {
         if (auto* key = event.getIf<sf::Event::KeyPressed>()) 
@@ -144,13 +261,38 @@ namespace Pacman
                 case sf::Keyboard::Scancode::Right:
                     world_.setPlayerRequestedDir(Dir::Right);
                     break;
+                case sf::Keyboard::Scancode::Enter:
+                    screenMode_ = ScreenMode::Playing;
+                    break;
                 default:
                     break;
             }
         }
     }
-
+    
     void GameView::update(sf::Time dt)
+    {
+        switch(screenMode_)
+        {
+            case ScreenMode::Intro:
+                updateIntro(dt);
+                break;
+            case ScreenMode::PushStart:
+                break;
+            case ScreenMode::Playing:
+                updatePlaying(dt);
+                break;
+            default:
+                break;
+        }
+    }
+
+    void GameView::updateIntro(sf::Time dt)
+    {
+        menuTimer_ += dt;
+    }
+
+    void GameView::updatePlaying(sf::Time dt)
     {
         world_.update(dt);
         uiLayout_.update(dt);
@@ -211,8 +353,8 @@ namespace Pacman
 
     void GameView::drawPopup(sf::RenderTarget& window, const TextPopup& popup)
     {
-            const TileFont& textRenderer = tileFontLibrary_->get(popup.color);
-            textRenderer.render(window, popup);
+        const TileFont& textRenderer = tileFontLibrary_->get(popup.color);
+        textRenderer.render(window, popup);
     }
     
     void GameView::drawPopup(sf::RenderTarget& window, const ScorePopup& popup)
@@ -225,9 +367,9 @@ namespace Pacman
         const TileFont& textRenderer = tileFontLibrary_->get(TextColors::WHITE);
         if (uiLayout_.oneUpVisible())
         {
-            textRenderer.render(window, TextColors::WHITE, std::string(UiLayout::OneUpText), UiLayout::OneUpLabel);
+            textRenderer.render(window, std::string(UiLayout::OneUpText), UiLayout::OneUpLabel, false);
         }
-        textRenderer.render(window, TextColors::WHITE, UiLayout::intToStringScore(world_.score()), UiLayout::ScoreValue);
+        textRenderer.render(window, UiLayout::intToStringScore(world_.score()), UiLayout::ScoreValue, false);
 
         //lives
         for (int i = 0; i < std::min(world_.lives(), UiLayout::MaxLivesDisplayed); i++)

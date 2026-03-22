@@ -20,6 +20,13 @@
 
 namespace Pacman
 {
+    enum class ScreenMode
+    {
+        Intro,
+        PushStart,
+        Playing
+    };
+
     class GameView 
     {
         public:
@@ -35,6 +42,7 @@ namespace Pacman
             void handleEvent(const sf::Event& event);
 
         private:
+            ScreenMode screenMode_ = ScreenMode::Intro;
             TextureCache& textCache_;
 
             sf::View worldView_;
@@ -72,5 +80,35 @@ namespace Pacman
             void drawUi(sf::RenderTarget& window);
             void drawCutscene(sf::RenderTarget& window);
             void drawFruit(sf::RenderTarget& window);
+            void drawIntro(sf::RenderTarget& window);
+            void drawPlaying(sf::RenderTarget& window);
+            void updatePlaying(sf::Time dt);
+            void updateIntro(sf::Time dt);
+
+            // main menu 
+            sf::Time menuTimer_;
+
+            sf::Sprite blinkyMenuSprite_;
+            sf::Sprite pinkyMenuSprite_;
+            sf::Sprite inkyMenuSprite_;
+            sf::Sprite clydeMenuSprite_;
+
+            static constexpr sf::Time blinkyMenuSpriteTime_ = sf::seconds(1.f);
+            static constexpr sf::Time blinkyCharacterTextTime_ = blinkyMenuSpriteTime_ + sf::seconds(1.0f);
+            static constexpr sf::Time blinkyNicknameTextTime_ = blinkyCharacterTextTime_ + sf::seconds(.4f);
+
+            static constexpr sf::Time pinkyMenuSpriteTime_ = blinkyNicknameTextTime_ + sf::seconds(.4f);
+            static constexpr sf::Time pinkyCharacterTextTime_ = pinkyMenuSpriteTime_ + sf::seconds(1.0f);
+            static constexpr sf::Time pinkyNicknameTextTime_ = pinkyCharacterTextTime_ + sf::seconds(.4f);
+
+            static constexpr sf::Time inkyMenuSpriteTime_ = pinkyNicknameTextTime_ + sf::seconds(.4f);
+            static constexpr sf::Time inkyCharacterTextTime_ = inkyMenuSpriteTime_ + sf::seconds(1.0f);
+            static constexpr sf::Time inkyNicknameTextTime_ = inkyCharacterTextTime_ + sf::seconds(.4f);
+            
+            static constexpr sf::Time clydeMenuSpriteTime_ = inkyNicknameTextTime_ + sf::seconds(.4f);
+            static constexpr sf::Time clydeCharacterTextTime_ = clydeMenuSpriteTime_ + sf::seconds(1.0f);
+            static constexpr sf::Time clydeNicknameTextTime_ = clydeCharacterTextTime_ + sf::seconds(.4f);
+            
+            static constexpr sf::Time ptsSpriteTime_ = clydeCharacterTextTime_ + sf::seconds(1.f);
     };
 }

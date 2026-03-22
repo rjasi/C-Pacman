@@ -105,9 +105,10 @@ namespace Pacman
             }
 
             // todo maybe refactor Popup since not every text is a popup
-            void render(sf::RenderTarget& window, TextColors color, const std::string& text, const sf::Vector2f& pos) const
+            void render(sf::RenderTarget& window, const std::string& text, const sf::Vector2f& pos, bool center = false) const
             {
-                render(window, {pos, sf::Time::Zero, color, text}, false);
+                // color is a placeholder.. not used
+                render(window, {pos, sf::Time::Zero, TextColors::RED, text}, false);
             }
 
     };

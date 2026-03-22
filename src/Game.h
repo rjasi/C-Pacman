@@ -18,7 +18,7 @@ namespace Pacman
     {
         private: 
             sf::RenderWindow window_;
-            GameState state_ = GameState::MainMenu;
+            GameState state_ = GameState::Playing;
             MainMenu menu_;
 
             // unique ptr for delayed construction

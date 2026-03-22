@@ -19,12 +19,12 @@ namespace Pacman::Atlas
 
     // returns region of sprite sheet of a single frame relative to origin
     // use with sprite to specify a which area to display
-    inline sf::IntRect frameRect(const AtlasRegion& r, int frameIndex = 0, int row = 0)
+    inline sf::IntRect frameRect(const AtlasRegion& r, int frameIndex = 0, int row = 0, int additionalWidth = 0)
     {
         // IntRect is {{left (x), top (y)}, {width, height}}
         return sf::IntRect(
             {r.origin.x + frameIndex * r.frameSize.x, r.origin.y + row * r.frameSize.y },
-            { r.frameSize.x, r.frameSize.y }
+            { r.frameSize.x + additionalWidth, r.frameSize.y }
         );
     } 
 

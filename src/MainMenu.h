@@ -1,11 +1,15 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
+#include "GameState.h"
+
+#include "TextureCache.h"
+#include "TileFontLibrary.h"
 
 #include <vector>
 #include <string>
 
-#include "GameState.h"
+#include <SFML/Graphics.hpp>
+
 
 namespace Pacman
 {
@@ -17,6 +21,7 @@ namespace Pacman
         Quit
     };
 
+    // not main menu not used other than just to start game
     class MainMenu
     {
         public:
@@ -43,7 +48,7 @@ namespace Pacman
             std::vector<std::string> labels_ = {"Start", "High scores", "Quit"};
             int selected_ = 0;
 
-            MenuAction pendingAction_ = MenuAction::None;
+            MenuAction pendingAction_ = MenuAction::StartGame;
 
             sf::Vector2u windowSize_;
     };

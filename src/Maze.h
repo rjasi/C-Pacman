@@ -80,6 +80,8 @@ namespace Pacman
             sf::Vector2f tileToWorldOnBoundary(const TileRC& tile) const;
             sf::Vector2f tileToWorldOnBoundary(sf::Vector2i loc) const;
             sf::Vector2f tileCenterClampX(sf::Vector2i t) const;
+            sf::Vector2f tileToWorldNonCentered(const TileRC& tile) const;
+
 
             // check if next tile from current position and direction can be entered
             bool canEnterNextTile(Dir d, const sf::Vector2f& pos) const;

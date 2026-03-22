@@ -200,6 +200,14 @@ namespace Pacman
         };
     }
 
+    sf::Vector2f Maze::tileToWorldNonCentered(const TileRC& tile) const
+    {
+        return {
+            origin_.x + tile.c * TILE_SIZE,
+            origin_.y + tile.r * TILE_SIZE
+        };
+    }
+
     // pixel coordinates at right boundary at given tiles (used to place sprites at between tiles such as ghost spawn locations)
     sf::Vector2f Maze::tileToWorldOnBoundary(const TileRC& tile) const
     {
