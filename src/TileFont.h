@@ -91,7 +91,20 @@ namespace Pacman
                             sprite.setOrigin({0, 0}); // top left is sfml default
                         }
                         window.draw(sprite);
-                        currentPos.x  += TEXT_TILE_W;
+                        
+                        if (c == '(')
+                        {
+                            currentPos.x  += TEXT_TILE_W * 6;
+                        }
+                        else if (c == ')')
+                        {
+                            currentPos.x  += TEXT_TILE_W * 2;
+                        }
+                        else 
+                        {
+                            currentPos.x  += TEXT_TILE_W;
+                        }
+
 
                         // std::cerr << "drawn\n";
                     }

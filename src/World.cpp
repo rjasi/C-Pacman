@@ -757,6 +757,10 @@ namespace Pacman
                 ghost.setSpeed(1.5f);
             }
         }
+    }
 
+    const int World::highScore() const
+    {
+        return score_;
     }
 }

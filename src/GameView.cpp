@@ -211,11 +211,31 @@ namespace Pacman
             powerPelletSprite_.setPosition(maze.tileToWorld({23,10}));
             whiteTextRenderer.render(window, "50 )", maze.tileToWorldNonCentered({23,13}));
             window.draw(powerPelletSprite_);
+        }        
+        
+        if (menuTimer_ >= namcoTimer_)
+        {
+            const TileFont& textRenderer = tileFontLibrary_->get(TextColors::PINK);
+            textRenderer.render(window, "(", maze.tileToWorldNonCentered({28, 11}));
         }
-            
-            
-        //  ptsSpriteTime 
     }
+
+    void GameView::drawPushStart(sf::RenderTarget& window)
+    {
+        drawUi(window);
+        const TileFont& orangeTextRenderer = tileFontLibrary_->get(TextColors::ORANGE);
+        const TileFont& blueTextRenderer = tileFontLibrary_->get(TextColors::BLUE);
+        const TileFont& salmonTextRenderer = tileFontLibrary_->get(TextColors::SALMON);
+        const TileFont& pinkTextRenderer = tileFontLibrary_->get(TextColors::PINK);
+
+        const Maze& maze = world_.maze();
+
+        orangeTextRenderer.render(window, "Push enter button", maze.tileToWorldNonCentered({14, 6}));
+        blueTextRenderer.render(window, "1 Player only", maze.tileToWorldNonCentered({18, 8}));
+        salmonTextRenderer.render(window, "Bonus pac-man for 10000 )", maze.tileToWorldNonCentered({22, 1}));
+        pinkTextRenderer.render(window, "+ ( 1980", maze.tileToWorldNonCentered({26, 8}));
+    }
+
 
 
     void GameView::render(sf::RenderTarget& window) 
@@ -233,6 +253,7 @@ namespace Pacman
                 drawIntro(window);
                 break;
             case ScreenMode::PushStart:
+                drawPushStart(window);
                 break;
             case ScreenMode::Playing:
                 drawPlaying(window);
@@ -261,8 +282,31 @@ namespace Pacman
                 case sf::Keyboard::Scancode::Right:
                     world_.setPlayerRequestedDir(Dir::Right);
                     break;
+                case sf::Keyboard::Scancode::Space:
+                    switch (screenMode_)
+                    {
+                        case ScreenMode::Intro:
+                            menuTimer_ = sf::seconds(20.f); // speed up intro
+                            break;
+                        default:
+                            return;
+                    }
+                    break;
                 case sf::Keyboard::Scancode::Enter:
-                    screenMode_ = ScreenMode::Playing;
+                    switch (screenMode_)
+                    {
+                        case ScreenMode::Intro:
+                            gameAudio_.playSfx(SfxId::Credit);
+                            screenMode_ = ScreenMode::PushStart;
+                            break;
+                        case ScreenMode::PushStart:
+                            gameAudio_.playSfx(SfxId::Credit);
+                            reset();
+                            screenMode_ = ScreenMode::Playing;
+                            break;
+                        default:
+                            return;
+                    }
                     break;
                 default:
                     break;
@@ -367,17 +411,28 @@ namespace Pacman
         const TileFont& textRenderer = tileFontLibrary_->get(TextColors::WHITE);
         if (uiLayout_.oneUpVisible())
         {
-            textRenderer.render(window, std::string(UiLayout::OneUpText), UiLayout::OneUpLabel, false);
+            textRenderer.render(window, std::string(UiLayout::OneUpText), UiLayout::OneUpLabel);
         }
-        textRenderer.render(window, UiLayout::intToStringScore(world_.score()), UiLayout::ScoreValue, false);
+        textRenderer.render(window, UiLayout::intToStringScore(world_.score()), UiLayout::ScoreValue);
 
-        //lives
-        for (int i = 0; i < std::min(world_.lives(), UiLayout::MaxLivesDisplayed); i++)
+        textRenderer.render(window, std::string(UiLayout::HighScoreText), UiLayout::HighScoreLabel);
+        textRenderer.render(window, UiLayout::intToStringScore(world_.highScore()), UiLayout::HighScoreValue);
+
+        //lives or credit depending on screen mode
+        if (screenMode_ == ScreenMode::Playing)
         {
-            sf::Vector2f livesPos =  UiLayout::LivesPosition + sf::Vector2f{UiLayout::LivesSpacing * i, 0};
-            pacmanLivesSprite_.setPosition(livesPos);
-            window.draw(pacmanLivesSprite_);
+            for (int i = 0; i < std::min(world_.lives(), UiLayout::MaxLivesDisplayed); i++)
+            {
+                sf::Vector2f livesPos =  UiLayout::LivesPosition + sf::Vector2f{UiLayout::LivesSpacing * i, 0};
+                pacmanLivesSprite_.setPosition(livesPos);
+                window.draw(pacmanLivesSprite_);
+            }
         }
+        else 
+        {
+            textRenderer.render(window, "Credit  0", UiLayout::LivesPosition);
+        }
+        
     }
 
     void GameView::drawCutscene(sf::RenderTarget& window)

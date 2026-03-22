@@ -81,6 +81,7 @@ namespace Pacman
             void drawCutscene(sf::RenderTarget& window);
             void drawFruit(sf::RenderTarget& window);
             void drawIntro(sf::RenderTarget& window);
+            void drawPushStart(sf::RenderTarget& window);
             void drawPlaying(sf::RenderTarget& window);
             void updatePlaying(sf::Time dt);
             void updateIntro(sf::Time dt);
@@ -110,5 +111,7 @@ namespace Pacman
             static constexpr sf::Time clydeNicknameTextTime_ = clydeCharacterTextTime_ + sf::seconds(.4f);
             
             static constexpr sf::Time ptsSpriteTime_ = clydeCharacterTextTime_ + sf::seconds(1.f);
+            static constexpr sf::Time namcoTimer_ = ptsSpriteTime_ + sf::seconds(1.f);
+
     };
 }

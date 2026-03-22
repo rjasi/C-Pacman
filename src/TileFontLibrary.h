@@ -20,7 +20,7 @@ namespace Pacman
         public:
             // in text.png each color has 4 rows in the 8x8 grid
             static constexpr int COLOR_BLOCK_HEIGHT = 4 * TEXT_TILE_H;
-            static constexpr std::string_view ALL_CHARS = "ABCDEFGHIJLKMNOPQRSTUVWXYZ0123456789!\"/-)";
+            static constexpr std::string_view ALL_CHARS = "ABCDEFGHIJLKMNOPQRSTUVWXYZ0123456789!\"/-()+";
 
             TileFontLibrary(TextureCache& cache)
             : atlas_(&cache.get("text"))
@@ -130,6 +130,22 @@ namespace Pacman
                             unsigned char offset = 'Z' - 'P' + 3; 
                             
                             rects[(unsigned char) c] =  Atlas::frameRect(region, offset, 1, TEXT_TILE_W * 2);
+                            has[(unsigned char) c] = true;
+
+                            auto p = rects[(unsigned char) c];
+                        }
+                        else if (c == '(') // namco
+                        {                            
+                            rects[(unsigned char) c] =  Atlas::frameRect(region, 0, 3, TEXT_TILE_W * 6);
+                            has[(unsigned char) c] = true;
+
+                            auto p = rects[(unsigned char) c];
+                        }
+                        else if (c == '+') // copyright symbol
+                        {                            
+                            unsigned char offset = 'Z' - 'P' + 2; 
+
+                            rects[(unsigned char) c] =  Atlas::frameRect(region, offset, 1);
                             has[(unsigned char) c] = true;
 
                             auto p = rects[(unsigned char) c];

@@ -13,13 +13,17 @@ namespace Pacman
     {
         public: 
             static constexpr std::string_view OneUpText = "1UP";
-            static constexpr sf::Vector2f OneUpLabel { 24.f,  0.f };
+            static constexpr sf::Vector2f OneUpLabel { 8.f * 3,  0.f };
             static constexpr sf::Vector2f ScoreValue { 8.f,  8.f };
+
+            static constexpr std::string_view HighScoreText = "HIGH SCORE";
+            static constexpr sf::Vector2f HighScoreLabel { 8.f * 9,  0.f };
+            static constexpr sf::Vector2f HighScoreValue { 8.f * 10,  8.f };
 
             static constexpr float CenterX = ScreenConfig::VirtualScreen.x / 2.f;
 
-            static constexpr sf::Vector2f HighScoreLabel {CenterX, 0.f };
-            static constexpr sf::Vector2f HighScoreValue {CenterX, 8.f };
+            // static constexpr sf::Vector2f HighScoreLabel {CenterX, 0.f };
+            // static constexpr sf::Vector2f HighScoreValue {CenterX, 8.f };
 
             static constexpr sf::Vector2f LivesPosition { 16.f, 272.f };
             static constexpr int MaxLivesDisplayed = 5;
@@ -31,6 +35,11 @@ namespace Pacman
             static std::string intToStringScore(int score)
             {
                 std::string unpadded = std::to_string(score);
+                if (score == 0) // original games shows 00 when score is 0
+                {
+                    unpadded += "0";
+                }
+
                 std::string padded = "";
                 
                 // pad a blank for each digit less than 6

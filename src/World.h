@@ -139,6 +139,7 @@ namespace Pacman
             sf::Time blinkElapsed_ = sf::Time::Zero;
             sf::Time blinkPeriod_  = sf::milliseconds(150); 
             bool powerPelletVisible_ = true;
+            int highScore_ = 0;
             int score_ = 0;
             int lives_ = 3;
             int dotsEaten_ = 0;
@@ -195,6 +196,7 @@ namespace Pacman
 
             Fruits spawnedFruit() const;
             const sf::Vector2f& fruitPos() const;
+            const int highScore() const;
 
     };
 }
