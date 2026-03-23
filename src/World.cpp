@@ -134,7 +134,7 @@ namespace Pacman
         {
             dotsEaten_++;
 
-            if (dotsEaten_ >= Maze::TOTAL_DOTS)
+            if (dotsEaten_ >= 10)
             {
                 state_ = WorldState::LevelCleared;
                 return;
@@ -594,7 +594,6 @@ namespace Pacman
             levelClearedPhase2Timer_ = sf::Time::Zero;
             flashMazeTimer_ = sf::Time::Zero;
             pacmanEntity_.setState(PacmanState::Normal);
-            advanceNextLevel();
             mazeDisplayMode_ = MazeDisplayMode::Normal;
 
             // just one cut scene for now
@@ -608,7 +607,7 @@ namespace Pacman
             {
                 state_ = WorldState::RestartLevel;
             }
-
+            advanceNextLevel();
         }
 
     }
@@ -618,6 +617,8 @@ namespace Pacman
         dotsEaten_ = 0;
         blinkElapsed_ = sf::Time::Zero;
         maze_.reset();
+        level_++;
+
         // todo read in next levels
         // resetEntities();
     }

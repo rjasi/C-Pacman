@@ -4,6 +4,8 @@
 #include "Animation.h"
 #include "GhostAnimationPack.h"
 #include "PacmanAnimationPack.h"
+#include "PacmanState.h"
+#include "MoveableEntity.h"
 
 namespace Pacman
 {
@@ -64,7 +66,7 @@ namespace Pacman
 
             void move(sf::Time dt, Dir d)
             {
-                sf::Vector2f step = DirUtils::dirVecWorld(d) * (speed_ * dt.asSeconds());
+                sf::Vector2f step = DirUtils::dirVecWorld(d) * (speed_ * MoveableEntity::BASE_SPEED * dt.asSeconds());
                 pos_ += step;
             }
     };
@@ -87,7 +89,13 @@ namespace Pacman
 
             void update(sf::Time dt) override
             {
+                animPack_.update(dt);
                 move(dt, currentDir_);
+            }
+
+            void setState(GhostState state)
+            {
+                state_ = state;
             }
 
         private:
@@ -95,9 +103,35 @@ namespace Pacman
             GhostState state_ = GhostState::Chase;
     };
 
-    // class PacmanActor : public ICutsceneActor
-    // {
-    //     private:
-    //         PacmanAnimationPack& animPack_;
-    // };
+    class PacmanActor : public CutsceneActor
+    {
+        public:
+            PacmanActor(PacmanAnimationPack animPack)
+            : animPack_(std::move(animPack))
+            {
+
+            }
+
+            void render(sf::RenderTarget& window) override
+            {
+                Animation& clip = animPack_.animationFor(state_).clipFor(currentDir_);
+                clip.sprite().setPosition(pos_);
+                window.draw(clip.sprite());
+            }
+
+            void update(sf::Time dt) override
+            {
+                animPack_.update(dt);
+                move(dt, currentDir_);
+            }
+
+            void setState(PacmanState state)
+            {
+                state_ = state;
+            }
+            
+        private:
+            PacmanState state_ = PacmanState::Normal;
+            PacmanAnimationPack animPack_;
+    };
 }

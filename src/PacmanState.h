@@ -6,6 +6,7 @@ namespace Pacman
     {
         Normal,
         Circle,
-        Dying
+        Dying,
+        Large
     };
 }

@@ -64,13 +64,7 @@ namespace Pacman
     }
 
     void GameView::reset() 
-    {
-        if (!assetsLoaded_) 
-        {
-            throw std::runtime_error("GameView::reset() called before loadAssets()");
-        }
-        
-        // mazeSprite_.setPosition(world_.maze().origin());
+    {   
         world_.setStartNewGame();
     }
 
@@ -338,14 +332,12 @@ namespace Pacman
 
     void GameView::updatePlaying(sf::Time dt)
     {
-        world_.update(dt);
-        uiLayout_.update(dt);
-
         if (world_.requestedCutscene() != Cutscenes::None)
         {
             switch (world_.requestedCutscene())
             {
                 case Cutscenes::Intermission1:
+                    gameAudio_.stopMusic();
                     CutsceneLibrary::Intermission1(cutscenePlayer_, textCache_.get("atlas"), gameAudio_);
                     cutscenePlayer_.start();
                     world_.notifyCutsceneStarted();
@@ -369,7 +361,9 @@ namespace Pacman
         {
             animationLibrary_->update(dt);
         }
-        
+
+        world_.update(dt);
+        uiLayout_.update(dt);
     }
 
     void GameView::drawPellets(sf::RenderTarget& window)

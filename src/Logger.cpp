@@ -37,14 +37,14 @@ namespace Pacman
 
     void Logger::info(const std::string& message)
     {
-        file_ << "[INFO]: " <<  message;
-        std::cerr << "[INFO]: " << message;
+        file_ << "[INFO]: " <<  message << "\n";
+        std::cerr << "[INFO]: " << message << "\n";;
     }
 
     void Logger::error(const std::string& message)
     {
-        file_ << "[ERROR]: " <<  message;
-        std::cerr << "[ERROR]: " << message;
+        file_ << "[ERROR]: " <<  message << "\n";;
+        std::cerr << "[ERROR]: " << message << "\n";;
     }
 
 

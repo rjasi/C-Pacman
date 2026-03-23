@@ -6,6 +6,11 @@ namespace Pacman
     { 
         return actors_; 
     }
+    
+    std::vector<sf::Sprite>& CutscenePlayer::props()
+    {
+        return props_;
+    }
 
     std::vector<CutsceneStep>& CutscenePlayer::steps() 
     { 

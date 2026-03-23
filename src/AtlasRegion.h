@@ -71,6 +71,13 @@ namespace Pacman::Atlas
         {16, 16}    
     };
 
+    inline constexpr AtlasRegion PacmanLarge
+    {
+        {488, 16},
+        {32, 32}    
+    };
+
+
     inline constexpr AtlasRegion PacmanLives
     {
         {584, 16},   // origin
@@ -261,9 +268,6 @@ namespace Pacman::Atlas
         {32, 16}
     };
 
-
-
-
     inline constexpr AtlasRegion GhostEyesRight
     {
         {584, 80},
@@ -338,6 +342,48 @@ namespace Pacman::Atlas
         {16, 16}
     };
 
+    inline constexpr AtlasRegion Nail
+    {
+        {584, 96},
+        {16, 16}
+    };
+
+    inline constexpr AtlasRegion BlinkyTear1
+    {
+        {600, 96},
+        {16, 16}
+    };
+
+    inline constexpr AtlasRegion BlinkyTear2
+    {
+        {616, 96},
+        {16, 16}
+    };
+
+    inline constexpr AtlasRegion BlinkyTear3
+    {
+        {632, 96},
+        {16, 16}
+    };
+
+    inline constexpr AtlasRegion BlinkyTear4
+    {
+        {648, 96},
+        {16, 16}
+    };
+
+    inline constexpr AtlasRegion BlinkyTear5
+    {
+        {584, 112},
+        {16, 16}
+    };
+
+    inline constexpr AtlasRegion BlinkyTear6
+    {
+        {600, 112},
+        {16, 16}
+    };
+
     inline constexpr sf::Vector2f Sprite8x8Origin
     {
         4.f,
@@ -349,6 +395,7 @@ namespace Pacman::Atlas
         8.f,
         8.f
     };
+    
 
     class DirRegions
     {

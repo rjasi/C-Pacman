@@ -79,7 +79,7 @@ namespace Pacman
 
             static constexpr std::array<MusicDef, static_cast<std::size_t>(MusicTrackId::Count)> MUSIC_TABLE
             {
-                MusicDef{"assets/sound/pacman_intermission.wav", true},
+                MusicDef{"assets/sound/intermission.wav", true},
                 MusicDef{"assets/sound/frightened.wav", true},
                 MusicDef{"assets/sound/eyes.wav", true},
                 MusicDef{"assets/sound/siren0.wav", true},

@@ -143,7 +143,8 @@ namespace Pacman
         auto normalAnim = DirectionalAnimation(MakeNormalCharacter(atlas, GameCharacters::Pacman, 2, pacmanFrameTime));
         auto circleAnim = DirectionalAnimation(PacmanCircle(atlas));
         auto dyingAnim = DirectionalAnimation(PacmanDying(atlas, pacmanDyingFrameTime));
-        return PacmanAnimationPack(normalAnim, circleAnim, dyingAnim);
+        auto pacmanLarge = DirectionalAnimation(PacmanLarge(atlas, pacmanFrameTime));
+        return PacmanAnimationPack(normalAnim, circleAnim, dyingAnim, pacmanLarge);
 
     }
 
@@ -153,6 +154,14 @@ namespace Pacman
         anim.setLoop(false);
         return anim;
     }
+
+     Animation AnimationLibrary::PacmanLarge(sf::Texture& atlas, sf::Time frameTime)
+    {
+        auto anim = Animation(atlas, Atlas::PacmanLarge, 3, frameTime, {16.f, 16.f}, 0);
+        anim.setLoop(true);
+        return anim;
+    }
+
 
     Animation AnimationLibrary::PacmanCircle(sf::Texture& atlas, sf::Vector2f origin)
     {

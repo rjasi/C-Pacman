@@ -90,6 +90,8 @@ namespace Pacman
                             clip->reset();
                         }
                         break;
+                    default: // pacman large do nothing. not used in gameplay only cutscenes
+                        break;
 
                 }
                

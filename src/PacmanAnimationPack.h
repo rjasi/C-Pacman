@@ -18,10 +18,12 @@ namespace Pacman
 
             PacmanAnimationPack(const DirectionalAnimation& normal, 
                                 const DirectionalAnimation& circle,
-                                const DirectionalAnimation& dying)
+                                const DirectionalAnimation& dying,
+                                const DirectionalAnimation& large)
             : normal_(normal), 
             circle_(circle),
-            dying_(dying)
+            dying_(dying),
+            large_(large)
             {
 
             }
@@ -36,6 +38,8 @@ namespace Pacman
                         return circle_;
                     case PacmanState::Dying:
                         return dying_;
+                    case PacmanState::Large:
+                        return large_;
                     default:
                         return normal_;
                 }
@@ -45,11 +49,13 @@ namespace Pacman
             {
                 normal_.update(dt);
                 dying_.update(dt);
+                large_.update(dt);
             }
         private:
             DirectionalAnimation normal_;
             DirectionalAnimation circle_;
             DirectionalAnimation dying_;
+            DirectionalAnimation large_;
     };
 
 }

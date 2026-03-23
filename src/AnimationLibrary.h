@@ -73,6 +73,7 @@ namespace Pacman
             static Animation PacmanDying(sf::Texture& atlas, sf::Time frameTime, sf::Vector2f origin = SPRITE_ORIGIN);
             static PacmanAnimationPack MakePacmanAnimationPack(sf::Texture& atlas);
             static Animation PacmanCircle(sf::Texture& atlas, sf::Vector2f origin = SPRITE_ORIGIN);
+            static Animation PacmanLarge(sf::Texture& atlas, sf::Time frameTime);
 
 
 
