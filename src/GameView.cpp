@@ -454,37 +454,13 @@ namespace Pacman
         cutscenePlayer_.render(window);
     }
 
-
     void GameView::drawFruit(sf::RenderTarget& window)
     {
-        switch (world_.spawnedFruit())
+        if (world_.spawnedFruit() != Fruits::None)
         {
-            case Fruits::Cherry:
-                window.draw(cherrySprite_);
-                return;
-            case Fruits::Strawberry:
-                window.draw(strawberrySprite_);
-                return;
-            case Fruits::Peach:
-                window.draw(peachSprite_);
-                return;
-            case Fruits::Apple:
-                window.draw(appleSprite_);
-                return;
-            case Fruits::Grapes:
-                window.draw(grapesSprite_);
-                return;
-            case Fruits::Galaxian:
-                window.draw(galaxianSprite_);
-                return;
-            case Fruits::Bell:
-                window.draw(bellSprite_);
-                return;
-            case Fruits::Key:
-                window.draw(keySprite_);
-                return;
-            default:
-                return;
+            sf::Sprite& fruitSprite = getFruitSprite(world_.spawnedFruit());
+            fruitSprite.setPosition(world_.fruitPos());
+            window.draw(fruitSprite);
         }
     }
 

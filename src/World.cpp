@@ -143,8 +143,8 @@ namespace Pacman
             gameAudio_.pauseMusic();
             score_ += 10;
             ghostDirector_.pelletEaten();
-            flipWaka ? gameAudio_.playSfx(SfxId::Waka1): gameAudio_.playSfx(SfxId::Waka2);
-            flipWaka = !flipWaka;
+            flipWaka_ ? gameAudio_.playSfx(SfxId::Waka1): gameAudio_.playSfx(SfxId::Waka2);
+            flipWaka_ = !flipWaka_;
         }
 
         if (maze_.tryEatPowerPellet(pacmanEntity_.position()))
@@ -217,10 +217,10 @@ namespace Pacman
                 {
                     continue;
                 }
-                else if (ghost.state() == GhostState::Chase || ghost.state() == GhostState::Scatter)
+                else if ((ghost.state() == GhostState::Chase || ghost.state() == GhostState::Scatter) && collision_)
                 {
-                    // lives_--;
-                    // state_ = WorldState::Died;
+                    lives_--;
+                    state_ = WorldState::Died;
                     return;
                 }
                 else if (ghost.state() == GhostState::Frightened)

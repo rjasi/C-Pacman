@@ -74,7 +74,8 @@ namespace Pacman
             Cutscenes activeCutscene_ = Cutscenes::None;
             MazeDisplayMode mazeDisplayMode_ = MazeDisplayMode::Normal;            
 
-            bool flipWaka = false;
+            bool flipWaka_ = false;
+            bool collision_ = true;
             
             std::vector<TextPopup> textPopups_;
             std::vector<ScorePopup> scorePopups_;
