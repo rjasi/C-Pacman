@@ -162,13 +162,15 @@ namespace Pacman
             void advanceNextLevel();
             void resetEntities();
             void handleFruit(sf::Time dt);
-            Fruits getFruitForLevel() const;
             int getFruitScore() const;
             Scores getFruitScorePopup() const;
 
             void setEntitySpeeds();
 
         public:
+            static constexpr int LAST_FRUIT_LEVEL = 13;
+            Fruits getFruitForLevel(int level) const;
+
             World() = delete;
             World(GameAudio& gameAudio);
 
@@ -187,6 +189,7 @@ namespace Pacman
             const std::vector<ScorePopup>& scorePopups() const;
             int score() const;
             int lives() const;
+            int level() const;
             void notifyCutsceneStarted();
             void notifyCutsceneFinished();
             Cutscenes requestedCutscene() const;

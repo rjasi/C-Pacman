@@ -81,7 +81,7 @@ namespace Pacman
                     if (hasSprite(c))
                     {
                         auto sprite = getTextSprite(c);
-                        sprite.setPosition(currentPos);
+                        sprite.setPosition({std::round(currentPos.x), std::round(currentPos.y)});
                         if (center)
                         {
                             sprite.setOrigin({TEXT_TILE_W/2, TEXT_TILE_H/2}); // center origin

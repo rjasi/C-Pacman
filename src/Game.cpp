@@ -7,7 +7,7 @@
 namespace Pacman
 {
     Game::Game()
-    : window_(sf::VideoMode({672, 744}), "Pacman"), 
+    : window_(sf::VideoMode({448, 576}), "Pacman"), 
     menu_(window_.getSize()) 
     {
         state_ = GameState::MainMenu;

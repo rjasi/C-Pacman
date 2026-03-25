@@ -337,10 +337,16 @@ namespace Pacman
         return lives_;
     }
 
+    int World::level() const
+    {
+        return level_;
+    }
+
     void World::notifyCutsceneFinished()
     {
         activeCutscene_ = Cutscenes::None;
         state_ = nextState_;
+        advanceNextLevel();// assume cutscene is only reuqest when level is finished. this is so the fruits at the bottom right are drown correctly
     }
 
     void World::notifyCutsceneStarted()
@@ -596,7 +602,6 @@ namespace Pacman
             pacmanEntity_.setState(PacmanState::Normal);
             mazeDisplayMode_ = MazeDisplayMode::Normal;
 
-            // just one cut scene for now
             if (level_ == 2)
             {
                 nextState_ = WorldState::RestartLevel;
@@ -612,8 +617,9 @@ namespace Pacman
             else
             {
                 state_ = WorldState::RestartLevel;
+                advanceNextLevel();
             }
-            advanceNextLevel();
+            
         }
 
     }
@@ -638,9 +644,9 @@ namespace Pacman
         return fruitPos_;
     }
     
-    Fruits World::getFruitForLevel() const
+    Fruits World::getFruitForLevel(int level) const
     {
-        switch (level_)
+        switch (level)
         {
             case 1:
                 return Fruits::Cherry;
@@ -722,7 +728,7 @@ namespace Pacman
         {
             if (dotsEaten_ == FIRST_FRUIT_SPAWN_DOT_COUNT || dotsEaten_ == SECOND_FRUIT_SPAWN_DOT_COUNT)
             {
-                spawnedFruit_ = getFruitForLevel();
+                spawnedFruit_ = getFruitForLevel(level_);
                 fruitTimer_ = sf::Time::Zero;
             }
         }

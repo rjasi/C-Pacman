@@ -73,6 +73,7 @@ namespace Pacman
         if (world_.activeCutscene() != Cutscenes::None)
         {
             drawCutscene(window);
+            drawUiFruits(window);
             return;
         }
 
@@ -426,12 +427,26 @@ namespace Pacman
                 pacmanLivesSprite_.setPosition(livesPos);
                 window.draw(pacmanLivesSprite_);
             }
+
+            drawUiFruits(window);
         }
         else 
         {
             textRenderer.render(window, "Credit  0", UiLayout::LivesPosition);
         }
         
+    }
+
+    void GameView::drawUiFruits(sf::RenderTarget& window)
+    {
+        int currentIndex = 0;
+        for (int i = std::max(world_.level() - 6, 1); i <= world_.level(); i++, currentIndex++)
+        {
+            sf::Vector2f pos =  UiLayout::FruitPosition - sf::Vector2f{UiLayout::FruitSpaceing * currentIndex, 0};
+            sf::Sprite& fruitSprite = getFruitSprite(world_.getFruitForLevel(i));
+            fruitSprite.setPosition(pos);
+            window.draw(fruitSprite);
+        }  
     }
 
     void GameView::drawCutscene(sf::RenderTarget& window)
@@ -470,6 +485,31 @@ namespace Pacman
                 return;
             default:
                 return;
+        }
+    }
+
+    sf::Sprite& GameView::getFruitSprite(Fruits fruit)
+    {
+        switch (fruit)
+        {
+            case Fruits::Cherry:
+                return cherrySprite_;
+            case Fruits::Strawberry:
+                return strawberrySprite_;
+            case Fruits::Peach:
+                return peachSprite_;
+            case Fruits::Apple:
+                return appleSprite_;
+            case Fruits::Grapes:
+                return grapesSprite_;
+            case Fruits::Galaxian:
+                return galaxianSprite_;
+            case Fruits::Bell:
+                return bellSprite_;
+            case Fruits::Key:
+                return keySprite_;
+            default:
+                return cherrySprite_;
         }
     }
 

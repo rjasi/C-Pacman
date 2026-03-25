@@ -85,7 +85,8 @@ namespace Pacman
             void drawPlaying(sf::RenderTarget& window);
             void updatePlaying(sf::Time dt);
             void updateIntro(sf::Time dt);
-
+            sf::Sprite& getFruitSprite(Fruits fruit);
+            void drawUiFruits(sf::RenderTarget& window);
             // main menu 
             sf::Time menuTimer_;
 

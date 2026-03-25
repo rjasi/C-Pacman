@@ -63,7 +63,6 @@ namespace Pacman
         {
             actor->render(window);
         }
-
     }
 
     void CutscenePlayer::update(sf::Time dt)

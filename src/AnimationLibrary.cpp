@@ -162,12 +162,8 @@ namespace Pacman
         return anim;
     }
 
-
     Animation AnimationLibrary::PacmanCircle(sf::Texture& atlas, sf::Vector2f origin)
     {
         return Animation(atlas, Atlas::PacmanLastFrame, 1, sf::Time::Zero, origin);
     }
-
-
-
 }

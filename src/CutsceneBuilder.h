@@ -31,7 +31,6 @@ namespace Pacman
             CutsceneBuilder& stopMusic(GameAudio& audio);
             CutsceneBuilder& setPropVisible(Prop& prop, bool visible);
             CutsceneBuilder& setActorVisible(CutsceneActor& actor, bool visible);
-
             CutsceneBuilder& setPropPosition(Prop& prop, sf::Vector2f pos);
 
         private:

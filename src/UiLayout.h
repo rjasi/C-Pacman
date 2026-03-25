@@ -29,8 +29,9 @@ namespace Pacman
             static constexpr int MaxLivesDisplayed = 5;
             static constexpr float LivesSpacing = (float)Atlas::PacmanLives.frameSize.x;
 
-            static constexpr sf::Vector2f ReadyPosition {CenterX, 160.f };
-            static constexpr sf::Vector2f GameOverPos {CenterX, 200.f };
+            static constexpr sf::Vector2f FruitPosition { 208.f, 280.f };
+            static constexpr float FruitSpaceing =  (float)Atlas::Cherry.frameSize.x;
+
 
             static std::string intToStringScore(int score)
             {
