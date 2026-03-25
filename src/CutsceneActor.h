@@ -6,6 +6,7 @@
 #include "PacmanAnimationPack.h"
 #include "PacmanState.h"
 #include "MoveableEntity.h"
+#include "AtlasRegion.h"
 
 namespace Pacman
 {
@@ -52,6 +53,20 @@ namespace Pacman
                 return currentDir_;
             }
 
+            virtual void freeze(bool freeze)
+            {
+                freeze_ = freeze;
+            }
+
+            virtual void setVisible(bool visible)
+            {
+                visible_ = visible;
+            }
+
+            virtual bool visible() const
+            {
+                return visible_;
+            }
 
             virtual void render(sf::RenderTarget& window) = 0;
             virtual void update(sf::Time dt) = 0;
@@ -63,6 +78,8 @@ namespace Pacman
             float speed_ = 60.f;
             Dir currentDir_ = Dir::None;
             sf::Vector2f pos_;
+            bool freeze_ = false;
+            bool visible_ = true;
 
             void move(sf::Time dt, Dir d)
             {
@@ -82,6 +99,10 @@ namespace Pacman
 
             void render(sf::RenderTarget& window) override
             {
+                if (!visible_)
+                {
+                    return;
+                }
                 Animation& clip = animPack_.animationFor(state_).clipFor(currentDir_);
                 clip.sprite().setPosition(pos_);
                 window.draw(clip.sprite());
@@ -89,8 +110,13 @@ namespace Pacman
 
             void update(sf::Time dt) override
             {
-                animPack_.update(dt);
                 move(dt, currentDir_);
+
+                if (freeze_)
+                {
+                    return;
+                }
+                animPack_.update(dt);
             }
 
             void setState(GhostState state)
@@ -114,6 +140,10 @@ namespace Pacman
 
             void render(sf::RenderTarget& window) override
             {
+                if (!visible_)
+                {
+                    return;
+                }
                 Animation& clip = animPack_.animationFor(state_).clipFor(currentDir_);
                 clip.sprite().setPosition(pos_);
                 window.draw(clip.sprite());
@@ -121,8 +151,13 @@ namespace Pacman
 
             void update(sf::Time dt) override
             {
-                animPack_.update(dt);
                 move(dt, currentDir_);
+
+                if (freeze_)
+                {
+                    return;
+                }
+                animPack_.update(dt);
             }
 
             void setState(PacmanState state)
@@ -133,5 +168,32 @@ namespace Pacman
         private:
             PacmanState state_ = PacmanState::Normal;
             PacmanAnimationPack animPack_;
+    };
+
+    class Prop : public sf::Sprite
+    {
+        public: 
+            Prop(sf::Texture& texture, const Atlas::AtlasRegion& region, const sf::Vector2f& origin = {8.f, 8.f}, bool visible = false)
+            : sf::Sprite(texture),
+            visible_(visible)
+            {
+                setTextureRect(region.IntRect());
+                setOrigin(origin);
+            }
+
+            Prop() = delete;
+     
+            void setVisible(bool visible)
+            {
+                visible_ = visible;
+            }
+            
+            bool visible() const
+            {
+                return visible_;
+            }
+
+        private:
+            bool visible_ = true;
     };
 }

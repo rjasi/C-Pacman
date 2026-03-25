@@ -33,13 +33,13 @@ namespace Pacman
             bool finished() const;
 
             std::vector<std::unique_ptr<CutsceneActor>>& actors();
-            std::vector<sf::Sprite>& props();
 
+            std::vector<Prop>& props();
             std::vector<CutsceneStep>& steps();
 
         private:
             std::vector<std::unique_ptr<CutsceneActor>> actors_;
-            std::vector<sf::Sprite> props_;
+            std::vector<Prop> props_;
 
             std::vector<CutsceneStep> steps_;
 

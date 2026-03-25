@@ -336,15 +336,20 @@ namespace Pacman
         {
             switch (world_.requestedCutscene())
             {
+                gameAudio_.stopMusic();
+
                 case Cutscenes::Intermission1:
-                    gameAudio_.stopMusic();
                     CutsceneLibrary::Intermission1(cutscenePlayer_, textCache_.get("atlas"), gameAudio_);
-                    cutscenePlayer_.start();
-                    world_.notifyCutsceneStarted();
+                    break;
+                case Cutscenes::Intermission2:
+                    CutsceneLibrary::Intermission2(cutscenePlayer_, textCache_.get("atlas"), gameAudio_);                    
                     break;
                 default:
                     break;
             }
+
+            cutscenePlayer_.start();
+            world_.notifyCutsceneStarted();
         }
         if (cutscenePlayer_.finished())
         {

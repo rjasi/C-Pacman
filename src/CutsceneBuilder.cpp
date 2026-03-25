@@ -22,6 +22,32 @@ namespace Pacman
         return *this;
     }
 
+    CutsceneBuilder& CutsceneBuilder::freeze(CutsceneActor& actor)
+    {
+         player_.steps().push_back(
+        {
+            .onEnter = [a = &actor] 
+            {
+                a->freeze(true);
+            }
+        });
+
+        return *this;
+    }
+
+    CutsceneBuilder& CutsceneBuilder::setActorVisible(CutsceneActor& actor, bool visible)
+    {
+        player_.steps().push_back(
+        {
+            .onEnter = [a = &actor, visible] 
+            {
+                a->setVisible(visible);
+            }
+        });
+
+        return *this;
+    }
+
     CutsceneBuilder& CutsceneBuilder::run(CutsceneActor& actor, Dir dir, float speed)
     {
         player_.steps().push_back(
@@ -91,6 +117,33 @@ namespace Pacman
                 return stepTime >= duration;
             }
         });
+        return *this;
+    }
+
+    CutsceneBuilder& CutsceneBuilder::setPropPosition(Prop& prop, sf::Vector2f pos)
+    {
+        player_.steps().push_back(
+        {
+            .onEnter = [p = &prop, pos] 
+            {
+                p->setPosition(pos);
+            }
+        });
+
+        return *this;
+
+    }
+
+    CutsceneBuilder& CutsceneBuilder::setPropVisible(Prop& prop, bool visible)
+    {
+        player_.steps().push_back(
+        {
+            .onEnter = [p = &prop, visible] 
+            {
+                p->setVisible(visible);
+            }
+        });
+        
         return *this;
     }
 

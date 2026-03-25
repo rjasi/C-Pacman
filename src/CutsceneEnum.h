@@ -7,8 +7,8 @@ namespace Pacman
     enum class Cutscenes
     {
         None,
-        Intermission1
-        // Intermission2,
+        Intermission1,
+        Intermission2
         // Intermission3
     };
 }

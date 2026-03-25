@@ -1,5 +1,7 @@
 #include "CutscenePlayer.h"
 
+#include <iostream>
+
 namespace Pacman
 {
     std::vector<std::unique_ptr<CutsceneActor>>& CutscenePlayer::actors() 
@@ -7,7 +9,7 @@ namespace Pacman
         return actors_; 
     }
     
-    std::vector<sf::Sprite>& CutscenePlayer::props()
+    std::vector<Prop>& CutscenePlayer::props()
     {
         return props_;
     }
@@ -48,10 +50,20 @@ namespace Pacman
 
     void CutscenePlayer::render(sf::RenderTarget& window)
     {
+   
+        for (const Prop& prop : props_)
+        {
+            if (prop.visible())
+            {
+                window.draw(prop);
+            }
+        }
+
         for (std::unique_ptr<CutsceneActor>& actor: actors_)
         {
             actor->render(window);
         }
+
     }
 
     void CutscenePlayer::update(sf::Time dt)

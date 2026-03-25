@@ -84,7 +84,7 @@ namespace Pacman
             // ________________________________
             
             // ghost eaten pause for 1 sec 
-            static constexpr sf::Time EATEN_PAUSE = sf::seconds(2.0f);
+            static constexpr sf::Time EATEN_PAUSE = sf::seconds(1.0f);
             sf::Time eatenTimer_{};
 
             // new game
@@ -129,6 +129,7 @@ namespace Pacman
 
             // fruit
             static constexpr sf::Time FRUIT_SPAWN_TIME = sf::seconds(10.f);
+            static constexpr sf::Time FRUIT_POPUP_TIME = sf::seconds(2.f);
             static constexpr int FIRST_FRUIT_SPAWN_DOT_COUNT = 70;
             static constexpr int SECOND_FRUIT_SPAWN_DOT_COUNT = 170;
             sf::Time fruitTimer_{};

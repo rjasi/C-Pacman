@@ -134,7 +134,7 @@ namespace Pacman
         {
             dotsEaten_++;
 
-            if (dotsEaten_ >= 10)
+            if (dotsEaten_ >= Maze::TOTAL_DOTS)
             {
                 state_ = WorldState::LevelCleared;
                 return;
@@ -158,7 +158,7 @@ namespace Pacman
         {
             gameAudio_.pauseMusic();
             score_ += getFruitScore();
-            scorePopups_.push_back(ScorePopup{maze_.tileToWorldOnBoundary(Maze::FRUIT_TILE), EATEN_PAUSE, 
+            scorePopups_.push_back(ScorePopup{maze_.tileToWorldOnBoundary(Maze::FRUIT_TILE), FRUIT_POPUP_TIME, 
                         getFruitScorePopup()});
             spawnedFruit_ = Fruits::None;
             gameAudio_.playSfx(SfxId::EatFruit);
@@ -603,6 +603,12 @@ namespace Pacman
                 requestedCutscene_ = Cutscenes::Intermission1;
                 state_ = WorldState::Cutscene;
             }
+            else if (level_ == 5)
+            {
+                nextState_ = WorldState::RestartLevel;
+                requestedCutscene_ = Cutscenes::Intermission2;
+                state_ = WorldState::Cutscene;
+            }
             else
             {
                 state_ = WorldState::RestartLevel;
@@ -620,7 +626,6 @@ namespace Pacman
         level_++;
 
         // todo read in next levels
-        // resetEntities();
     }
 
     Fruits World::spawnedFruit() const
