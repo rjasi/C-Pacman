@@ -114,6 +114,7 @@ namespace Pacman
             void snapToJunction(const Maze& maze);
 
             PacmanState state_ = PacmanState::Normal;
+            int pauseMovementCount = 0;
 
 
             // below functions are a quick but badly coupled way to reset the pacman died animation 
@@ -139,6 +140,16 @@ namespace Pacman
                 }
 
                 return false;
+            }
+
+            void pelletEaten()
+            {
+                pauseMovementCount+=1;
+            }
+
+            void powerPelletEaten()
+            {
+                pauseMovementCount+=3;
             }
 
     };

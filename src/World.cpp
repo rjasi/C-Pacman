@@ -144,6 +144,7 @@ namespace Pacman
                 state_ = WorldState::LevelCleared;
                 return;
             }
+            pacmanEntity_.pelletEaten();
 
             gameAudio_.pauseMusic();
             score_ += 10;
@@ -157,6 +158,7 @@ namespace Pacman
             score_ += 50;
             dotsEaten_++;
             ghostDirector_.powerPelletEaten();
+            pacmanEntity_.powerPelletEaten();
         }
 
         if (spawnedFruit_ != Fruits::None && maze_.tryEatFruit(pacmanEntity_.position()))

@@ -337,6 +337,7 @@ namespace Pacman
         phaseIndex_ = 0;
         pelletsEaten_ = 0;
         ghostEaten_ = 0;
+        elapsed_ = sf::Time::Zero;
         ghostsPendingRelease_ = {GameCharacters::Pinky, GameCharacters::Inky, GameCharacters::Clyde};
 
     }

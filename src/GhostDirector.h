@@ -31,7 +31,6 @@ namespace Pacman
 
             std::vector<GameCharacters> ghostsPendingRelease_ = {GameCharacters::Pinky, GameCharacters::Inky, GameCharacters::Clyde};
             LevelConfig cfg_;
-            Phase currentPhase_;
             
             void tryReleaseGhost(const std::array<Ghost*, 4>& ghost, sf::Time dt);
             void updatePhase(const std::array<Ghost*, 4>& ghosts, sf::Time dt);

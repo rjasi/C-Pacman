@@ -199,6 +199,12 @@ namespace Pacman
 
     void MoveableEntity::update(sf::Time dt, const Maze& maze)
     {
+        if (pauseMovementCount > 0)
+        {
+            pauseMovementCount--;
+            return;
+        }
+
         sf::Vector2f prev = pos_;
     
         move(dt, corneringContext_.cornerDir);
