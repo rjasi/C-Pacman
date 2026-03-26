@@ -33,6 +33,8 @@ namespace Pacman
         Cutscene,
         NewGame,
         RestartLevel,
+        GameOver,
+        Paused,
     };
 
     enum class MazeDisplayMode
@@ -116,6 +118,12 @@ namespace Pacman
 
             sf::Time flashMazeTimer_{};
             sf::Time blackScreenTime{};
+
+            // gameover 
+            static constexpr sf::Time GAMEOVER_TIME = sf::seconds(3.0f);
+            sf::Time gameOverTimer_{};
+            bool resetToIntroRequested_ = false;
+
             // ________________________________
 
 
@@ -153,6 +161,7 @@ namespace Pacman
             void ghostEaten(sf::Time dt);
             void restartLevel(sf::Time dt);
             void levelCleared(sf::Time dt);
+            void gameOver(sf::Time dt);
 
             void advanceBlinkTimer(sf::Time dt);
             void updatePopups(sf::Time dt);
@@ -196,12 +205,14 @@ namespace Pacman
             Cutscenes requestedCutscene() const;
             Cutscenes activeCutscene() const;
 
+            bool consumeResetToIntroRequest();
+
             void setStartNewGame();
             MazeDisplayMode mazeDisplayMode() const;
 
             Fruits spawnedFruit() const;
             const sf::Vector2f& fruitPos() const;
             const int highScore() const;
-
+            const bool gameOver() const;
     };
 }

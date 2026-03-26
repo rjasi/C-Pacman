@@ -26,8 +26,6 @@ namespace Pacman
             sf::Time releaseTimer_ = sf::Time{};
             sf::Time TIME_TO_RELEASE_GHOST = sf::seconds(2);
 
-
-
             bool frightened_ = false;
             bool powerPelletEaten_ = false;
 
@@ -51,7 +49,8 @@ namespace Pacman
             int ghostEaten();
             int ghostEatenCount() const;
             bool frightened() const;
-
+            void setLevelConfig(const LevelConfig& cfg);
+            void reset();
             void restartLevel();
 
     };

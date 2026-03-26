@@ -311,6 +311,12 @@ namespace Pacman
     
     void GameView::update(sf::Time dt)
     {
+        if (world_.consumeResetToIntroRequest())
+        {
+            screenMode_ = ScreenMode::Intro;
+            menuTimer_ = sf::Time::Zero;
+        }
+
         switch(screenMode_)
         {
             case ScreenMode::Intro:

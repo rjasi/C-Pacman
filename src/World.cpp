@@ -90,6 +90,11 @@ namespace Pacman
             case WorldState::LevelCleared:
                 levelCleared(dt);
                 break;
+            case WorldState::GameOver:
+                gameOver(dt);
+                break;
+            case WorldState::Paused: // do nothing
+                break;
             default:
                 return;
         }
@@ -362,7 +367,6 @@ namespace Pacman
         return requestedCutscene_;
     }
 
-
     Cutscenes World::activeCutscene() const
     {
         return activeCutscene_;
@@ -423,7 +427,7 @@ namespace Pacman
 
      void World::newGame(sf::Time dt)
      {
-        startNewGameTimer_ += dt;
+        startNewGameTimer_ += dt;        
         gameAudio_.playMusic(MusicTrackId::StartGame);
         updatePopups(dt);
 
@@ -449,8 +453,20 @@ namespace Pacman
     {
         state_ = WorldState::NewGame;
         auto loc = maze_.tileToWorld(Maze::READY_POPUP_TILE);
-        pacmanEntity_.setState(PacmanState::Circle);
         textPopups_.push_back({loc, NEW_GAME_INTRO_SPAWN_CHARACTER_TIME, TextColors::YELLOW, "Ready! "});
+        resetEntities();
+        pacmanEntity_.setState(PacmanState::Circle);
+        dotsEaten_ = 0;
+        lives_ = 3;
+        score_ = 0;
+        level_ = 1;
+        blinkElapsed_ = sf::Time::Zero;
+        powerPelletVisible_ = true;
+        cfg_ = LevelConfig::GetLevelConfig(level_);
+        ghostDirector_.setLevelConfig(cfg_);
+        ghostDirector_.reset();
+        maze_.reset();
+        spawnedFruit_ = Fruits::None;
     }
 
     void World::died(sf::Time dt)
@@ -475,6 +491,7 @@ namespace Pacman
             pinky_.setVisible(false);
             inky_.setVisible(false);
             clyde_.setVisible(false);
+            spawnedFruit_ = Fruits::None;
             pacmanEntity_.setState(PacmanState::Dying);
             gameAudio_.playMusic(MusicTrackId::Died);
         }
@@ -486,44 +503,52 @@ namespace Pacman
         if (diedTimer_ > DIED_STATE_TIME)
         {
             diedTimer_ = sf::Time::Zero;
-            //todo gameover if lives run out
-            state_ = WorldState::RestartLevel;
+
+            if (lives_ <= 0)
+            {
+                state_ = WorldState::GameOver;
+            }
+            else 
+            {
+                state_ = WorldState::RestartLevel;
+            }
         }
 
     }
 
     void World::resetEntities()
     {
-            ghostDirector_.restartLevel();
+        ghostDirector_.restartLevel();
 
-            blinky_.setState(GhostState::Chase);
-            blinky_.setHouseState(HouseState::Outside);
-            blinky_.setPosition(maze_.tileToWorldOnBoundary(Maze::INFRONT_DOOR_LEFT), Maze::INFRONT_DOOR_LEFT);
-            blinky_.setDirection(Dir::Left);
-            blinky_.setVisible(true);
+        blinky_.setState(GhostState::Chase);
+        blinky_.setHouseState(HouseState::Outside);
+        // when spawning tile boundary, if left, then current tile is the right tile. if right then current tile is the left tile
+        blinky_.setPosition(maze_.tileToWorldOnBoundary(Maze::INFRONT_DOOR_LEFT), Maze::INFRONT_DOOR_LEFT + TileRC{0, 1});
+        blinky_.setDirection(Dir::Left);
+        blinky_.setVisible(true);
 
-            pinky_.setState(GhostState::Chase);
-            pinky_.setPosition(maze_.tileToWorldOnBoundary(Maze::HOUSE_CENTER), Maze::HOUSE_CENTER);
-            pinky_.setDirection(Dir::Down);
-            pinky_.setHouseState(HouseState::InHouse);
-            pinky_.setVisible(true);
-            
-            inky_.setState(GhostState::Chase);
-            inky_.setPosition(maze_.tileToWorldOnBoundary(Maze::HOUSE_LEFT), Maze::HOUSE_LEFT);
-            inky_.setDirection(Dir::Up);
-            inky_.setHouseState(HouseState::InHouse);
-            inky_.setVisible(true);
+        pinky_.setState(GhostState::Chase);
+        pinky_.setPosition(maze_.tileToWorldOnBoundary(Maze::HOUSE_CENTER), Maze::HOUSE_CENTER);
+        pinky_.setDirection(Dir::Down);
+        pinky_.setHouseState(HouseState::InHouse);
+        pinky_.setVisible(true);
+        
+        inky_.setState(GhostState::Chase);
+        inky_.setPosition(maze_.tileToWorldOnBoundary(Maze::HOUSE_LEFT), Maze::HOUSE_LEFT);
+        inky_.setDirection(Dir::Up);
+        inky_.setHouseState(HouseState::InHouse);
+        inky_.setVisible(true);
 
-            clyde_.setState(GhostState::Chase);
-            clyde_.setPosition(maze_.tileToWorldOnBoundary(Maze::HOUSE_RIGHT), Maze::HOUSE_RIGHT);
-            clyde_.setDirection(Dir::Up);
-            clyde_.setHouseState(HouseState::InHouse);
-            clyde_.setVisible(true);
+        clyde_.setState(GhostState::Chase);
+        clyde_.setPosition(maze_.tileToWorldOnBoundary(Maze::HOUSE_RIGHT), Maze::HOUSE_RIGHT);
+        clyde_.setDirection(Dir::Up);
+        clyde_.setHouseState(HouseState::InHouse);
+        clyde_.setVisible(true);
 
-            pacmanEntity_.reset();
-            pacmanEntity_.setState(PacmanState::Circle);
-            pacmanEntity_.setPosition(maze_.tileToWorldOnBoundary(Maze::PACMAN_SPAWN_POINT), Maze::PACMAN_SPAWN_POINT);
-            pacmanEntity_.setDirection(Dir::Right);
+        pacmanEntity_.reset();
+        pacmanEntity_.setState(PacmanState::Circle);
+        pacmanEntity_.setPosition(maze_.tileToWorldOnBoundary(Maze::PACMAN_SPAWN_POINT), Maze::PACMAN_SPAWN_POINT);
+        pacmanEntity_.setDirection(Dir::Right);
     }
 
 
@@ -630,8 +655,9 @@ namespace Pacman
         blinkElapsed_ = sf::Time::Zero;
         maze_.reset();
         level_++;
-
-        // todo read in next levels
+        cfg_ = LevelConfig::GetLevelConfig(level_);
+        ghostDirector_.setLevelConfig(cfg_);
+        ghostDirector_.reset();
     }
 
     Fruits World::spawnedFruit() const
@@ -774,5 +800,36 @@ namespace Pacman
     const int World::highScore() const
     {
         return score_;
+    }
+
+    bool World::consumeResetToIntroRequest()
+    {
+        if (resetToIntroRequested_)
+        {
+            resetToIntroRequested_ = false;
+            return true;
+        }
+        return false;
+    }
+
+    void World::gameOver(sf::Time dt)
+    {
+        gameAudio_.stopMusic();
+        updatePopups(dt);
+        if (gameOverTimer_ == sf::Time::Zero)
+        {
+            spawnedFruit_ = Fruits::None;
+            auto loc = maze_.tileToWorld(Maze::GAMEOVER_POPUP_TILE);
+            textPopups_.push_back({loc, GAMEOVER_TIME, TextColors::RED, "Game  Over"});
+        }
+
+        gameOverTimer_ += dt;
+
+        if (gameOverTimer_ >= GAMEOVER_TIME)
+        {
+            resetToIntroRequested_ = true;
+            gameOverTimer_ = sf::Time::Zero;
+            state_ = WorldState::Paused;
+        }
     }
 }

@@ -42,8 +42,8 @@ namespace Pacman
             static constexpr TileRC WARP_TILE_LEFT = {WARP_TILE_ROW, -2};
             static constexpr TileRC WARP_TILE_RIGHT = {WARP_TILE_ROW, 29};
             static constexpr TileRC READY_POPUP_TILE = {17, 11};
+            static constexpr TileRC GAMEOVER_POPUP_TILE = {17, 9};
             static constexpr TileRC FRUIT_TILE = {17, 13};
-
 
             Maze(const sf::Vector2f& origin);
             Maze(const Maze& maze) = delete;
@@ -98,6 +98,5 @@ namespace Pacman
             bool isAtJunction(const sf::Vector2f& p) const;
 
             void reset();
-
     };
 }

@@ -103,15 +103,20 @@ namespace Pacman
             return;
         }
 
-        releaseTimer_ += dt;
-        if (releaseTimer_ >= TIME_TO_RELEASE_GHOST)
+        // once pellet count release is done, release by timer
+        if ((pinkyPelletCountRelease_ && ghostId == GameCharacters::Pinky) 
+        || (inkyPelletCountRelease_ && ghostId == GameCharacters::Inky) 
+        || (clydePelletCountRelease_ && ghostId == GameCharacters::Clyde))
         {
-            ghostToRelease->setHouseState(HouseState::LeavingGettingToHouseCenter);
-            ghostsPendingRelease_.erase(ghostsPendingRelease_.begin());
+            releaseTimer_ += dt;
+            if (releaseTimer_ >= TIME_TO_RELEASE_GHOST)
+            {
+                ghostToRelease->setHouseState(HouseState::LeavingGettingToHouseCenter);
+                ghostsPendingRelease_.erase(ghostsPendingRelease_.begin());
 
-            releaseTimer_ -= TIME_TO_RELEASE_GHOST;
+                releaseTimer_ -= TIME_TO_RELEASE_GHOST;
+            }
         }
-
     }
 
     void GhostDirector::pelletEaten()
@@ -242,12 +247,28 @@ namespace Pacman
     void GhostDirector::restartLevel()
     {
         frightened_ = false;
+        releaseTimer_ = sf::Time::Zero;
         ghostsPendingRelease_ = {GameCharacters::Pinky, GameCharacters::Inky, GameCharacters::Clyde};
-        // currentPhase_ = cfg_.phases.front();
     }
 
     void GhostDirector::startFrightenedMode(const std::array<Ghost*, 4>& ghosts)
     {
+        // when frightened time is 0 just reverse direction
+        if (cfg_.frightenedDuration <= sf::Time::Zero)
+        {
+            powerPelletEaten_ = false;
+            for (Ghost* ghost : ghosts)
+            {
+                if (ghost->isOutsideHouse() && isActive(ghost->state()))
+                {
+                    ghost->requestReverseDirection();
+                }
+            }
+
+            return;
+        }
+
+
         // startFrightenedMode is also called when frightened mode is extended
         // if this is not an extension, then reset ghosts eaten score
         if (!frightened_)
@@ -299,4 +320,25 @@ namespace Pacman
     {
         return frightened_;
     }
+
+    void GhostDirector::setLevelConfig(const LevelConfig& cfg)
+    {
+        cfg_ = cfg;
+    }
+
+    void GhostDirector::reset()
+    {
+        pinkyPelletCountRelease_ = false;
+        inkyPelletCountRelease_ = false;
+        clydePelletCountRelease_ = false;
+        frightened_ = false;
+        powerPelletEaten_ = false;
+        ghostEaten_ = 0;
+        phaseIndex_ = 0;
+        pelletsEaten_ = 0;
+        ghostEaten_ = 0;
+        ghostsPendingRelease_ = {GameCharacters::Pinky, GameCharacters::Inky, GameCharacters::Clyde};
+
+    }
+
 }

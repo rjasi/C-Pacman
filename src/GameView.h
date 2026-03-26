@@ -71,6 +71,7 @@ namespace Pacman
             TileFontLibrary* tileFontLibrary_;
             ScorePopupRenderer* scorePopupRenderer_;
             CutscenePlayer cutscenePlayer_;
+        
             bool assetsLoaded_ = false;
 
             void loadAssets();

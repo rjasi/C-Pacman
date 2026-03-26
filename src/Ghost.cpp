@@ -262,7 +262,10 @@ namespace Pacman
             pos_.y = target.y;
             current_ = Dir::Left; //todo randomly choose left or right
             // state_ = GhostState::Chase; let ghost director handle this
-            // if going left then current tile is always INFRONT_OF_DOOR_RIGHT
+            // if going left then current tile is INFRONT_OF_DOOR_RIGHT
+            // because of tile crossing logic. When in between tiles, 
+            // if going left then we are already in the right tile so target is left tile
+            // opposite if going right and on boundary
             currentTile_ = Maze::INFRONT_DOOR_RIGHT;
             targetTile_ = PathUtils::step(current_, currentTile_);
             houseState_ = HouseState::Outside;
@@ -410,9 +413,12 @@ namespace Pacman
         // clips wall for one tick? 
         if (reverseRequested_) 
         {
+            // std::cerr << "current " << currentTile_.r << " " << currentTile_.c << " target " << targetTile_.r << " " << targetTile_.c << "\n";
             reverseRequested_ = false;
             current_ = DirUtils::opposite(current_);
             std::swap(currentTile_, targetTile_);
+            // std::cerr << "swapped " << currentTile_.r << " " << currentTile_.c << " target " << targetTile_.r << " " << targetTile_.c << "\n";
+
             targetContext_ =  nullptr; 
             return;
         }
