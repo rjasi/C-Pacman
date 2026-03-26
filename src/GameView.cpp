@@ -39,11 +39,11 @@ namespace Pacman
         mazeNoDoorBlueSprite_.setPosition(ScreenConfig::MazeOrigin);
         mazeNoDoorWhiteSprite_.setPosition(ScreenConfig::MazeOrigin);
 
+        renderables_.emplace_back(animationLibrary_->pacmanResolver_.get(), &world_.pacman());
         renderables_.emplace_back(animationLibrary_->ghostResolvers_[GameCharactersIndex::BLINKY].get(), &world_.blinky());
         renderables_.emplace_back(animationLibrary_->ghostResolvers_[GameCharactersIndex::PINKY].get(), &world_.pinky());
         renderables_.emplace_back(animationLibrary_->ghostResolvers_[GameCharactersIndex::INKY].get(), &world_.inky());
         renderables_.emplace_back(animationLibrary_->ghostResolvers_[GameCharactersIndex::CLYDE].get(), &world_.clyde());
-        renderables_.emplace_back(animationLibrary_->pacmanResolver_.get(), &world_.pacman());
 
         cherrySprite_.setPosition(world_.fruitPos());
         cherrySprite_.setOrigin(Atlas::Sprite16x18Origin);

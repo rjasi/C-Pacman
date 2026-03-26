@@ -111,7 +111,7 @@ namespace Pacman
 
             static constexpr sf::Time ghostFrameTime = sf::milliseconds(80.f);
             static constexpr sf::Time pacmanFrameTime = sf::milliseconds(60.f);
-            static constexpr sf::Time pacmanDyingFrameTime = sf::milliseconds(100.f);
+            static constexpr sf::Time pacmanDyingFrameTime = sf::milliseconds(120.f);
             static constexpr sf::Time ghostFrightenedFrameTime = sf::seconds(0.25f);
 
             std::array<std::unique_ptr<IAnimationResolver>, 4> ghostResolvers_;
