@@ -36,12 +36,13 @@ namespace Pacman
 
             std::vector<Prop>& props();
             std::vector<CutsceneStep>& steps();
-
+            std::vector<CutsceneStep>& backgroundSteps();
+            
         private:
             std::vector<std::unique_ptr<CutsceneActor>> actors_;
-            std::vector<Prop> props_;
-
             std::vector<CutsceneStep> steps_;
+            std::vector<Prop> props_;
+            std::vector<CutsceneStep> backGroundSteps_; // steps to always run on entire cutscene
 
             bool active_ = false;
             std::size_t currentStep_ = 0;

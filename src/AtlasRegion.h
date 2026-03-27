@@ -348,6 +348,13 @@ namespace Pacman::Atlas
         {16, 16}
     };
 
+    // on a seperate img file
+    inline constexpr AtlasRegion PowerPellet
+    {
+        {0, 0},
+        {8, 8}
+    };
+
     inline constexpr AtlasRegion BlinkyTear1
     {
         {600, 96},

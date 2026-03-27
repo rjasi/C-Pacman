@@ -79,7 +79,7 @@ namespace Pacman
             Dir currentDir_ = Dir::None;
             sf::Vector2f pos_;
             bool freeze_ = false;
-            bool visible_ = true;
+            bool visible_ = false;
 
             void move(sf::Time dt, Dir d)
             {
@@ -110,12 +110,13 @@ namespace Pacman
 
             void update(sf::Time dt) override
             {
-                move(dt, currentDir_);
 
                 if (freeze_)
                 {
                     return;
                 }
+                move(dt, currentDir_);
+
                 animPack_.update(dt);
             }
 
@@ -151,12 +152,13 @@ namespace Pacman
 
             void update(sf::Time dt) override
             {
-                move(dt, currentDir_);
 
                 if (freeze_)
                 {
                     return;
                 }
+                move(dt, currentDir_);
+
                 animPack_.update(dt);
             }
 
@@ -194,6 +196,6 @@ namespace Pacman
             }
 
         private:
-            bool visible_ = true;
+            bool visible_ = false;
     };
 }

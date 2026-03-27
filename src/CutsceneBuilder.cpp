@@ -22,13 +22,13 @@ namespace Pacman
         return *this;
     }
 
-    CutsceneBuilder& CutsceneBuilder::freeze(CutsceneActor& actor)
+    CutsceneBuilder& CutsceneBuilder::freeze(CutsceneActor& actor, bool freeze)
     {
          player_.steps().push_back(
         {
-            .onEnter = [a = &actor] 
+            .onEnter = [a = &actor, freeze] 
             {
-                a->freeze(true);
+                a->freeze(freeze);
             }
         });
 
@@ -133,6 +133,54 @@ namespace Pacman
         return *this;
 
     }
+
+    CutsceneBuilder& CutsceneBuilder::blinkingProp(Prop& prop, sf::Time blinkTIme)
+    {
+        sf::Time time;
+        player_.backgroundSteps().push_back(
+        {
+            .update = [p = &prop, blinkElapsed = time, blinkTIme](sf::Time stepTime) mutable
+            {
+                blinkElapsed += stepTime;
+                if (blinkElapsed >= blinkTIme)
+                {
+                    blinkElapsed -= blinkTIme;
+                    p->setVisible(!p->visible());
+                }
+            }
+        });
+
+        return *this;
+    }
+
+    CutsceneBuilder& CutsceneBuilder::keepCutsceneAlive()
+    {
+        player_.steps().push_back(
+        {
+            .done = [](sf::Time stepTime) 
+            {
+                return false;
+            }
+        });
+
+        return *this;
+    }
+
+    CutsceneBuilder& CutsceneBuilder::setCutsceneStepEnabled(CutsceneStep& step, bool enabled)
+    {
+        player_.steps().push_back(
+        {
+            .onEnter = [s = &step, enabled] 
+            {
+                s->enabled = enabled;
+            }
+        });
+        
+        return *this;
+    }
+
+    
+
 
     CutsceneBuilder& CutsceneBuilder::setPropVisible(Prop& prop, bool visible)
     {

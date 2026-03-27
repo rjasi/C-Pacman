@@ -19,6 +19,11 @@ namespace Pacman
         return steps_;
     }
 
+    std::vector<CutsceneStep>& CutscenePlayer::backgroundSteps()
+    {
+        return backGroundSteps_;
+    }
+
     bool CutscenePlayer::finished() const
     {
         return active_ && currentStep_ >= steps_.size();
@@ -42,6 +47,8 @@ namespace Pacman
     {
         actors_.clear();
         steps_.clear();
+        props_.clear();
+        backGroundSteps_.clear();
         currentStep_ = 0;
         stepTime_ = sf::Time::Zero;
         entered_ = false;
@@ -75,6 +82,14 @@ namespace Pacman
         for (std::unique_ptr<CutsceneActor>& actor : actors_)
         {
             actor->update(dt);
+        }
+
+        for (CutsceneStep& backgroundSteps : backGroundSteps_)
+        {
+            if (backgroundSteps.enabled)
+            {
+                backgroundSteps.update(dt);
+            }
         }
 
         auto& step = steps_[currentStep_];

@@ -23,8 +23,9 @@ namespace Pacman
     class CutsceneStep
     {
         public:
+            bool enabled = true;
             std::function<void()> onEnter = [] {};
-            // std::function<void(sf::Time)> update = [](sf::Time) {};
+            std::function<void(sf::Time)> update = [](sf::Time) {};
             std::function<bool(sf::Time)> done = [](sf::Time) { return true; };
             std::function<void()> onExit = [] {};
     };

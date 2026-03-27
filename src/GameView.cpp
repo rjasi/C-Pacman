@@ -119,6 +119,7 @@ namespace Pacman
 
     void GameView::drawIntro(sf::RenderTarget& window) 
     {
+
         drawUi(window);
         const TileFont& whiteTextRenderer = tileFontLibrary_->get(TextColors::WHITE);
         const Maze& maze = world_.maze();
@@ -203,15 +204,29 @@ namespace Pacman
             window.draw(pelletSprite_);
             whiteTextRenderer.render(window, "10 )", maze.tileToWorldNonCentered({21,13}));
 
-            powerPelletSprite_.setPosition(maze.tileToWorld({23,10}));
+            if (!cutscenePlayer_.active())
+            {
+                powerPelletSprite_.setPosition(maze.tileToWorld({23,10}) - sf::Vector2f{0, 1.f});
+                window.draw(powerPelletSprite_);
+            }
             whiteTextRenderer.render(window, "50 )", maze.tileToWorldNonCentered({23,13}));
-            window.draw(powerPelletSprite_);
         }        
         
         if (menuTimer_ >= namcoTimer_)
         {
             const TileFont& textRenderer = tileFontLibrary_->get(TextColors::PINK);
             textRenderer.render(window, "(", maze.tileToWorldNonCentered({28, 11}));
+            if (!cutscenePlayer_.active())
+            {
+                CutsceneLibrary::IntroScreen(cutscenePlayer_, textCache_);
+                cutscenePlayer_.start();
+            }
+            
+        }
+
+        if (cutscenePlayer_.active())
+        {
+            drawCutscene(window);
         }
     }
 
@@ -292,6 +307,7 @@ namespace Pacman
                     {
                         case ScreenMode::Intro:
                             gameAudio_.playSfx(SfxId::Credit);
+                            cutscenePlayer_.reset();
                             screenMode_ = ScreenMode::PushStart;
                             break;
                         case ScreenMode::PushStart:
@@ -315,6 +331,7 @@ namespace Pacman
         {
             screenMode_ = ScreenMode::Intro;
             menuTimer_ = sf::Time::Zero;
+            cutscenePlayer_.reset();
         }
 
         switch(screenMode_)
@@ -335,6 +352,19 @@ namespace Pacman
     void GameView::updateIntro(sf::Time dt)
     {
         menuTimer_ += dt;
+        if (menuTimer_ >= namcoTimer_)
+        {
+            if (!cutscenePlayer_.active())
+            {
+                CutsceneLibrary::IntroScreen(cutscenePlayer_, textCache_);
+                cutscenePlayer_.start();
+            }   
+        }
+
+        if (cutscenePlayer_.active())
+        {
+            cutscenePlayer_.update(dt);
+        }
     }
 
     void GameView::updatePlaying(sf::Time dt)
