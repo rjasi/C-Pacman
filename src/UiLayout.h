@@ -66,6 +66,12 @@ namespace Pacman
                 return oneUpVisible_;
             }
 
+            void reset()
+            {
+                blinkElapsed1UP_ = sf::Time::Zero;
+                oneUpVisible_ = true;
+            }
+
         private:
             sf::Time blinkElapsed1UP_ = sf::Time::Zero;
             sf::Time blinkPeriod1UP_  = sf::milliseconds(250); 

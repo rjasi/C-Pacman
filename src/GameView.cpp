@@ -246,8 +246,6 @@ namespace Pacman
         pinkTextRenderer.render(window, "+ ( 1980", maze.tileToWorldNonCentered({26, 8}));
     }
 
-
-
     void GameView::render(sf::RenderTarget& window) 
     {
         worldView_.setSize(ScreenConfig::VirtualScreen);
@@ -332,6 +330,7 @@ namespace Pacman
             screenMode_ = ScreenMode::Intro;
             menuTimer_ = sf::Time::Zero;
             cutscenePlayer_.reset();
+            uiLayout_.reset();
         }
 
         switch(screenMode_)

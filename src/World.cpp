@@ -168,6 +168,11 @@ namespace Pacman
             gameAudio_.playSfx(SfxId::Extend);
         }
 
+        if (score_ > highScore_)
+        {
+            highScore_ = score_;
+        }
+
         if (spawnedFruit_ != Fruits::None && maze_.tryEatFruit(pacmanEntity_.position()))
         {
             gameAudio_.pauseMusic();
@@ -663,6 +668,7 @@ namespace Pacman
     {
         dotsEaten_ = 0;
         blinkElapsed_ = sf::Time::Zero;
+        powerPelletVisible_ = true;
         maze_.reset();
         level_++;
         cfg_ = LevelConfig::GetLevelConfig(level_);
@@ -809,7 +815,7 @@ namespace Pacman
 
     const int World::highScore() const
     {
-        return score_;
+        return highScore_;
     }
 
     bool World::consumeResetToIntroRequest()
