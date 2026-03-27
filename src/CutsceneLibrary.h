@@ -27,11 +27,11 @@ namespace Pacman
                 CutsceneBuilder script(player);
 
                 script
-                .setActorVisible(*blinkyPtr, true)
-                .setActorVisible(*pacmanPtr, true)
                 .playMusic(gameAudio, MusicTrackId::Intermission1)
                 .setPos(*blinkyPtr, {260.f, 150.f})
                 .setPos(*pacmanPtr, {230.f, 150.f})
+                .setActorVisible(*blinkyPtr, true)
+                .setActorVisible(*pacmanPtr, true)
                 .run(*blinkyPtr, Dir::Left, 1.f)
                 .run(*pacmanPtr, Dir::Left, .95f)
                 .untilX(*pacmanPtr, -100.f)

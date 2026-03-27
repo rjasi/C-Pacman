@@ -138,12 +138,6 @@ namespace Pacman
         if (maze_.tryEatPellet(pacmanEntity_.position()))
         {
             dotsEaten_++;
-
-            if (dotsEaten_ >= Maze::TOTAL_DOTS)
-            {
-                state_ = WorldState::LevelCleared;
-                return;
-            }
             pacmanEntity_.pelletEaten();
 
             gameAudio_.pauseMusic();
@@ -171,6 +165,12 @@ namespace Pacman
         if (score_ > highScore_)
         {
             highScore_ = score_;
+        }
+        
+        if (dotsEaten_ >= Maze::TOTAL_DOTS)
+        {
+            state_ = WorldState::LevelCleared;
+            return;
         }
 
         if (spawnedFruit_ != Fruits::None && maze_.tryEatFruit(pacmanEntity_.position()))
@@ -474,6 +474,8 @@ namespace Pacman
         lives_ = 3;
         score_ = 0;
         level_ = 1;
+        spawnedFirstFruit_ = false;
+        spawnedSecondFruit_ = false;
         livesExtended_ = false;
         blinkElapsed_ = sf::Time::Zero;
         powerPelletVisible_ = true;
@@ -574,7 +576,7 @@ namespace Pacman
         if (restartLevelTimer_ <= sf::Time::Zero)
         { 
             resetEntities();
-
+            powerPelletVisible_ = true;
             auto loc = maze_.tileToWorld(Maze::READY_POPUP_TILE);
             textPopups_.push_back({loc, RESTART_LEVEL_PAUSE_TIME, TextColors::YELLOW, "Ready!"});
         }
@@ -667,6 +669,8 @@ namespace Pacman
     void World::advanceNextLevel()
     {
         dotsEaten_ = 0;
+        spawnedFirstFruit_ = false;
+        spawnedSecondFruit_ = false;
         blinkElapsed_ = sf::Time::Zero;
         powerPelletVisible_ = true;
         maze_.reset();
@@ -768,8 +772,16 @@ namespace Pacman
     {
         if (spawnedFruit_ == Fruits::None)
         {
-            if (dotsEaten_ == FIRST_FRUIT_SPAWN_DOT_COUNT || dotsEaten_ == SECOND_FRUIT_SPAWN_DOT_COUNT)
+            if (dotsEaten_ == FIRST_FRUIT_SPAWN_DOT_COUNT && !spawnedFirstFruit_)
             {
+                spawnedFirstFruit_ = true;
+                spawnedFruit_ = getFruitForLevel(level_);
+                fruitTimer_ = sf::Time::Zero;
+            }
+        
+            if (dotsEaten_ == SECOND_FRUIT_SPAWN_DOT_COUNT && !spawnedSecondFruit_)
+            {
+                spawnedSecondFruit_ = true;
                 spawnedFruit_ = getFruitForLevel(level_);
                 fruitTimer_ = sf::Time::Zero;
             }

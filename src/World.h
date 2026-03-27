@@ -115,7 +115,6 @@ namespace Pacman
             static constexpr sf::Time MAZE_FLASH_TIME = sf::seconds(0.20f);
             static constexpr sf::Time LEVEL_CLEARED_PHASE_2 = sf::seconds(1.6f); // 8 * MAZE_FLASH_TIME, display 4 of white and  blue maze
 
-
             sf::Time levelClearedPhase1Timer_{};
             sf::Time levelClearedPhase2Timer_{};
 
@@ -147,6 +146,8 @@ namespace Pacman
             sf::Time fruitTimer_{};
             Fruits spawnedFruit_ = Fruits::None;
             sf::Vector2f fruitPos_;
+            bool spawnedFirstFruit_ = false;
+            bool spawnedSecondFruit_ = false;
 
             // power pellet blinking
             sf::Time blinkElapsed_ = sf::Time::Zero;
