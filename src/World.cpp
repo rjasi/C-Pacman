@@ -161,6 +161,13 @@ namespace Pacman
             pacmanEntity_.powerPelletEaten();
         }
 
+        if (score_ >= LIVES_EXTEND_SCORE && !livesExtended_)
+        {
+            livesExtended_ = true;
+            lives_++;
+            gameAudio_.playSfx(SfxId::Extend);
+        }
+
         if (spawnedFruit_ != Fruits::None && maze_.tryEatFruit(pacmanEntity_.position()))
         {
             gameAudio_.pauseMusic();
@@ -462,6 +469,7 @@ namespace Pacman
         lives_ = 3;
         score_ = 0;
         level_ = 1;
+        livesExtended_ = false;
         blinkElapsed_ = sf::Time::Zero;
         powerPelletVisible_ = true;
         cfg_ = LevelConfig::GetLevelConfig(level_);

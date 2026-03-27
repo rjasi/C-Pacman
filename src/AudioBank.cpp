@@ -37,6 +37,12 @@ namespace Pacman
             std::cerr << "Could not load sound\n";
         }
 
+        succcess = buffers_[EnumHelper::toIndex(SfxId::Extend)].loadFromFile("assets/sound/extend.wav");
+        if (!succcess)
+        {
+            std::cerr << "Could not load sound\n";
+        }
+
         std::vector<std::int16_t> silence(44100, 0);
 
         std::vector<sf::SoundChannel> channels = {sf::SoundChannel::Mono};

@@ -9,6 +9,7 @@ namespace Pacman
         EatGhost,
         EatFruit,
         Credit,
+        Extend,
         Count
     };
 }

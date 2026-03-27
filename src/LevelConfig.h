@@ -153,7 +153,7 @@ namespace Pacman
                     case 1:
                         return sf::seconds(6.f);
                     case 2:
-                        return sf::seconds(0.f);
+                        return sf::seconds(5.f);
                     case 3:
                         return sf::seconds(4.f);
                     case 4:

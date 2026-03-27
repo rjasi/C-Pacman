@@ -82,6 +82,9 @@ namespace Pacman
             std::vector<TextPopup> textPopups_;
             std::vector<ScorePopup> scorePopups_;
 
+            bool livesExtended_ = false;
+            static constexpr int LIVES_EXTEND_SCORE = 10000;
+
 
             // ingame cutscene related details
             // ________________________________
