@@ -78,6 +78,7 @@ namespace Pacman
 
             bool flipWaka_ = false;
             bool collision_ = true;
+            bool paused_ = false;
             
             std::vector<TextPopup> textPopups_;
             std::vector<ScorePopup> scorePopups_;
@@ -223,6 +224,7 @@ namespace Pacman
             Fruits spawnedFruit() const;
             const sf::Vector2f& fruitPos() const;
             const int highScore() const;
-            const bool gameOver() const;
+            void handlePause();
+            bool paused() const;
     };
 }

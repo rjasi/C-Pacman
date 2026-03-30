@@ -16,6 +16,7 @@ namespace Pacman
             void playMusic(MusicTrackId trackId);
             void stopMusic();
             void pauseMusic();
+            void resumeMusic();
 
         private:
             AudioBank audioBank_;

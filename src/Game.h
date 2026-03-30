@@ -8,6 +8,8 @@
 #include "TileFontLibrary.h"
 #include "ScorePopupRenderer.h"
 
+#include <string_view>
+
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/System.hpp>
@@ -18,6 +20,7 @@ namespace Pacman
     {
         private:
             static constexpr int FRAMERATE_LIMIT = 240;
+            static constexpr std::string_view ICON_PATH = "assets/icon.png";
             sf::RenderWindow window_;
             GameState state_ = GameState::Playing;
             MainMenu menu_;

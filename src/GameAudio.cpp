@@ -29,4 +29,9 @@ namespace Pacman
         musicPlayer_.pause();
     }
 
+    void GameAudio::resumeMusic()
+    {
+        musicPlayer_.resume();
+    }
+
 }

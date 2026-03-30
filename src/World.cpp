@@ -67,6 +67,11 @@ namespace Pacman
 
     void World::update(sf::Time dt)
     {
+        if (paused_)
+        {
+            return;
+        }
+
         setEntitySpeeds();
         switch (state_)
         {
@@ -168,6 +173,7 @@ namespace Pacman
         if (score_ > highScore_)
         {
             highScore_ = score_;
+            UpdateHighScore(highScore_);
         }
         
         if (dotsEaten_ >= Maze::TOTAL_DOTS)
@@ -890,6 +896,29 @@ namespace Pacman
         }
 
         file << highScore;
+    }
 
+    void World::handlePause()
+    {
+        // no pause during cutscene
+        if (activeCutscene_ != Cutscenes::None)
+        {
+            return;
+        }
+
+        if (!paused_)
+        {
+            gameAudio_.pauseMusic();
+        }
+        else
+        {
+            gameAudio_.resumeMusic();
+        }
+        paused_ = !paused_;;
+    }
+
+    bool World::paused() const
+    {
+        return paused_;
     }
 }

@@ -339,6 +339,16 @@ namespace Pacman
                             return;
                     }
                     break;
+                case sf::Keyboard::Scancode::Escape:
+                    switch (screenMode_)
+                    {
+                        case ScreenMode::Playing:
+                            world_.handlePause();
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
                 default:
                     break;
             }
@@ -422,7 +432,10 @@ namespace Pacman
 
         if (world_.state() == WorldState::Playing || world_.state() == WorldState::Died)
         {
-            animationLibrary_->update(dt);
+            if (!world_.paused())
+            {
+                animationLibrary_->update(dt);
+            }
         }
 
         world_.update(dt);

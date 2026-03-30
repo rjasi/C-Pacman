@@ -19,6 +19,14 @@ namespace Pacman
         tileFontLibrary_->load();
         gameView_ = std::make_unique<GameView>(textureCache_,  animationLibrary_.get(), tileFontLibrary_.get(), scorePopupRenderer_.get(), gameAudio_);
         window_.setFramerateLimit(FRAMERATE_LIMIT);
+
+        sf::Image icon;
+        if (!icon.loadFromFile(ICON_PATH))
+        {
+            std::cerr << "Could not load icon.png" << std::endl;
+        }
+
+        window_.setIcon(icon.getSize(), icon.getPixelsPtr());
     }
 
     void Game::run()
