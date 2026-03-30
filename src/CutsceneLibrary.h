@@ -255,7 +255,7 @@ namespace Pacman
                 .freeze(*pacmanPtr) 
                 .setActorVisible(*clydePtr, false)
                 .setActorVisible(*pacmanPtr, false)
-                .setPropPosition(*score1600, {180.f, 170.f})
+                .setPropPosition(*score1600, {175.f, 170.f})
                 .setPropVisible(*score1600, true)
                 .wait(sf::seconds(1.f))
                 .setPropVisible(*score1600, false)

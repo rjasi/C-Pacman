@@ -44,7 +44,9 @@ namespace Pacman
         private:
             ScreenMode screenMode_ = ScreenMode::Intro;
             TextureCache& textCache_;
-
+            sf::RenderTexture worldRT_;
+            sf::View worldRTView_;
+            sf::Shader postShader_;
             sf::View worldView_;
             sf::Sprite mazeSprite_;
             sf::Sprite mazeNoDoorBlueSprite_;

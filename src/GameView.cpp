@@ -61,6 +61,19 @@ namespace Pacman
         bellSprite_.setOrigin(Atlas::Sprite16x18Origin);
         keySprite_.setPosition(world_.fruitPos());
         keySprite_.setOrigin(Atlas::Sprite16x18Origin);
+        worldView_.setSize(ScreenConfig::VirtualScreen);
+        worldView_.setCenter(ScreenConfig::VirtualScreen / 2.f);
+        worldRTView_.setSize(ScreenConfig::VirtualScreen );
+        worldRTView_.setCenter(ScreenConfig::VirtualScreen / 2.f);
+        worldRT_.setView(worldRTView_);
+
+        bool success = worldRT_.resize
+        ({
+            static_cast<unsigned>(ScreenConfig::VirtualScreen.x) * 4,
+            static_cast<unsigned>(ScreenConfig::VirtualScreen.y) * 4
+        });
+
+        success = postShader_.loadFromFile("assets/soften.frag", sf::Shader::Type::Fragment);
     }
 
     void GameView::reset() 
@@ -232,6 +245,7 @@ namespace Pacman
 
     void GameView::drawPushStart(sf::RenderTarget& window)
     {
+
         drawUi(window);
         const TileFont& orangeTextRenderer = tileFontLibrary_->get(TextColors::ORANGE);
         const TileFont& blueTextRenderer = tileFontLibrary_->get(TextColors::BLUE);
@@ -248,12 +262,13 @@ namespace Pacman
 
     void GameView::render(sf::RenderTarget& window) 
     {
-        worldView_.setSize(ScreenConfig::VirtualScreen);
-        worldView_.setCenter(ScreenConfig::VirtualScreen / 2.f);
+
         worldView_.setViewport(
-            ScreenConfig::letterboxViewport(window.getSize(), 
+            ScreenConfig::letterboxViewport(window.getSize(),
             ScreenConfig::VirtualScreen));
         window.setView(worldView_);
+
+        worldRT_.clear();
 
         switch(screenMode_)
         {
@@ -269,7 +284,14 @@ namespace Pacman
             default:
                 break;
         }
-        
+
+
+        // sprite movement is too jittery when rendered using wrodlRt method
+        // this is done to use setsmooth without artifacts
+        // worldRT_.display();
+        // worldRT_.setSmooth(true);
+        // sf::Sprite frame(worldRT_.getTexture());
+        // window.draw(frame);
     }
 
     void GameView::handleEvent(const sf::Event& event)

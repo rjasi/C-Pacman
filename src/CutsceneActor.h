@@ -91,7 +91,7 @@ namespace Pacman
     class GhostActor : public CutsceneActor
     {
         public:
-            GhostActor(GhostAnimationPack&& animPack)
+            GhostActor(GhostAnimationPack animPack)
             : animPack_(std::move(animPack)) 
             {
 

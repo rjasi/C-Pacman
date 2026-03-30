@@ -834,6 +834,7 @@ namespace Pacman
     {
         if (resetToIntroRequested_)
         {
+            score_ = 0;
             resetToIntroRequested_ = false;
             return true;
         }

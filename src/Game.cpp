@@ -7,7 +7,7 @@
 namespace Pacman
 {
     Game::Game()
-    : window_(sf::VideoMode({448, 576}), "Pacman"), 
+    : window_(sf::VideoMode({448, 576}), "Pacman"),
     menu_(window_.getSize()) 
     {
         state_ = GameState::MainMenu;
@@ -18,7 +18,7 @@ namespace Pacman
 
         tileFontLibrary_->load();
         gameView_ = std::make_unique<GameView>(textureCache_,  animationLibrary_.get(), tileFontLibrary_.get(), scorePopupRenderer_.get(), gameAudio_);
-        window_.setFramerateLimit(60);
+        window_.setFramerateLimit(50);
     }
 
     void Game::run()
