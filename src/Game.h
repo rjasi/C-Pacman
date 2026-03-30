@@ -16,7 +16,8 @@ namespace Pacman
 {
     class Game 
     {
-        private: 
+        private:
+            static constexpr int FRAMERATE_LIMIT = 240;
             sf::RenderWindow window_;
             GameState state_ = GameState::Playing;
             MainMenu menu_;

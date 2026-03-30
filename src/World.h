@@ -149,6 +149,8 @@ namespace Pacman
             bool spawnedFirstFruit_ = false;
             bool spawnedSecondFruit_ = false;
 
+            static constexpr std::string_view HIGHSCORE_FILE = "highscore.txt";
+
             // power pellet blinking
             sf::Time blinkElapsed_ = sf::Time::Zero;
             sf::Time blinkPeriod_  = sf::milliseconds(150); 
@@ -180,6 +182,10 @@ namespace Pacman
             Scores getFruitScorePopup() const;
 
             void setEntitySpeeds();
+
+            [[nodiscard]] static int ReadHighScore();
+            static void UpdateHighScore(int highScore);
+
 
         public:
             static constexpr int LAST_FRUIT_LEVEL = 13;

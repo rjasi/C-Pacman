@@ -2,6 +2,7 @@
 
 
 #include <iostream>
+#include <fstream>
 
 namespace Pacman
 {
@@ -40,6 +41,8 @@ namespace Pacman
         pacmanEntity_.setVisible(false);
 
         fruitPos_ = maze_.tileToWorldOnBoundary(Maze::FRUIT_TILE);
+        highScore_ = ReadHighScore();
+
     }
 
     void World::setPlayerRequestedDir(Dir d)
@@ -847,6 +850,7 @@ namespace Pacman
         updatePopups(dt);
         if (gameOverTimer_ == sf::Time::Zero)
         {
+            UpdateHighScore(highScore_);
             spawnedFruit_ = Fruits::None;
             auto loc = maze_.tileToWorld(Maze::GAMEOVER_POPUP_TILE);
             textPopups_.push_back({loc, GAMEOVER_TIME, TextColors::RED, "Game  Over"});
@@ -860,5 +864,32 @@ namespace Pacman
             gameOverTimer_ = sf::Time::Zero;
             state_ = WorldState::Paused;
         }
+    }
+
+
+    [[nodiscard]] int World::ReadHighScore()
+    {
+        std::ifstream file(HIGHSCORE_FILE);
+        int value = 0;
+
+        if (file >> value)
+        {
+            return value;
+        }
+        return 0;
+    }
+
+    void World::UpdateHighScore(int highScore)
+    {
+        std::ofstream file(HIGHSCORE_FILE, std::ios::trunc); // overwrite file
+
+        if (!file)
+        {
+            std::cerr << "Failed to open file for writing\n";
+            return;
+        }
+
+        file << highScore;
+
     }
 }

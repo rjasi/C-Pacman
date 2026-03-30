@@ -18,7 +18,7 @@ namespace Pacman
 
         tileFontLibrary_->load();
         gameView_ = std::make_unique<GameView>(textureCache_,  animationLibrary_.get(), tileFontLibrary_.get(), scorePopupRenderer_.get(), gameAudio_);
-        window_.setFramerateLimit(50);
+        window_.setFramerateLimit(FRAMERATE_LIMIT);
     }
 
     void Game::run()
