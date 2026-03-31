@@ -450,9 +450,20 @@ namespace Pacman
 
      void World::newGame(sf::Time dt)
      {
-        startNewGameTimer_ += dt;        
         gameAudio_.playMusic(MusicTrackId::StartGame);
         updatePopups(dt);
+
+        if (startNewGameTimer_ == sf::Time::Zero)
+        {
+            blinky_.setVisible(false);
+            pinky_.setVisible(false);
+            inky_.setVisible(false);
+            clyde_.setVisible(false);
+            pacmanEntity_.setVisible(false);
+        }
+
+        startNewGameTimer_ += dt;
+
 
         if (startNewGameTimer_ >= NEW_GAME_INTRO_SPAWN_CHARACTER_TIME)
         {
@@ -469,6 +480,7 @@ namespace Pacman
             gameAudio_.stopMusic();
             state_ = WorldState::Playing;
             pacmanEntity_.setState(PacmanState::Normal);
+            lives_ --; //consume one life
         }
      }
 
@@ -530,7 +542,7 @@ namespace Pacman
         {
             diedTimer_ = sf::Time::Zero;
 
-            if (lives_ <= 0)
+            if (lives_ < 0)
             {
                 state_ = WorldState::GameOver;
             }
