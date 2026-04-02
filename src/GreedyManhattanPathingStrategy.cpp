@@ -25,6 +25,11 @@ namespace Pacman
                 continue;
             }
 
+            if (d == Dir::Up && !maze.canTurnUpAtTile(query.current_tile))
+            {
+                continue;
+            }
+
             TileRC nextStep = PathUtils::step(d, query.current_tile);
             if (maze.isWall(nextStep) && !maze.isInWarpTunnel(nextStep))
             {

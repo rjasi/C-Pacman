@@ -16,6 +16,7 @@ namespace Pacman
             int colCount_;
             sf::Vector2f origin_{ 0, 0 }; // pixel location on screen
             std::vector<std::string> tilesReference_; // original unmodified maze tiles
+            bool enforceForbiddenTiles = true;
 
         public:
             std::vector<std::string> tiles_;
@@ -32,7 +33,7 @@ namespace Pacman
             static constexpr char POWER_PELLET = 'o';
             static constexpr char EMPTY = ' ';
             
-            static constexpr TileRC SAFE_SPORT = {20,15}; // todo mode where safe spot works
+            static constexpr TileRC SAFE_SPOT = {20,15}; // todo mode where safe spot works
             static constexpr TileRC PACMAN_SPAWN_POINT = {23, 13};
             static constexpr TileRC INFRONT_DOOR_LEFT = {11, 13};
             static constexpr TileRC INFRONT_DOOR_RIGHT = {11, 14};
@@ -44,6 +45,13 @@ namespace Pacman
             static constexpr TileRC READY_POPUP_TILE = {17, 11};
             static constexpr TileRC GAMEOVER_POPUP_TILE = {17, 9};
             static constexpr TileRC FRUIT_TILE = {17, 13};
+            static constexpr std::array<TileRC, 4> UP_FORBIDDEN_TILES =
+            {
+                TileRC{11, 12},
+                TileRC{11, 15},
+                TileRC{23, 12},
+                TileRC{23, 15}
+            };
 
             Maze(const sf::Vector2f& origin);
             Maze(const Maze& maze) = delete;
@@ -96,6 +104,7 @@ namespace Pacman
             bool nearTileCenterX(sf::Vector2f p, const float eps) const;
             bool nearTileCenterY(sf::Vector2f p, const float eps) const;
             bool isAtJunction(const sf::Vector2f& p) const;
+            bool canTurnUpAtTile(const TileRC& tile) const;
 
             void reset();
     };

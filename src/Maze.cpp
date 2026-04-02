@@ -375,6 +375,16 @@ namespace Pacman
         tiles_ = tilesReference_;
     }
 
+    bool Maze::canTurnUpAtTile(const TileRC& tile) const
+    {
+        if (!enforceForbiddenTiles)
+        {
+            return true;
+        }
+
+        return std::find(UP_FORBIDDEN_TILES.begin(), UP_FORBIDDEN_TILES.end(), tile) == UP_FORBIDDEN_TILES.end();
+    }
+
 
     // bool Maze::isTile(int r, int c, char value) const
     // {
