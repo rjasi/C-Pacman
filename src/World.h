@@ -133,10 +133,10 @@ namespace Pacman
 
             GreedyManhattanPathingStrategy greedyManhattanPathingStrategy_;
 
-            static constexpr TileRC BLINKY_SCATTER_CORNER = {-3, 27};
-            static constexpr TileRC PINKY_SCATTER_CORNER = {-3, 0};
-            static constexpr TileRC INKY_SCATTER_CORNER = {31, 27};
-            static constexpr TileRC CLYDE_SCATTER_CORNER = {31, 0};
+            static constexpr TileRC BLINKY_SCATTER_CORNER = {-4, 27};
+            static constexpr TileRC PINKY_SCATTER_CORNER = {-4, 0};
+            static constexpr TileRC INKY_SCATTER_CORNER = {35, 27};
+            static constexpr TileRC CLYDE_SCATTER_CORNER = {35, 0};
             
 
             // fruit
