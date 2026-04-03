@@ -225,10 +225,36 @@ namespace Pacman
                 return 0;
             }
 
+            static int GetClydePelletReleaseCount(int level)
+            {
+                switch (level)
+                {
+                    case 1:
+                        return 90;
+                    case 2:
+                        return 50;
+                    default:
+                        return 0;
+                }
+            }
+
+            static int GetInkyPelletReleaseCount(int level)
+                {
+                    switch (level)
+                    {
+                        case 1:
+                            return 30;
+                        default:
+                            return 0;
+                    }
+                }
+
             static LevelConfig GetLevelConfig(int level)
             {
                 return LevelConfig
                 {
+                    .pelletsToReleaseClyde = GetClydePelletReleaseCount(level),
+                    .pelletsToReleaseInky = GetInkyPelletReleaseCount(level),
                     .frightenedDuration = GetFrightenedTime(level),
                     .frightenedFlashes = GetFrightenedFlashCount(level),
                     .phases = GetPhases(level),

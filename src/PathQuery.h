@@ -13,6 +13,7 @@ namespace Pacman
             TileRC current_tile;
             Dir current_direction;
             TileRC target_tile;
-            bool canReverse = false; 
+            bool canReverse = false;
+            bool deterministicTiebreaker = false;
     };
 }

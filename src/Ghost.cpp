@@ -329,7 +329,8 @@ namespace Pacman
             .current_tile = maze.worldToTile(pos_),
             .current_direction = current_,
             .target_tile = Maze::INFRONT_DOOR_LEFT, // according to pacman dossier it always targets that tile
-            .canReverse = false
+            .canReverse = false,
+            .deterministicTiebreaker = true
         };
 
         current_ = pathingStrategy_->chooseNext(maze, query);

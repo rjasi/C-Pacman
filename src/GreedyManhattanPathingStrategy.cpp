@@ -17,8 +17,8 @@ namespace Pacman
 
         int bestScore = std::numeric_limits<int>::max();
 
-        // loop through valid dirs and pick the best
-        for (Dir d : {Dir::Up, Dir::Down, Dir::Left, Dir::Right})
+        // order of dir in list matters as original game priority was Up, Left, Down, Right
+        for (Dir d : {Dir::Up, Dir::Left, Dir::Down, Dir::Right})
         {
             if (!query.canReverse && d == DirUtils::opposite(query.current_direction))
             {
@@ -57,6 +57,10 @@ namespace Pacman
             return chooseNext(maze, query);
         }
 
+        if (query.deterministicTiebreaker)
+        {
+            return bestDirs.front();
+        }
         return bestDirs[randomInt(0, bestDirs.size() - 1)]; // size - 1 because rand function is inclusive
     }
 }
