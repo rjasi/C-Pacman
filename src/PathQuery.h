@@ -14,6 +14,6 @@ namespace Pacman
             Dir current_direction;
             TileRC target_tile;
             bool canReverse = false;
-            bool deterministicTiebreaker = false;
+            bool deterministicTiebreaker = true;
     };
 }
