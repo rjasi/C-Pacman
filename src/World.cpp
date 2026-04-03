@@ -841,7 +841,7 @@ namespace Pacman
             }
             else if (ghost.state() == GhostState::EatenReturning)
             {
-                ghost.setSpeed(2.5f);
+                ghost.setSpeed(1.8f);
             }
         }
     }

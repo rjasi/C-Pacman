@@ -330,7 +330,8 @@ namespace Pacman
             .current_direction = current_,
             .target_tile = Maze::INFRONT_DOOR_LEFT, // according to pacman dossier it always targets that tile
             .canReverse = false,
-            .deterministicTiebreaker = false // will get stuck in a loop sometimes if true
+            .deterministicTiebreaker = false, // will get stuck in a loop sometimes if true
+            .enforceForbiddenTileTurns = false // will get stuck in a loop sometimes if true
         };
 
         current_ = pathingStrategy_->chooseNext(maze, query);

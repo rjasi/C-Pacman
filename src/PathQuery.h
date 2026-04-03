@@ -15,5 +15,6 @@ namespace Pacman
             TileRC target_tile;
             bool canReverse = false;
             bool deterministicTiebreaker = true;
+            bool enforceForbiddenTileTurns = true;
     };
 }

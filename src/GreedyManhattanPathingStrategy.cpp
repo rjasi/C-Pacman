@@ -25,7 +25,7 @@ namespace Pacman
                 continue;
             }
 
-            if (d == Dir::Up && !maze.canTurnUpAtTile(query.current_tile))
+            if (d == Dir::Up && !maze.canTurnUpAtTile(query.current_tile, query.enforceForbiddenTileTurns))
             {
                 continue;
             }

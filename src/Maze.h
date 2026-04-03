@@ -16,7 +16,6 @@ namespace Pacman
             int colCount_;
             sf::Vector2f origin_{ 0, 0 }; // pixel location on screen
             std::vector<std::string> tilesReference_; // original unmodified maze tiles
-            bool enforceForbiddenTiles = true;
 
         public:
             std::vector<std::string> tiles_;
@@ -104,7 +103,7 @@ namespace Pacman
             bool nearTileCenterX(sf::Vector2f p, const float eps) const;
             bool nearTileCenterY(sf::Vector2f p, const float eps) const;
             bool isAtJunction(const sf::Vector2f& p) const;
-            bool canTurnUpAtTile(const TileRC& tile) const;
+            bool canTurnUpAtTile(const TileRC& tile, bool enforceForbiddenTileTurns) const;
 
             void reset();
     };

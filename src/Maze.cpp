@@ -375,9 +375,9 @@ namespace Pacman
         tiles_ = tilesReference_;
     }
 
-    bool Maze::canTurnUpAtTile(const TileRC& tile) const
+    bool Maze::canTurnUpAtTile(const TileRC& tile, bool enforceForbiddenTileTurns) const
     {
-        if (!enforceForbiddenTiles)
+        if (!enforceForbiddenTileTurns)
         {
             return true;
         }
